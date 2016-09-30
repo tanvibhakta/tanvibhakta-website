@@ -1,0 +1,5 @@
+@media (min-width: 768px) {
+  .navbar-remove-border-radius {
+    border-radius: 0;
+  }
+}
