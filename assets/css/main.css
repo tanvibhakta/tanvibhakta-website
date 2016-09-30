@@ -3,3 +3,7 @@
     border-radius: 0;
   }
 }
+
+.navbar-toggle-remove-border {
+  border: 0;
+}
