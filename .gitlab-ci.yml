@@ -2,8 +2,9 @@ image: ruby:2.1
 
 pages:
   script:
-  - gem install jekyll
-  - jekyll build -d public/
+  - gem install jekyll bundler
+  - bundler exec jekyll serve -d /public
+  # - jekyll build -d public/
   artifacts:
     paths:
     - public
