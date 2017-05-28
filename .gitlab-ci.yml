@@ -1,6 +1,7 @@
 image: ruby:2.1
 
 pages:
+  # stage: deploy
   script:
   - gem install jekyll bundler
   - bundler exec jekyll serve -d /public
