@@ -16,8 +16,8 @@
 
   li {
     padding: 8px 0;
-    border-bottom: 1px solid lighten($black,80);
-    border-bottom: 1px solid rgba($black,.10);
+    border-bottom: 1px solid lighten($accent-color,80);
+    border-bottom: 1px solid rgba($accent-color,.10);
     @include font-size(18,no);
     @include clearfix;
 
@@ -76,7 +76,7 @@
   a {
     padding: 4px 6px;
     margin: 2px;
-    background-color: lighten($black, 90);
+    background-color: lighten($accent-color, 90);
     @include rounded(4px);
     text-decoration: none;
 

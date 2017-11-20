@@ -13,8 +13,8 @@
 .entry,
 .hentry {
 	@include clearfix;
-	border-bottom: 1px solid lighten($black,80);
-	border-bottom: 1px solid rgba($black,.10);
+	border-bottom: 1px solid lighten($accent-color,80);
+	border-bottom: 1px solid rgba($accent-color,.10);
 }
 
 /* feature image */
@@ -88,7 +88,7 @@ span + .entry-title {
 	letter-spacing: -3px;
 
 	a {
-		color: $black;
+		color: $accent-color;
 		text-decoration: underline;
 	}
 
@@ -133,8 +133,8 @@ span + .entry-title {
 		@include media($large) {
 			display: block;
 			padding: 8px 0;
-			border-bottom: 1px solid lighten($black,80);
-			border-bottom: 1px solid rgba($black,.10);
+			border-bottom: 1px solid lighten($accent-color,80);
+			border-bottom: 1px solid rgba($accent-color,.10);
 		}
 	}
 }

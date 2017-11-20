@@ -1,6 +1,6 @@
 // TYPOGRAPHY ================================================
-$base-font                : 'source-sans-pro', sans-serif;
-$heading-font             : $base-font;
+$base-font                : 'Open-sans', sans-serif;
+$heading-font             : 'Roboto', serif;
 $caption-font             : $base-font;
 $code-font                : 'source-code-pro', monospace;
 $alt-font                 : 'volkhov', serif;
@@ -25,8 +25,8 @@ $base-color               : #343434;
 $comp-color               : adjust-hue($base-color, 180);
 $border-color             : #ddd;
 $white                    : #fff;
-$black                    : #000;
-$accent-color             : $black;
+$accent-color                    : #000;
+$accent-color             : #d23235;
 $link-color               : #222;
 
 $table-border-color       : $border-color;

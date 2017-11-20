@@ -29,7 +29,7 @@ body {
   font-family: $base-font;
   color: $text-color;
   background-color: $body-color;
-  border-top: 5px solid $black;
+  border-top: 5px solid $accent-color;
 }
 
 /*
@@ -155,7 +155,7 @@ figure {
 
       &:hover {
         @include transform(translateY(-5px));
-        @include box-shadow(0 0 10px rgba($black, .20));
+        @include box-shadow(0 0 10px rgba($accent-color, .20));
         opacity: 1;
       }
     }
@@ -192,7 +192,7 @@ blockquote {
 	font-style: italic;
 	@include font-size(16);
 	padding-left: 20px;
-	border-left: 8px solid $black;
+	border-left: 8px solid $accent-color;
 }
 
 
@@ -212,8 +212,8 @@ li {
 		white-space: nowrap;
 		margin: 0 2px;
 		padding: 0 5px;
-		border: 1px solid lighten($black, 90);
-		background-color: lighten($black, 95);
+		border: 1px solid lighten($accent-color, 90);
+		background-color: lighten($accent-color, 95);
 		@include rounded(3px);
 	}
 }
