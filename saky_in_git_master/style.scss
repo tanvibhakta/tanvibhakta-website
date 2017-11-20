@@ -1,0 +1,451 @@
+---
+---
+
+//
+// IMPORTS
+//
+
+//TODO: nav bar alignment in mobile
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+// @import url(https://fonts.googleapis.com/css?family=Open Sans);
+@import "reset";
+@import "variables";
+// Syntax highlighting @import is at the bottom of this file
+
+/**************/
+/* BASE RULES */
+/**************/
+
+html {
+  font-size: 100%;
+  font-family: "Open Sans";
+  font-weight: lighter;
+  //letter-spacing: 1.5px;
+}
+
+body {
+  //background: $lightGray;
+  background: #fff;
+  //font: 18px/1.4 $helvetica;
+  font: 18px/1.4;
+  font-weight: lighter;
+  color: $darkGray;
+}
+
+
+.container {
+  margin: 0 auto;
+  max-width: 740px;
+  padding: 0 10px;
+  width: 100%;
+}
+
+.cards {
+  box-shadow: 0px 0px 2px 0px #777777;
+  background: $white;
+  padding: 0px 20px 2px 20px;
+}
+
+.gallery-wrapper {
+  img {
+    max-width: 100%;
+    margin: 5px;
+  }
+}
+
+.excerpt {
+  @media screen and (min-width: 768px) {
+    width: 50%;
+    //float: left;
+  }
+}
+
+.label {
+  color: #d23235;
+  font-size: 50px;
+  margin-top: 10px;
+  font-family: "Open Sans";
+  text-transform: uppercase;
+
+  @media screen and (min-width: 768px) {
+    width: 50%;
+    float: right;
+    text-align: center;
+    margin-top: 50px;
+  }
+
+}
+
+.dux-mobile {
+  img {
+    display: none;
+    @include mobile {
+      width: 100%;
+      display: inline;
+    }
+  }
+}
+
+.dux-desktop {
+  img {
+    @include mobile {
+      display: none;
+    }
+  }
+}
+.clear {
+  float: none;
+}
+
+.post-title {
+  color: #d23235;
+
+  a {
+
+    color: $darkGray;
+
+    &:hover,focus {
+      color: #d23235;
+      background-color: transparent;
+    }
+  }
+
+  @include mobile {
+    width: 50%;
+  }
+}
+
+.preview {
+  font-family: "Open Sans";
+}
+
+h1, h2, h3, h4, h5, h6 {
+  //font-family: $helveticaNeue;
+  font-family: "Open Sans";
+  color: $darkerGray;
+  font-weight: bold;
+
+  line-height: 1.7;
+  margin: 1em 0 15px;
+  padding: 0;
+
+  @include mobile {
+    line-height: 1.4;
+  }
+}
+
+h1 {
+  font-size: 30px;
+  a {
+    color: inherit;
+  }
+}
+
+h2 {
+  font-size: 24px;
+}
+
+h3 {
+  font-size: 20px;
+}
+
+h4 {
+  font-size: 18px;
+  color: $gray;
+}
+
+p {
+  margin: 15px 0;
+  line-height: 150%;
+}
+
+a {
+  //color: $blue;
+  color: #E34234;
+  text-decoration: none;
+	cursor: pointer;
+  &:hover, &:active {
+    //color: $blue;
+    color: #fff;
+    background-color: rgba(255, 83, 73, 120);
+  }
+}
+
+ul, ol {
+  margin: 15px 0;
+  padding-left: 30px;
+}
+
+ul {
+  list-style-type: disc;
+}
+
+ol {
+  list-style-type: decimal;
+}
+
+ol ul, ul ol, ul ul, ol ol {
+  margin: 0;
+}
+
+ul ul, ol ul {
+  list-style-type: circle;
+}
+
+li {
+  line-height: 1.5;
+}
+
+em, i {
+  font-style: italic;
+}
+
+strong, b {
+  font-weight: bold;
+}
+
+img {
+  max-width: 100%;
+}
+
+// Fixes images in popup boxes from Google Translate
+.gmnoprint img {
+  max-width: none;
+}
+
+.date {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  font-family: "Open Sans";
+  color: $gray;
+  line-height: 150%;
+}
+
+// Specify the color of the selection
+::-moz-selection {
+  color: #fff;
+  background: rgba(255, 83, 73, 120);
+}
+::selection {
+  color: #fff;
+  background: rgba(255, 83, 73, 120);
+}
+
+// Nicolas Gallagher's micro clearfix hack
+// http://nicolasgallagher.com/micro-clearfix-hack/
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+/*********************/
+/* LAYOUT / SECTIONS */
+/*********************/
+
+//
+// .masthead
+//
+
+.wrapper-masthead {
+  margin-bottom: 50px;
+  //background-color: $lightGray;
+  background: #fff;
+
+}
+
+.masthead {
+  padding: 20px 0;
+  // border-bottom: 1px solid $lightGray;
+
+  @include mobile {
+    text-align: center;
+  }
+}
+
+.site-avatar {
+  float: left;
+  width: 70px;
+  height: 70px;
+  margin-right: 15px;
+
+  @include mobile {
+    float: none;
+    display: block;
+    margin: 0 auto;
+  }
+
+  img {
+    border-radius: 5px;
+  }
+}
+
+.site-info {
+  float: left;
+
+  @include mobile {
+    float: none;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+.site-name {
+  margin: 0;
+  margin-top: 10px;
+  color: $darkGray;
+  cursor: pointer;
+  //font-family: $helveticaNeue;
+  font-family: "Open Sans";
+  font-weight: 300;
+  font-size: 56px;
+  // text-transform: uppercase;
+  letter-spacing: 1px;
+
+  a:hover,focus {
+    color: #d23235;
+    background-color: transparent;
+  }
+}
+
+.site-description {
+  margin: -5px 0 0 0;
+  color: $gray;
+  font-size: 16px;
+
+  @include mobile {
+    margin: 3px 0;
+  }
+}
+
+
+nav {
+  float: right;
+  margin-top: 32px; // @TODO: Vertically middle align
+  //font-family: $helveticaNeue;
+  font-family: "Open Sans";
+  // text-transform: uppercase;
+  font-size: 18px;
+
+  @include mobile {
+    float: none;
+    margin-top: 9px;
+    display: block;
+    font-size: 16px;
+  }
+
+  a {
+    margin-left: 20px;
+    //color: $darkGray;
+    color: #d23235;
+    text-align: right;
+    font-weight: 300;
+    letter-spacing: 1px;
+
+    @include mobile {
+      margin: 0 10px;
+      //color: $blue;
+    }
+
+    &:hover,focus {
+      color: $darkGray;
+      background-color: transparent;
+    }
+  }
+}
+
+//
+// .main
+//
+
+i {
+  color: $gray;
+}
+
+.posts > .post {
+  padding-bottom: 2em;
+  border-bottom: 1px solid $lightGray;
+}
+
+.posts > .post:last-child {
+  padding-bottom: 1em;
+  border-bottom: none;
+}
+
+.post {
+  float: clear;
+  width: 100%;
+  blockquote {
+    margin: 1.8em .8em;
+    //border-left: 2px solid $gray;
+    border-left: 2px solid #E34234;
+    padding: 0.1em 1em;
+    //color: $gray;
+    color: #d23235;
+    font-size: 22px;
+    font-style: italic;
+    letter-spacing: 1px;
+  }
+
+  .comments {
+    margin-top: 10px;
+  }
+
+  .read-more {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 18px;
+
+    a {
+      color: #d23235;
+
+      &:hover,focus {
+        color: #000;
+        background-color: transparent;
+      }
+    }
+  }
+}
+
+.wrapper-footer {
+  margin-top: 50px;
+  // border-top: 1px solid #ddd;
+  //background-color: $lightGray;
+  background: #fff;
+}
+
+footer {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.wrapper-pinned {
+  margin-bottom: 50px;
+  margin-top: 50px;
+ background-color: $lightGray;
+
+}
+
+.copyright {
+  font-size: 30px;
+
+  a {
+    color: #d23235;
+
+    &:hover,focus {
+      color: $darkGray;
+      background-color: transparent;
+    }
+  }
+}
+
+// Settled on moving the import of syntax highlighting to the bottom of the CSS
+// ... Otherwise it really bloats up the top of the CSS file and makes it difficult to find the start
+@import "highlights";
+@import "svg-icons";

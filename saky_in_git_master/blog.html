@@ -1,0 +1,51 @@
+---
+layout: default
+---
+
+<div class="posts">
+
+{% for post in site.posts %}
+  <!--<div class="cards" onclick="location.href='{{ site.baseurl }}{{ post.url }}';" style="cursor: pointer;">-->
+    <article class="post">
+
+      <h1 class="post-title"><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
+        <span class="date">
+        {{ post.date | date: "%B %e, %Y" }}
+        </span>
+      </h1>
+      <!-- <div class="user">
+        {% if post.user %} | {{ post.user }}{% endif %}
+      </div> -->
+
+      <!-- <div class="entry">
+      {% if post.image %}
+          <img src="{{ post.image }}" style="//margin-bottom: 10px;">
+        {% endif %} -->
+
+
+<!--
+<div class="wrapper-excerpt">
+<div class="label">
+ {{ post.label }}
+</div> -->
+<!-- <div class="excerpt">
+      <p class="preview">
+  {{ post.excerpt }}
+</p>
+ <p class="preview read-more">
+        <a href="{{ site.baseurl }}{{ post.url }}">More</a></p>
+<br>
+
+</div>
+</div>
+</div> -->
+
+<div class="clear"></div>
+    </article>
+
+<!--</div>-->
+
+  {% endfor %}
+
+
+</div>

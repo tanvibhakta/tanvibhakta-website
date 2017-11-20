@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% if page.title %}{{ page.title }} – {% endif %}{{ site.name }}{% if site.description %} – {{ site.description }}{% endif %}</title>
+    {% include meta.html %}
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/style.css" />
+    <link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/css/flexslider.css" />
+    <link rel="alternate" type="application/rss+xml" title="{{ site.name }} - {{ site.description }}" href="{{ site.baseurl }}/feed.xml" />
+  </head>
+
+  <body>
+    <!-- Forked from the excellent saky.in website -->
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          {% if site.avatar %}<a href="{{ site.baseurl }}/" class="site-avatar"><img src="{{ site.avatar }}" /></a>{% endif %}
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="{{ site.baseurl }}/">{{ site.name }}</a></h1>
+            <!--<p class="site-description">{{ site.description }}</p>-->
+          </div>
+
+          <nav>
+            <a href="{{ site.baseurl }}/blog">Blog</a>
+            <a href="https://docs.google.com/document/d/1iJz0Bw1ZOIdsTS0e2_ixi1FkIpOr8W-zmc4EUEe3XP8/edit?usp=sharing">Resume</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+    <div id="main" role="main" class="container">
+
+      {{ content }}
+      <!-- <br> -->
+    </div>
+
+      <div class="container">
+    <div class="wrapper-footer">
+        <footer class="footer">
+          <a href="mailto:mail@tanvibhakta.com">mail@tanvibhakta.com</a>
+          <!-- <p class="preview copyright"><a href="{{ site.baseurl }}/about#licensing">&copy;</a></p> -->
+        </footer>
+      </div>
+    </div>
+
+    <!-- {% include analytics.html %} -->
+  </body>
+</html>
