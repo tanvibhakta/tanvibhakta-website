@@ -7,8 +7,9 @@
 
 //TODO: nav bar alignment in mobile
 
-@import url(https://fonts.googleapis.com/css?family=Open+Sans);
-// @import url(https://fonts.googleapis.com/css?family=Open Sans);
+// @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800');
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300');
 @import "reset";
 @import "variables";
 // Syntax highlighting @import is at the bottom of this file
@@ -20,8 +21,8 @@
 html {
   font-size: 100%;
   font-family: "Open Sans";
-  font-weight: lighter;
-  //letter-spacing: 1.5px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
 }
 
 body {
@@ -29,12 +30,16 @@ body {
   background: #fff;
   //font: 18px/1.4 $helvetica;
   font: 18px/1.4;
-  font-weight: lighter;
+  font-weight: 400;
   color: $darkGray;
 }
 
 
 .container {
+
+  display: flex;
+  justify-content: center;
+
   margin: 0 auto;
   max-width: 740px;
   padding: 0 10px;
@@ -124,7 +129,7 @@ h1, h2, h3, h4, h5, h6 {
   //font-family: $helveticaNeue;
   font-family: "Open Sans";
   color: $darkerGray;
-  font-weight: bold;
+  font-style: bold;
 
   line-height: 1.7;
   margin: 1em 0 15px;
@@ -172,6 +177,26 @@ a {
   }
 }
 
+a {
+  margin-left: 20px;
+  //color: $darkGray;
+  color: #d23235;
+  text-align: right;
+  font-weight: 400;
+  letter-spacing: 1px;
+
+  @include mobile {
+    margin: 0 10px;
+    //color: $blue;
+  }
+
+  &:hover,focus {
+    color: $darkGray;
+    background-color: transparent;
+  }
+
+}
+
 ul, ol {
   margin: 15px 0;
   padding-left: 30px;
@@ -202,7 +227,7 @@ em, i {
 }
 
 strong, b {
-  font-weight: bold;
+  font-style: bold;
 }
 
 img {
@@ -216,7 +241,7 @@ img {
 
 .date {
   font-style: normal;
-  font-weight: normal;
+  font-weight: 300;
   font-size: 16px;
   font-family: "Open Sans";
   color: $gray;
@@ -287,7 +312,8 @@ img {
 }
 
 .site-info {
-  float: left;
+  // float: left;
+  flex-basis: auto;
 
   @include mobile {
     float: none;
@@ -302,12 +328,15 @@ img {
   color: $darkGray;
   cursor: pointer;
   //font-family: $helveticaNeue;
-  font-family: "Open Sans";
-  font-weight: 300;
+  font-family: "Roboto";
+  font-style: normal;
   font-size: 56px;
   // text-transform: uppercase;
   letter-spacing: 1px;
 
+  a {
+    font-weight: 100;
+  }
   a:hover,focus {
     color: #d23235;
     background-color: transparent;
@@ -326,7 +355,10 @@ img {
 
 
 nav {
-  float: right;
+  // float: right;
+  display: flex;
+  justify-content: center;
+  // flex-basis: auto;
   margin-top: 32px; // @TODO: Vertically middle align
   //font-family: $helveticaNeue;
   font-family: "Open Sans";
@@ -340,23 +372,8 @@ nav {
     font-size: 16px;
   }
 
-  a {
-    margin-left: 20px;
-    //color: $darkGray;
-    color: #d23235;
-    text-align: right;
-    font-weight: 300;
-    letter-spacing: 1px;
-
-    @include mobile {
-      margin: 0 10px;
-      //color: $blue;
-    }
-
-    &:hover,focus {
-      color: $darkGray;
-      background-color: transparent;
-    }
+  nav  a {
+    flex-basis: auto;
   }
 }
 
@@ -399,7 +416,7 @@ i {
 
   .read-more {
     text-transform: uppercase;
-    font-weight: bold;
+    font-style: bold;
     font-size: 18px;
 
     a {
@@ -443,6 +460,12 @@ footer {
       background-color: transparent;
     }
   }
+}
+
+.blurb {
+  // text-align: center;
+  flex-basis: auto;
+
 }
 
 // Settled on moving the import of syntax highlighting to the bottom of the CSS
