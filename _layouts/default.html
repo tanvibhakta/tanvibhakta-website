@@ -24,7 +24,7 @@
           </div>
 
           <nav>
-            <a href="{{ site.baseurl }}">Home</a>
+            <a href="{{ site.baseurl }}/">Home</a>
             <a href="{{ site.baseurl }}/blog">Blog</a>
             <a href="https://docs.google.com/document/d/1iJz0Bw1ZOIdsTS0e2_ixi1FkIpOr8W-zmc4EUEe3XP8/edit?usp=sharing">Resume</a>
           </nav>
@@ -37,20 +37,14 @@
       <!-- <br> -->
     </div>
 
-    {% ifhascontent footer %}
-      {% contentblock footer %}
-    {% endifhascontent %}
-
-    {% ifnothascontent footer %}
     <div class="container">
-  <div class="wrapper-footer">
+  <div class="wrapper-footer fixed-footer">
       <footer class="footer">
         <a href="{{ site.footer-links.email }}">{{ site.footer-links.email }}</a>
         <!-- <p class="preview copyright"><a href="{{ site.baseurl }}/about#licensing">&copy;</a></p> -->
       </footer>
     </div>
   </div>
-  {% endifnothascontent %}
 
     <!-- {% include analytics.html %} -->
   </body>
