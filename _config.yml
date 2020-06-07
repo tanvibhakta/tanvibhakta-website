@@ -9,26 +9,20 @@ name: Tanvi Bhakta
 #description:
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
-#avatar:
+avatar: https://avatars3.githubusercontent.com/u/13763558?s=400&u=553f0c467cd15a0add43022ab3927b0bd3caa772&v=4
 #
 # Flags below are optional
 #
 
 # Includes an icon in the footer for each username you enter
 footer-links:
-  dribbble:
   email: me@tanvibhakta.in
-  facebook:
-  flickr:
   github: tanvibhakta
   instagram: tanvibhakta
   linkedin:
-  pinterest:
   rss:
   twitter: padawanjack
-  stackoverflow: # your stackoverflow profile, e.g. "users/50476/bart-kiers"
   youtube: tanvibhakta
-  googleplus:
 
 # Enter your Disqus shortname (not your username) to enable commenting on posts
 # You can find your shortname on the Settings page of your Disqus account
@@ -39,7 +33,7 @@ google_analytics:
 
 # Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
 # Used for Sitemap.xml and your RSS feed
-url: rss.xml
+url: "https://tanvibhakta.in"
 
 # If you're hosting your site at a Project repository on GitHub pages
 # (http://yourusername.github.io/repository-name)
