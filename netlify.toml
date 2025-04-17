@@ -4,6 +4,15 @@
   status = 302
   force = true
 
+
 [[redirects]]
-  from = "/news"
-  to = "/"
+  from = "/resume/"
+  to = "https://tanvibhakta.in/resume.pdf"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/code/"
+  to = "https://github.com/tanvibhakta"
+  status = 301
+  force = true
