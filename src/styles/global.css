@@ -1,1 +1,22 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800");
+@import url('https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&display=swap');
 @import "tailwindcss";
+
+
+html {
+  font-family: "Open Sans", ui-sans-serif, system-ui;
+    color: oklch(26.9% 0 0); /*neutral-800*/
+}
+
+::selection {
+    color: oklch(98.5% 0 0); /*neutral-50*/
+    background: oklch(70.4% 0.191 22.216); /*red-400*/
+}
+
+a {
+    color: oklch(50.5% 0.213 27.518); /*red-800*/
+}
+
+@theme {
+    --font-literata: 'Literata', serif;
+}
