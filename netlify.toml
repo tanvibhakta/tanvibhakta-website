@@ -7,7 +7,7 @@
 
 [[redirects]]
   from = "/resume/"
-  to = "https://tanvibhakta.in/resume.pdf"
+  to = "/resume.pdf"
   status = 301
   force = true
 
