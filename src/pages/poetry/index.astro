@@ -1,0 +1,22 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+const allPoetry = await getCollection("poetry");
+---
+
+<Layout>
+  <h1>All poetry</h1>
+  <ul>
+    <p>
+      {
+        allPoetry.map((poem) => {
+          return (
+            <li>
+              <a href={`/poetry/${poem.id}`}>{poem.data.title}</a>
+            </li>
+          );
+        })
+      }
+    </p>
+  </ul>
+</Layout>

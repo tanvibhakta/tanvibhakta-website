@@ -8,5 +8,4 @@ excerpt:
 
 Slowly change your sleep cycle over the course of three days.
 
-
 What to wear and what that says about you.
