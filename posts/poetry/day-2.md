@@ -1,6 +1,7 @@
-# Day 2
-
-> Published on Apr 3, 2025
+---
+title: "Day 2"
+publishedOn: 03-04-2025
+---
 
 Talk to me, eternal love  
 We grow and we change  

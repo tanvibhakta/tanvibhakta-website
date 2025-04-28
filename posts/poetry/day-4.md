@@ -1,6 +1,7 @@
-# Day 4
-
-> Published on Apr 6, 2025
+---
+title: "Day 4"
+publishedOn: 06-04-2025
+---
 
 My ajjol didn't live with paintings  
 They lived with memories  

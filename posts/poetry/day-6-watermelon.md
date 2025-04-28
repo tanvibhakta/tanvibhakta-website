@@ -1,6 +1,7 @@
-# Day 6: Watermelon
-
-> Published on Apr 6, 2025
+---
+title: "Day 6: Watermelon"
+publishedOn: 06-04-2025
+---
 
 Splash  
 A pink cube  

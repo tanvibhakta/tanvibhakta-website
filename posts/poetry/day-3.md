@@ -1,6 +1,7 @@
-# Day 3
-
-> Published on Apr 3, 2025
+---
+title: "Day 3"
+publishedOn: 03-04-2025
+---
 
 I go up and down and have only one eye.  
 Who am I?

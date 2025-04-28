@@ -1,6 +1,7 @@
-# Day 8
-
-> Published on Apr 8, 2025
+---
+title: "Day 8"
+publishedOn: 08-04-2025
+---
 
 My parents  
  from Chikmagalur  

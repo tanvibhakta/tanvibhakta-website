@@ -1,6 +1,7 @@
-# Day 1
-
-> Published on Apr 3, 2025
+---
+title: "Day 1"
+publishedOn: 03-04-2025
+---
 
 I left you behind  
 ten years ago  
