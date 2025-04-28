@@ -1,4 +1,5 @@
-# Tanvi's web home 
+# Tanvi's web home
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/93203410-0cf6-43bd-8527-49e274e0e091/deploy-status)](https://app.netlify.com/sites/tanvibhakta/deploys)
 
 This project uses astro.

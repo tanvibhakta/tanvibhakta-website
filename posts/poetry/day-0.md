@@ -15,7 +15,6 @@ especially when he hasn't got his twenty minutes of extra special focused attent
 He desperately wants to be in my lap  
 but won't come unless I pull him in and plop him there
 
-
 His big yellow eyes close softly  
 Kissing my cheeks so gently  
 Is this a portrait of him? Or is he a portrait of me?
