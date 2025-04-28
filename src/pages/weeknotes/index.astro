@@ -1,0 +1,22 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+const allWeeknotes = await getCollection("weeknotes");
+---
+
+<Layout>
+  <h1>All poetry</h1>
+  <ul>
+    <p>
+      {
+        allWeeknotes.map((weeknote) => {
+          return (
+            <li>
+              <a href={`/weeknotes/${weeknote.id}`}>{weeknote.data.title}</a>
+            </li>
+          );
+        })
+      }
+    </p>
+  </ul>
+</Layout>

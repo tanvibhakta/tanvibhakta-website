@@ -1,0 +1,19 @@
+---
+import { getCollection, render } from "astro:content";
+import PoemLayout from "../../layouts/PoemLayout.astro";
+
+export async function getStaticPaths() {
+  const blogPosts = await getCollection("blog");
+  return blogPosts.map((blogPost) => ({
+    params: { title: blogPost.data.title, slug: blogPost.id },
+    props: { blogPost },
+  }));
+}
+
+const { blogPost } = Astro.props;
+const { Content } = await render(blogPost);
+---
+
+<PoemLayout frontmatter={blogPost.data}>
+  <Content />
+</PoemLayout>
