@@ -1,6 +1,7 @@
-# Week of Apr 9, 2025
-
-> Published on Apr 9, 2025
+---
+title: "Week of Apr 9, 2025"
+publishedOn: 09-04-2025
+---
 
 ## Work
 

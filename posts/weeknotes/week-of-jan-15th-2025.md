@@ -1,6 +1,7 @@
-# Week of Jan 15th, 2025
-
-> Published on Jan 15, 2025
+---
+title: "Week of Jan 15th, 2025"
+publishedOn: 15-01-2025
+---
 
 ## Work
 

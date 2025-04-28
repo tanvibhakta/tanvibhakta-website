@@ -1,6 +1,7 @@
-# Week of December 25th, 2024
-
-> Published on Dec 25, 2024
+---
+title: "Week of December 25th, 2024"
+publishedOn: 25-12-2024
+---
 
 ## work
 

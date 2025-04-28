@@ -1,6 +1,7 @@
-# Week of Dec 11th, 2024
-
-> Published on Dec 11, 2024
+---
+title: "Week of Dec 11th, 2024"
+publishedOn: 11-12-2024
+---
 
 ## Work
 

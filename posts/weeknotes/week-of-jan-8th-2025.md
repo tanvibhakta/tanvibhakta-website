@@ -1,6 +1,7 @@
-# Week of Jan 8th, 2025
-
-> Published on Jan 8, 2025
+---
+title: "Week of Jan 8th, 2025"
+publishedOn: 08-01-2025
+---
 
 ## Work
 

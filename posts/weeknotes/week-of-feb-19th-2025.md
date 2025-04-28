@@ -1,6 +1,7 @@
-# Week of Feb 19th, 2025
-
-> Published on Feb 19, 2025
+---
+title: "Week of Feb 19th, 2025"
+publishedOn: 19-02-2025
+---
 
 ## Life
 

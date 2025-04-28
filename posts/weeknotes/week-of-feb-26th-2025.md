@@ -1,6 +1,7 @@
-# Week of Feb 26th, 2025
-
-> Published on Feb 28, 2025
+---
+title: "Week of Feb 26th, 2025"
+publishedOn: 28-02-2025
+---
 
 ## Work
 

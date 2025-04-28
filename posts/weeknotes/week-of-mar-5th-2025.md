@@ -1,6 +1,7 @@
-# Week of Mar 5th, 2025
-
-> Published on Mar 7, 2025
+---
+title: "Week of Mar 5th, 2025"
+publishedOn: 07-03-2025
+---
 
 ## Work
 

@@ -1,6 +1,7 @@
-# Week of Jan 1st, 2025
-
-> Published on Jan 1, 2025
+---
+title: "Week of Jan 1st, 2025"
+publishedOn: 01-01-2025
+---
 
 # (lack of) Work leading to Life
 

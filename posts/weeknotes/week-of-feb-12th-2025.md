@@ -1,6 +1,7 @@
-# Week of Feb 12th, 2025
-
-> Published on Feb 12, 2025
+---
+title: "Week of Feb 12th, 2025"
+publishedOn: 12-02-2025
+---
 
 ## Work
 

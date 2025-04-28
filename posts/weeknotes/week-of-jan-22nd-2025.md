@@ -1,6 +1,7 @@
-# Week of Jan 22nd, 2025
-
-> Published on Jan 22, 2025
+---
+title: "Week of Jan 22nd, 2025"
+publishedOn: 22-01-2025
+---
 
 ## Work
 

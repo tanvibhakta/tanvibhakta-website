@@ -1,6 +1,7 @@
-# Week of Dec 18th, 2024
-
-> Published on Dec 18, 2024
+---
+title: "Week of Dec 18th, 2024"
+publishedOn: 18-12-2024
+---
 
 ## Life
 
