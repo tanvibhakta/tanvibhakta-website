@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800");
 @import url("https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&display=swap");
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 html {
   font-family: "Open Sans", ui-sans-serif, system-ui;
