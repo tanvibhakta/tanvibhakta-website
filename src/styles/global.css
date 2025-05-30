@@ -12,6 +12,15 @@ html {
   background: oklch(70.4% 0.191 22.216); /*red-400*/
 }
 
+@custom-variant mobile-landscape {
+  @media only screen and (( 
+ ((max-height: 990px) and (max-width: 560px)) or 
+  ((max-height: 560px) and (max-width: 990px)) ) 
+  and (orientation: landscape)) {
+    @slot;
+  }
+}
+
 a {
   color: oklch(50.5% 0.213 27.518); /*red-800*/
 }

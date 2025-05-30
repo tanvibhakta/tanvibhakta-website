@@ -1,12 +1,22 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
-import Body from "../components/Body.astro";
 import Footer from "../components/Footer.astro";
 ---
 
 <Layout>
-  <Header />
-  <Body />
-  <Footer />
+  <div class="w-screen min-h-screen flex flex-col justify-around items-center">
+    <Header />
+
+    <div class="justify-start mx-16 flex flex-col gap-2">
+      <p>I like technology.</p>
+      <p>I really like communities around technology.</p>
+      <p>I do Computer Science, and talk to people about it.</p>
+      <p>I can hold a tune.</p>
+      <p>I enjoy Tango.</p>
+      <p>I want to talk to you.</p>
+    </div>
+
+    <Footer />
+  </div>
 </Layout>
