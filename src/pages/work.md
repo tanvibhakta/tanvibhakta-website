@@ -1,3 +1,7 @@
+---
+layout: ../layouts/ProseLayout.astro
+---
+
 # Work
 
 [this page is a work-in-progress. It is available in the interest of building fast, in public, and all that other good stuff]
