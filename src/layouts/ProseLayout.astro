@@ -6,7 +6,9 @@ const { frontmatter } = Astro.props;
 // blog posts also should be treated differently.
 ---
 
-<Layout class="min-w-screen min-h-screen prose">
-  <h1>{frontmatter.title}</h1>
-  <slot />
+<Layout class="min-w-screen min-h-screen flex justify-center prose">
+  <div class="mx-8 md:w-1/2 leading-6">
+    <h1>{frontmatter.title}</h1>
+    <slot />
+  </div>
 </Layout>
