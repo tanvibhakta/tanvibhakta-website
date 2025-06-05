@@ -1,5 +1,6 @@
 ---
 import "/src/styles/global.css";
+const { class: className } = Astro.props;
 ---
 
 <html lang="en">
@@ -33,7 +34,7 @@ import "/src/styles/global.css";
         };
     </script>
   </head>
-  <body class="w-full h-full m-0 flex flex-col justify-around items-center">
+  <body class=`${className || ""}`>
     <slot />
   </body>
 </html>
