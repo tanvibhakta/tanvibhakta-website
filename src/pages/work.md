@@ -4,8 +4,6 @@ layout: ../layouts/ProseLayout.astro
 
 # Work
 
-[this page is a work-in-progress. It is available in the interest of building fast, in public, and all that other good stuff]
-
 I contract regularly and I am always open to talk about work!
 
 In the past, I have worked on
@@ -38,15 +36,16 @@ Here is an (inexhaustive) list of work I have done over the last few years.
 
 ## Appsmith
 
-Appsmith is a Series B funded, open source low-code platform. I was part of the inaugural design system team.
+[Appsmith](https://www.appsmith.com/) is an open-source low-code platform for tech power-users to quickly build internal tools. In order to unify several competing UX patterns around the app, increase polish, and pay down tech debt, a design system was necessary.
 
-- Built an exhaustive [design-system](https://github.com/appsmithorg/design-system/) to be complete, [accessible, well-tested, and correctly themed](https://design-system.appsmith.com/?path=/docs/ads-components-avatar--docs).
-- Refactored ~50k loc to [use the design system](LINK TO PR THAT DID THAT?) across all parts of the app
-- For ease of white-labelling, standardising UX language across the product
-- Set up processes to streamline work between various design teams and the engineers that use them
+- Built the [appsmith design system](https://github.com/appsmithorg/design-system/) to be complete, [accessible, well-tested, and correctly themed](https://design-system.appsmith.com/?path=/docs/ads-components-avatar--docs).
+- Refactored ~50k loc to use this system across all parts of the codebase, and upon release received no p0 or p1 bugs. This project was derisked by carrying out a similar effort in much smaller scope earlier in the process, implementing a type system across the app, and significantly increasing the org-wide standard for code that could be committed.
+- Set up processes to streamline design-dev handoff, and org-ds team hand-off.
 - Wrote documentation and tests for the design-system
 
 ## Sprinto
+
+Sprinto
 
 - Built a proof-of-concept around creating a design system and evaluated working with Ant Design for it
 
