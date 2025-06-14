@@ -34,23 +34,25 @@ Here is an (inexhaustive) list of work I have done over the last few years.
 
 ## Appsmith
 
+![Screengrab of the storybook containing all the components in the appsmith design system](../assets/images/appsmith-design-system.png)
+
 [Appsmith](https://www.appsmith.com/) is an open-source low-code platform for tech power users to quickly build internal tools. In order to unify several competing UX patterns around the app, increase polish, and pay down tech debt, a design system was necessary.
 
-- Built the [appsmith design system](https://github.com/appsmithorg/design-system/) to be complete, [accessible, well-tested, and correctly themed](https://design-system.appsmith.com/?path=/docs/ads-components-avatar--docs).
-- Refactored ~50k loc to use this system across all parts of the codebase, and upon release received no p0 or p1 bugs. This project was derisked by a set of smaller initiatives:
-  - carrying out a similar effort in a smaller scope earlier in the process
-  - fixing existing typescript errors
-  - enforcing stricter linter checks across the eng org
-- Set up processes to streamline hand-off between design<>dev using the design system components on Figma.
-- Wrote documentation and some tests for the design system.
+- We built the [appsmith design system](https://github.com/appsmithorg/design-system/) to be complete, [accessible, well-tested, and correctly themed](https://design-system.appsmith.com/?path=/docs/ads-components-avatar--docs).
+- We refactored ~50k loc to use this system across all parts of the codebase, and upon release received no p0 or p1 bugs. This project was derisked by a set of smaller initiatives:
+  - We carried out a similar effort in a smaller scope earlier in the process.
+  - I fixed existing typescript errors.
+  - I enforced stricter linter checks across the engineering organisation.
+- I set up processes to streamline hand-off between design<>dev using the design system components on Figma.
+- I wrote documentation and some tests for the design system.
 
 ## Sprinto
 
-[Sprinto](https://sprinto.com/) helps fast-growing cloud companies acquire security compliances (such as SOC2, ISO, GDPR, etc) by providing continuous monitoring and a centralized management dashboard. I helped
+[Sprinto](https://sprinto.com/) helps fast-growing cloud companies acquire security compliances (such as SOC2, ISO, GDPR, etc) by providing continuous monitoring and a centralized management dashboard.
 
-- Built a proof-of-concept around creating a design system on top of [ant.design](https://4x.ant.design/components/overview/).
-- set up clear guidelines for the shape of components, created a composable layout system for them, and refactored several existing components to be more generic and fit with the guidelines.
-- Set up a component storybook, and also a component UI testing workflow.
+- I built a proof-of-concept around creating a design system on top of [ant.design](https://4x.ant.design/components/overview/).
+- I set up clear guidelines for the shape of components, created a composable layout system for them, and refactored several existing components to be more generic and fit with the guidelines.
+- I set up a component storybook, and also a component UI testing workflow.
 
 ## Obvious/Wikipedia
 
@@ -58,6 +60,6 @@ Here is an (inexhaustive) list of work I have done over the last few years.
 
 As part of the web team, we worked with the New Readers Team at Wikipedia to help them [understand how to reach the next billion users](https://www.obvious.in/wikipedia).
 
-- Wrote a script to scrape about thirty articles from Wikipedia across three different languages
-- Built a mobile-first application with several unique UI components - eg: stories, interactive quizzes.
-- Ensured a seamless localised experience for Punjabi and Hindi users.
+- I wrote a script to scrape about thirty articles from Wikipedia across three different languages.
+- We built a mobile-first application with several unique UI components - eg: stories, interactive quizzes.
+- We ensured a seamless localised experience for Punjabi and Hindi users.
