@@ -25,6 +25,15 @@ a {
   color: oklch(50.5% 0.213 27.518); /*red-800*/
 }
 
+a:hover {
+  filter: brightness(0.8);
+  transition: filter 0.12s ease-in-out;
+}
+
+a:visited {
+  filter: brightness(0.9);
+}
+
 @theme {
   --font-literata: "Literata", serif;
 }
