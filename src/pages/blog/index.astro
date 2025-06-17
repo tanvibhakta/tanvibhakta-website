@@ -1,11 +1,14 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "../../layouts/Layout.astro";
+import ProseLayout from "../../layouts/ProseLayout.astro";
 const allBlogPosts = await getCollection("blog");
+
+const frontmatter = {
+  title: "Blogs",
+};
 ---
 
-<Layout class="prose">
-  <h1>Blog</h1>
+<ProseLayout frontmatter={frontmatter}>
   <ul>
     <p>
       {
@@ -19,4 +22,4 @@ const allBlogPosts = await getCollection("blog");
       }
     </p>
   </ul>
-</Layout>
+</ProseLayout>
