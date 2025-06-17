@@ -1,14 +1,18 @@
 ---
 import Layout from "./Layout.astro";
 const { frontmatter } = Astro.props;
-// one-off pages should have: flex flex-col items-center justify-center
-// long form pages (like my current work page, random notes dumps, etc, should have less margins and left justification
-// blog posts also should be treated differently.
+/** TODO: different formats for different kinds of pages
+- one-off pages should have: flex flex-col items-center justify-center
+- long form pages (like my current work page, random notes dumps, etc, should have less margins and left justification
+-  blog posts also should be treated differently.
+  */
 ---
 
-<Layout class="min-w-screen min-h-screen flex justify-center prose">
+<Layout
+  class="min-w-screen min-h-screen flex justify-center my-12 md:my-16 prose md:prose-lg ld:prose-xl prose-stone prose-headings:font-literata prose-headings:font-bold"
+>
   <div class="mx-8 md:w-1/2 leading-6">
-    <h1>{frontmatter.title}</h1>
+    {frontmatter.title && <h1>{frontmatter.title}</h1>}
     <slot />
   </div>
 </Layout>
