@@ -1,11 +1,17 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import ProseLayout from "../../layouts/ProseLayout.astro";
 const allPoetry = await getCollection("poetry");
+
+const frontmatter = {
+  title: "Poetry",
+};
 ---
 
-<Layout>
-  <h1>All poetry</h1>
+<ProseLayout frontmatter={frontmatter}>
+  <h2>Global Poetry Writing Month 2025</h2>
+  <a href={`/blog/global-poetry-writing-month-2025.md`}>Introductory post</a>
   <ul>
     <p>
       {
@@ -19,4 +25,10 @@ const allPoetry = await getCollection("poetry");
       }
     </p>
   </ul>
-</Layout>
+</ProseLayout>
+
+<style>
+  ul {
+    list-style: none;
+  }
+</style>
