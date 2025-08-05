@@ -1,6 +1,6 @@
 ---
 title: "Day 22"
-publishedOn: 22-04-2025
+publishedOn: 2025-04-22
 ---
 
 Nouv varsha Tanvi sakaali pode uTun yoga kartashile, tigel vastar iron kartashile, ani vattishele bhi, schoola vach kint pude!

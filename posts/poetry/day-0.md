@@ -1,6 +1,6 @@
 ---
 title: "Day 0"
-publishedOn: 03-04-2025
+publishedOn: 2025-04-03
 ---
 
 He is small and cute and  

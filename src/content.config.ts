@@ -5,7 +5,7 @@ const poetry = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/poetry/" }),
   schema: z.object({
     title: z.string(),
-    publishedOn: z.string(),
+    publishedOn: z.date(),
   }),
 });
 
@@ -21,7 +21,7 @@ const blog = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/blog/" }),
   schema: z.object({
     title: z.string(),
-    publishedOn: z.string(),
+    publishedOn: z.date(),
   }),
 });
 
