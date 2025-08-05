@@ -11,13 +11,19 @@ Bryan Adams on Saturday was excellent. Apart from getting there and getting back
 
 Jigsaw puzzles bought me peace this week. So did reaching for my RSS reader instead of social media as much as I could. I still have a phone screen time that is too high for comfort, but shifting it towards reading more intentionally and more long form was noticeably better for my mental health and overall peace. I did have one instance of staying up all night and obsessively [Sudoku](https://sudoku.coach/)-ing[^2] but eh, it happens and I hope it doesn’t again. Got some moderately bad news from the vet about one of the babies but it’s fixable. The beauty of having friends who live close to you and will bully you out of your house and into dinner and hot chocolate with marshmallows is highly underrated.
 
-## Media
+## Media Diet
 
-Music: Really like the [new Doechii album](https://open.spotify.com/album/60UzB8mOCMpc7xkuJE6Bwc?si=NGS_JsaNRuuJb7g9ueJc6Q). Didn’t realise Megan released [ACT 2](https://open.spotify.com/album/7KYpVsgw7yqbfmGBp9gYiR?si=qrHqXnxNRp6CibPTzWXxKA), so catching up on that. Also been vibing with the [Kruangbin](https://open.spotify.com/artist/2mVVjNmdjXZZDvhgQWiakk?si=7TpFye_rRvSQPzidx7cKCA)-esque music Spotify has been throwing at me. I would like to escape the algorithm though, so if y’all have reccs for good user-made playlist discovery for Spotify then please tell me how.
+### Listening
 
-TV: Watched The Devil wears Prada for the first time and whew, that was quite excellent I think! I did read the book forever ago and this is one of those rare instances where the move matches up to the experience, or is better!
+Really like the [new Doechii album](https://open.spotify.com/album/60UzB8mOCMpc7xkuJE6Bwc?si=NGS_JsaNRuuJb7g9ueJc6Q). Didn’t realise Megan released [ACT 2](https://open.spotify.com/album/7KYpVsgw7yqbfmGBp9gYiR?si=qrHqXnxNRp6CibPTzWXxKA), so catching up on that. Also been vibing with the [Kruangbin](https://open.spotify.com/artist/2mVVjNmdjXZZDvhgQWiakk?si=7TpFye_rRvSQPzidx7cKCA)-esque music Spotify has been throwing at me. I would like to escape the algorithm though, so if y’all have reccs for good user-made playlist discovery for Spotify then please tell me how.
 
-Reading: Finally finished my reread of [Nona the Ninth](https://www.goodreads.com/book/show/58662507-nona-the-ninth) - I was listening to the audiobook for the first time and Moira Quirk is a treasure. I heard the Dresden files audiobooks were really good, so I started and [immediately DNFed](https://www.goodreads.com/review/show/7086687581) it. I’m side-eying all of you who enjoy that mediocrity. Please send me audiobook recommendations narrated by a woman where both the book and the narration are actually good. Been enjoying [The Program](https://open.spotify.com/show/1ZQcGQMhrwF7MnXtFxt77z?si=a87c86dc37ea4d2d), a series recommended by [Nemo](https://captnemo.in/) at [RC co-working](https://captnemo.in/cowork/) one week. Revisiting [Getting Things Done](https://www.goodreads.com/book/show/22521573-getting-things-done) after a friend mentioned it offhand and now questioning if I read it at all in the first place.
+### Watching
+
+Watched The Devil wears Prada for the first time and whew, that was quite excellent I think! I did read the book forever ago and this is one of those rare instances where the move matches up to the experience, or is better!
+
+### Reading
+
+Finally finished my reread of [Nona the Ninth](https://www.goodreads.com/book/show/58662507-nona-the-ninth) - I was listening to the audiobook for the first time and Moira Quirk is a treasure. I heard the Dresden files audiobooks were really good, so I started and [immediately DNFed](https://www.goodreads.com/review/show/7086687581) it. I’m side-eying all of you who enjoy that mediocrity. Please send me audiobook recommendations narrated by a woman where both the book and the narration are actually good. Been enjoying [The Program](https://open.spotify.com/show/1ZQcGQMhrwF7MnXtFxt77z?si=a87c86dc37ea4d2d), a series recommended by [Nemo](https://captnemo.in/) at [RC co-working](https://captnemo.in/cowork/) one week. Revisiting [Getting Things Done](https://www.goodreads.com/book/show/22521573-getting-things-done) after a friend mentioned it offhand and now questioning if I read it at all in the first place.
 
 [^1]: Bangalore, please stop using concert venues that aren’t reachable via public transport, I’m begging you. The Madavara metro station has just opened up and NICE grounds is _right there._
 
