@@ -1,6 +1,6 @@
 ---
 title: "Week of December 25th, 2024"
-publishedOn: 25-12-2024
+publishedOn: 2024-12-25
 ---
 
 ## work

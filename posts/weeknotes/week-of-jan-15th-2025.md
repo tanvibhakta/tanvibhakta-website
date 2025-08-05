@@ -1,6 +1,6 @@
 ---
 title: "Week of Jan 15th, 2025"
-publishedOn: 15-01-2025
+publishedOn: 2025-01-15
 ---
 
 ## Work

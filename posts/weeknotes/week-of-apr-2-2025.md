@@ -1,6 +1,6 @@
 ---
 title: "Week of Apr 2, 2025"
-publishedOn: 02-04-2025
+publishedOn: 2025-04-02
 ---
 
 ## Work

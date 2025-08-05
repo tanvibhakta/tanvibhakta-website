@@ -1,6 +1,6 @@
 ---
 title: "Week of Dec 18th, 2024"
-publishedOn: 18-12-2024
+publishedOn: 2024-12-18
 ---
 
 ## Life

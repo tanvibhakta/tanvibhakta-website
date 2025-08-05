@@ -1,6 +1,6 @@
 ---
 title: "Week of Mar 5th, 2025"
-publishedOn: 07-03-2025
+publishedOn: 2025-03-07
 ---
 
 ## Work

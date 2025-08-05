@@ -1,6 +1,6 @@
 ---
 title: "Week of Feb 19th, 2025"
-publishedOn: 19-02-2025
+publishedOn: 2025-02-19
 ---
 
 ## Life

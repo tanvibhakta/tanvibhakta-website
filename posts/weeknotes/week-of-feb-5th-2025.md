@@ -1,6 +1,6 @@
 ---
 title: "Week of Feb 5th, 2025"
-publishedOn: 05-02-2025
+publishedOn: 2025-02-05
 ---
 
 ## Work

@@ -1,6 +1,6 @@
 ---
 title: "Week of Mar 19th, 2025"
-publishedOn: 19-03-2025
+publishedOn: 2025-03-19
 ---
 
 ## Work
