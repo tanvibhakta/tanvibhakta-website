@@ -1,6 +1,6 @@
 ---
 title: "Week of Mar 26, 2025"
-publishedOn: 26-03-2025
+publishedOn: 2025-03-26
 ---
 
 This note is significantly shorter than the others owing to a great deal of excitement on other things to do.

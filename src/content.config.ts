@@ -13,7 +13,7 @@ const weeknotes = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/weeknotes/" }),
   schema: z.object({
     title: z.string(),
-    publishedOn: z.string(),
+    publishedOn: z.date(),
   }),
 });
 

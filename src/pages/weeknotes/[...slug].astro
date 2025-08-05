@@ -3,8 +3,8 @@ import { getCollection, render } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 
 export async function getStaticPaths() {
-  const poetry = await getCollection("weeknotes");
-  return poetry.map((weeknote) => ({
+  const weeknotes = await getCollection("weeknotes");
+  return weeknotes.map((weeknote) => ({
     params: { title: weeknote.data.title, slug: weeknote.id },
     props: { weeknote },
   }));

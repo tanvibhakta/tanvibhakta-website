@@ -1,6 +1,6 @@
 ---
 title: "Week of 16 Apr, 2025"
-publishedOn: 18-04-2025
+publishedOn: 2025-04-18
 ---
 
 First off, applause for me please. I’ve been consistent with these weeknotes since the second week of December!

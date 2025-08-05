@@ -1,6 +1,6 @@
 ---
 title: "Week of Mar 12th, 2025"
-publishedOn: 12-03-2025
+publishedOn: 2025-03-12
 ---
 
 ## Life

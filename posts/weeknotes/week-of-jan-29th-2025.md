@@ -1,6 +1,6 @@
 ---
 title: "Week of Jan 29th, 2025"
-publishedOn: 29-01-2025
+publishedOn: 2025-01-29
 ---
 
 I’m late on this weeknote again. The weekend was excellent - I attended Bengawalk’s Cooke Town walkability assessment and also Visaka George’s workshop on creating ethical content. But the week itself has been pretty crap. I’ve had one of those terrible headaches for two days straight. I worked out but my brain hasn’t caught up. I’m ignoring friends who live far away, it feels like more effort than I have in me to keep up long distance relationships. I have been cheating on my social-media free diet by spending entirely too much time on reddit. Need to train my brain to be okay with spending effort and not being immediately rewarded.

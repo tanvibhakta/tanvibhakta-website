@@ -1,6 +1,6 @@
 ---
 title: "Week of Jan 1st, 2025"
-publishedOn: 01-01-2025
+publishedOn: 2025-01-01
 ---
 
 # (lack of) Work leading to Life
