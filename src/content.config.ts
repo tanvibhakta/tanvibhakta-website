@@ -1,28 +1,37 @@
 import { z, defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 
-const poetry = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./posts/poetry/" }),
-  schema: z.object({
-    title: z.string(),
-    publishedOn: z.date(),
-  }),
+// Common schema for all collections
+const collectionSchema = z.object({
+  title: z.string(),
+  publishedOn: z.date(),
+});
+
+// Manually define collections for now
+// TODO: Make this dynamic when Astro supports it better
+const blog = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./posts/blog/" }),
+  schema: collectionSchema,
 });
 
 const weeknotes = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/weeknotes/" }),
-  schema: z.object({
-    title: z.string(),
-    publishedOn: z.date(),
-  }),
+  schema: collectionSchema,
 });
 
-const blog = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./posts/blog/" }),
-  schema: z.object({
-    title: z.string(),
-    publishedOn: z.date(),
-  }),
+const poetry = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./posts/poetry/" }),
+  schema: collectionSchema,
 });
 
-export const collections = { poetry, weeknotes, blog };
+const digitalGarden = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./posts/digital-garden/" }),
+  schema: collectionSchema,
+});
+
+export const collections = {
+  blog,
+  weeknotes,
+  poetry,
+  digitalGarden,
+};

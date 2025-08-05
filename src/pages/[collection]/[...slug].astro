@@ -1,0 +1,43 @@
+---
+import { getCollection, render } from "astro:content";
+import ProseLayout from "../../layouts/ProseLayout.astro";
+
+export async function getStaticPaths() {
+  const paths: any[] = [];
+
+  // Manually define the collection mappings for now
+  const collectionMappings = [
+    { name: "blog", collection: "blog" },
+    { name: "weeknotes", collection: "weeknotes" },
+    { name: "poetry", collection: "poetry" },
+    { name: "digital-garden", collection: "digitalGarden" },
+  ];
+
+  for (const mapping of collectionMappings) {
+    try {
+      const posts = await getCollection(mapping.collection);
+
+      for (const post of posts) {
+        paths.push({
+          params: {
+            collection: mapping.name,
+            slug: post.id,
+          },
+          props: { post },
+        });
+      }
+    } catch (error) {
+      console.warn(`Failed to load collection ${mapping.collection}:`, error);
+    }
+  }
+
+  return paths;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<ProseLayout frontmatter={post.data}>
+  <Content />
+</ProseLayout>
