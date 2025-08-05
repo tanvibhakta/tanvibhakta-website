@@ -1,15 +1,20 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "../../layouts/Layout.astro";
-const allWeeknotes = await getCollection("weeknotes");
+import ProseLayout from "../../layouts/ProseLayout.astro";
+const sortedWeeknotes = (await getCollection("weeknotes")).sort(
+  (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
+);
+
+const frontmatter = {
+  title: "Weeknotes",
+};
 ---
 
-<Layout>
-  <h1>All poetry</h1>
+<ProseLayout frontmatter={frontmatter}>
   <ul>
     <p>
       {
-        allWeeknotes.map((weeknote) => {
+        sortedWeeknotes.map((weeknote) => {
           return (
             <li>
               <a href={`/weeknotes/${weeknote.id}`}>{weeknote.data.title}</a>
@@ -19,4 +24,10 @@ const allWeeknotes = await getCollection("weeknotes");
       }
     </p>
   </ul>
-</Layout>
+</ProseLayout>
+
+<style>
+  ul {
+    list-style: none;
+  }
+</style>
