@@ -3,13 +3,13 @@ title: "Week of December 25th, 2024"
 publishedOn: 2024-12-25
 ---
 
-## work
+## Work
 
 I'm doing some small contract work for a friend. It's hard to price myself well to someone i respect. Need to figure out my rates for self-funded projects, retainers, and perpetual pricing better.
 
 I'm also considering writing work in the interest of getting better at it. I've done really well this week. I have three drafts ready - one travelogue, one book review, and one bit of fanfction, which I'm most excited about.
 
-## health
+## Health
 
 Went to the gym and fucked around with a friend last Wednesday. It was SO much fun, I need to do more. Unfortunately the rest of the week has been a wash with movement - i had a cold on Thu Fri Sat, was busy on Sun then stayed up all night which means Mon was about recovery. Then immediately got my period. Now it's Wednesday night again and I haven't yet worked out. It's the first time in 8 weeks that I haven't even once, and I'm very sad about breaking my streak. I had a pocket on Sunday that I should have just taken. I did walk around a lot on Sunday evening and Tuesday morning so I did get some movement in, but my callouses are fading away and I don't like it.
 
@@ -18,7 +18,7 @@ Giant pimple, red left eye since Tuesday morning, unclear why. Maybe mascara?
 
 Routine has been good, but I still haven't chipped away at the boss that is General Anxiety.
 
-## life
+## Life
 
 It continues to be fulfilling to reach for an rss feed or a kindle instead of social media.
 
@@ -30,14 +30,14 @@ I don't want to throw a party randomly. I want it to mark an occasion. Organized
 
 ## Media Diet
 
-### Music
+### Listening
 
-The SCIENCE album by incubus is so weird and so wonderful- nothing like their radio-frirndly pop-rock hits at all! More please.
+The [SCIENCE](https://open.spotify.com/album/0XC5hMpEFLDSuRxc5bVtIZ?si=V7i89_HFRQusP7DROLTxxQ) album by incubus is so weird and so wonderful- nothing like their radio-frirndly pop-rock hits at all! More please.
 
 ### Reading
 
-I lost my noise cancelling ear phone :( so I haven't made any progress on any audiobooks.
+I lost my noise cancelling ear phones :( so I haven't made any progress on any audiobooks.
 
-I continue reading The Jinnbot of Shantiport. There's a brand of absurdism around it that I'm not entirely sure is intentional. But I think I'll be seeing it to it's end.
+I continue reading [The Jinnbot of Shantiport](https://www.goodreads.com/book/show/65211707-the-jinn-bot-of-shantiport). There's a brand of absurdism around it that I'm not entirely sure is intentional. But I think I'll be seeing it to it's end.
 
 I also read 150,000 words of Drarry fanfiction and 150,000 words of Yuri! On Ice fanfiction. No, i didn't know what Yuri! On Ice was before this, but I will now be defending Yuuri/Viktor with my life.

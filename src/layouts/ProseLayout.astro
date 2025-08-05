@@ -12,7 +12,7 @@ const { frontmatter } = Astro.props;
   class="min-w-screen min-h-screen flex justify-center my-12 md:my-16 prose md:prose-lg ld:prose-xl prose-stone prose-headings:font-literata prose-headings:font-bold"
 >
   <div class="mx-8 md:w-1/2 leading-6">
-    {frontmatter.title && <h1>{frontmatter.title}</h1>}
+    {frontmatter?.title && <h1>{frontmatter.title}</h1>}
     <slot />
   </div>
 </Layout>

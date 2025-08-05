@@ -1,29 +1,41 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 const sortedWeeknotes = (await getCollection("weeknotes")).sort(
   (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
 );
 
-const frontmatter = {
-  title: "Weeknotes",
-};
+const latestWeeknote = sortedWeeknotes[0];
+const previousWeeknotes = sortedWeeknotes.slice(1);
+const { Content } = await render(latestWeeknote);
 ---
 
-<ProseLayout frontmatter={frontmatter}>
-  <ul>
-    <p>
-      {
-        sortedWeeknotes.map((weeknote) => {
-          return (
-            <li>
-              <a href={`/weeknotes/${weeknote.id}`}>{weeknote.data.title}</a>
-            </li>
-          );
-        })
-      }
-    </p>
-  </ul>
+<ProseLayout>
+  {
+    latestWeeknote && (
+      <article>
+        <h1>{latestWeeknote.data.title}</h1>
+        <Content />
+      </article>
+    )
+  }
+
+  {
+    previousWeeknotes.length > 0 && (
+      <section>
+        <h2>Previous weeknotes</h2>
+        <ul>
+          {previousWeeknotes.map((weeknote) => {
+            return (
+              <li>
+                <a href={`/weeknotes/${weeknote.id}`}>{weeknote.data.title}</a>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    )
+  }
 </ProseLayout>
 
 <style>
