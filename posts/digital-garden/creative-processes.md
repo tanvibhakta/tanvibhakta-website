@@ -1,7 +1,9 @@
 ---
-title: "Digital Garden: Creative processes"
+title: "Creative processes"
 publishedOn: 2025-07-19
 ---
+
+This garden attempts to document how I approach my various creative activities.
 
 ## Weeknotes
 

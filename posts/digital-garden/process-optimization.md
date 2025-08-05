@@ -1,9 +1,10 @@
 ---
-title: "Digital Garden: process optimization"
+title: "process optimization"
 publishedOn: 2025-07-14
+lastUpdateOn: 2025-07-14
 ---
 
-This garden will contain notes for various hacks, scripts, systems, and configurations I build/tweak/deploy to make some part of existing in a world with technology easier for me.
+This garden will contain notes for various hacks, scripts, systems, and configurations I build/tweak/deploy to make some part of existing in a world with technology easier for me. Here, I document a few optimzations to make my life easy.
 
 Headings that don't have body text are yet to be started.
 Sometimes things will be in progress, and marked as such.
