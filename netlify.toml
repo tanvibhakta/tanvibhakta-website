@@ -1,8 +1,8 @@
-[[redirects]]
-  from = "/weeknotes/"
-  to = "https://tanvibhakta.mataroa.blog"
-  status = 302
-  force = true
+# [[redirects]]
+#   from = "/weeknotes/"
+#   to = "https://tanvibhakta.mataroa.blog"
+#   status = 302
+#   force = true
 
 
 [[redirects]]

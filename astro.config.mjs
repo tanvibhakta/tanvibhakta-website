@@ -12,10 +12,10 @@ export default defineConfig({
   },
 
   redirects: {
-    '/weeknotes': {
-      status: 302,
-      destination: 'https://tanvibhakta.mataroa.blog'
-    },
+    // '/weeknotes': {
+    //   status: 302,
+    //   destination: 'https://tanvibhakta.mataroa.blog'
+    // },
     '/resume': {
       status: 301,
       destination: '/resume.pdf'
