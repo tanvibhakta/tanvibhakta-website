@@ -5,7 +5,7 @@ publishedOn: 2025-07-16
 
 ## Work
 
-I started 4 small projects last week. Then I started a [digital garden](https://maggieappleton.com/garden-history/) about [some of it](/digital-garden/digital-garden-process-optimization). Then I got sick so haven't made progress on any of them. Now I feel terrible.
+I started 4 small projects last week. Then I started a [digital garden](https://maggieappleton.com/garden-history/) about [some of it](/digital-garden/process-optimization). Then I got sick so haven't made progress on any of them. Now I feel terrible.
 
 ## Health
 
@@ -64,4 +64,4 @@ More [murderbot](https://www.imdb.com/title/tt30444310/), yummy
 1. Atharva’s [start with AI](https://blog.nilenso.com/blog/2025/06/23/how-i-keep-up-with-ai-progress/) post on the Nilenso blog
 2. Ratika’s [7-day challenges](https://chavanniclass.wordpress.com/2025/07/13/sixteen-7-day-challenges/) - I love doing series of challenges and I might do something like this one day too. Have added it to the to-do list.
 
-I am not spending enough time in the [feed reader I spent time setting up](/digital-garden/digital-garden-consuming-the-web)!
+I am not spending enough time in the [feed reader I spent time setting up](/digital-garden/consuming-the-web)!
