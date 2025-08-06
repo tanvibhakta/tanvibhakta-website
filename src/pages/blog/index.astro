@@ -1,10 +1,13 @@
 ---
 import { getCollection } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
-const allBlogPosts = await getCollection("blog");
+
+const sortedBlogPosts = (await getCollection("blog")).sort(
+  (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
+);
 
 const frontmatter = {
-  title: "Blogs",
+  title: "Blog",
 };
 ---
 
@@ -12,10 +15,17 @@ const frontmatter = {
   <ul>
     <p>
       {
-        allBlogPosts.map((blogPost) => {
+        sortedBlogPosts.map((blogPost) => {
           return (
             <li>
               <a href={`/blog/${blogPost.id}`}>{blogPost.data.title}</a>
+              <span class="date">
+                {blogPost.data.publishedOn.toLocaleDateString("en-US", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </span>
             </li>
           );
         })
@@ -23,3 +33,15 @@ const frontmatter = {
     </p>
   </ul>
 </ProseLayout>
+
+<style>
+  ul {
+    list-style: none;
+  }
+
+  .date {
+    font-size: 0.9rem;
+    font-variant: small-caps;
+    margin-left: 0.5rem;
+  }
+</style>
