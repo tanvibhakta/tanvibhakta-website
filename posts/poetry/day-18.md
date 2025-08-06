@@ -1,6 +1,6 @@
 ---
 title: "Day 18"
-publishedOn: 18-04-2025
+publishedOn: 2025-04-18
 ---
 
 You taught me how to handle a nano  

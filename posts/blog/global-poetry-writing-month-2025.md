@@ -1,6 +1,6 @@
 ---
 title: "Global Poetry Writing Month 2025"
-publishedOn: 03-04-2025
+publishedOn: 2025-04-03
 ---
 
 I’ll be attempting to follow along with [GloPoWriMo](https://www.napowrimo.net/) this year with a subset of my writing group. As [Shruti](https://www.shrutisunderraman.com/) astutely observed, I’ve made some of my best art when I wasn’t afraid to embrace (or wasn’t aware of) my cringe. Writing poetry is Cringe with a capital C, especially when forced and for no discernible purpose, so I’m excited to see what comes up!

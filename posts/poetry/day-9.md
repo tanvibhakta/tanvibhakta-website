@@ -1,6 +1,6 @@
 ---
 title: "Day 9"
-publishedOn: 09-04-2025
+publishedOn: 2025-04-09
 ---
 
 I've been told that I should rhyme  

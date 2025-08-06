@@ -1,6 +1,6 @@
 ---
 title: "Nobody needs 23 types of deodorant"
-publishedOn: 10-02-2025
+publishedOn: 2025-02-10
 ---
 
 From the [comments section of an LWN article](https://lwn.net/Articles/994149/)

@@ -1,6 +1,6 @@
 ---
 title: "Day 15"
-publishedOn: 15-04-2025
+publishedOn: 2025-04-15
 ---
 
 In the muddy waters of my childhood  

@@ -1,6 +1,6 @@
 ---
 title: "Day 7"
-publishedOn: 07-04-2025
+publishedOn: 2025-04-07
 ---
 
 I am not a set of known variables and understood constraints  

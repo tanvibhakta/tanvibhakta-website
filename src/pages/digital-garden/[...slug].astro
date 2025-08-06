@@ -1,0 +1,19 @@
+---
+import { getCollection, render } from "astro:content";
+import ProseLayout from "../../layouts/ProseLayout.astro";
+
+export async function getStaticPaths() {
+  const gardenPosts = await getCollection("digitalGarden");
+  return gardenPosts.map((post) => ({
+    params: { title: post.data.title, slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<ProseLayout frontmatter={post.data}>
+  <Content />
+</ProseLayout>

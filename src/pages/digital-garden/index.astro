@@ -1,0 +1,71 @@
+---
+import { getCollection } from "astro:content";
+import ProseLayout from "../../layouts/ProseLayout.astro";
+
+const sortedGardenPosts = (await getCollection("digitalGarden")).sort(
+  (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
+);
+
+// Helper function to extract first paragraph from markdown content
+function extractFirstParagraph(content: string): string {
+  const lines = content.split("\n");
+  let firstParagraph = "";
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    // Skip empty lines and headers
+    if (trimmed === "" || trimmed.startsWith("#")) continue;
+
+    // Found first non-empty, non-header line
+    firstParagraph = trimmed;
+    break;
+  }
+
+  return firstParagraph || "";
+}
+
+// Get descriptions for all posts
+const postsWithDescriptions = await Promise.all(
+  sortedGardenPosts.map(async (post) => {
+    let description = post.data.description;
+
+    if (!description) {
+      // Extract first paragraph from the raw markdown body
+      description = extractFirstParagraph(post.body);
+    }
+
+    return { ...post, description };
+  }),
+);
+---
+
+<ProseLayout>
+  <h1>Digital Garden</h1>
+
+  {
+    postsWithDescriptions.length > 0 && (
+      <section>
+        <ul>
+          {postsWithDescriptions.map((post) => {
+            return (
+              <li>
+                <a href={`/digital-garden/${post.id}`}>{post.data.title}</a>
+                {post.description && <p>{post.description}</p>}
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    )
+  }
+</ProseLayout>
+
+<style>
+  ul {
+    list-style: none;
+  }
+
+  a {
+    text-transform: capitalize;
+  }
+</style>

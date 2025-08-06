@@ -5,7 +5,7 @@ publishedOn: 2025-06-11
 
 ## Work
 
-I am getting more deeply into figuring out exactly how code agents can (and cannot) help augment my developer workflow - tentative thoughts [here](https://tanvibhakta.mataroa.blog/blog/thoughts-on-ai-june-2025/), and most of my reading to this end is from [simon willison’s blog](https://simonwillison.net/). More opinions welcome.
+I am getting more deeply into figuring out exactly how code agents can (and cannot) help augment my developer workflow - tentative thoughts [here](/blog/thoughts-on-ai-june-2025), and most of my reading to this end is from [simon willison’s blog](https://simonwillison.net/). More opinions welcome.
 
 I am taking active calls with people to figure out my next consulting gig - it is so much fun going into calls with people knowing I can handle a lot more than I did the last time I did this. I love growing in work and life. It’s almost the same feeling as travelling for a week and coming back to the gym realising you can lift 25kg instead of 20kg now.
 
