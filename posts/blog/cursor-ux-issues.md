@@ -1,3 +1,8 @@
+---
+title: "Issues with the cursor UX"
+publishedOn: 2025-08-07
+---
+
 I used cursor for a month for code work, using the claude.com interface only for one-off conversations or larger planning work. 
 
 I have several nits to pick with the cursor team.
