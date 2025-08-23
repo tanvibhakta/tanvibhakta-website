@@ -3,8 +3,6 @@ title: "Week of Aug 23rd, 2025"
 publishedOn: 2025-08-23
 ---
 
-# Week of Aug 23rd, 2025
-
 My weeknote days so far have been Wednesdays. It worked great because on short contracts or when I’m funemployed I have the flexibility to schedule two hours on a Wednesday to reflect, write, publish. I’m changing it to Saturday now.
 
 ## Work
