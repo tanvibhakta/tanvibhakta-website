@@ -2,7 +2,7 @@ import type { APIRoute, GetStaticPaths } from "astro";
 import {
   generateCollectionFeed,
   getEligibleCollections,
-} from "../../utils/feeds";
+} from "../../config/feeds";
 import { collections } from "../../content.config";
 
 type CollectionName = keyof typeof collections;
