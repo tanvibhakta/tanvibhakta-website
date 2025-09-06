@@ -4,22 +4,6 @@
 
 This project uses astro.
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
 ## 🧞 Commands
 
 All commands are run from the root of the project, from a terminal:
@@ -32,3 +16,17 @@ All commands are run from the root of the project, from a terminal:
 | `npm run preview`         | Preview your build locally, before deploying     |
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
+
+## 📜 Custom Scripts
+
+### transform-files.cjs
+
+Transforms Mataroa blog export files to Astro-compatible frontmatter format.
+
+**Example:**
+
+```bash
+node src/utils/transform-files.cjs posts/weeknotes
+```
+
+This script converts Mataroa's markdown format (with title and date in the content) to Astro's YAML frontmatter format. It can be run multiple times safely on the same files.
