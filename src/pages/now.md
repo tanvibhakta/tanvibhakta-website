@@ -4,9 +4,10 @@ layout: ../layouts/ProseLayout.astro
 
 # Now
 
-I’m turning 28 this year. I continue to love living with my 3 cats and a large number of good friends within a 30 minute auto ride distance.
+I’m 28 years old. I live with my 3 cats and a large number of good friends within a 30 minute auto ride distance.
 
 I’m [continuing to contract out](https://tanvibhakta.in/work/) to engineering teams that are looking for talent for well-scoped projects - though these days I’m moving out of my design system niche into broader engineering roles. I’d like to lead a project and/or a team.
+I am working on a project until the end of November but am likely to have availability after that and would like to talk to you!
 
 I’ve been thinking a lot about cognitive independence. To that end, I’ve spent some time over the last few months getting off of traditional social media, setting up this ~~blog~~ home to my web presence, and am attempting to syndicate back to where people are from here.
 
