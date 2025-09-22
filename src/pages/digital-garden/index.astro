@@ -37,9 +37,13 @@ const postsWithDescriptions = await Promise.all(
     return { ...post, description };
   }),
 );
+
+const frontmatter = {
+  title: "Digital Garden",
+};
 ---
 
-<ProseLayout>
+<ProseLayout frontmatter={frontmatter}>
   <h1>Digital Garden</h1>
 
   {
