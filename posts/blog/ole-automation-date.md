@@ -1,6 +1,6 @@
 ---
 title: "OLE Automation Date"
-publishedOn: 2025-08-07
+publishedOn: 2025-09-22
 ---
 
 TIL about the `[Excel serial date number](https://support.microsoft.com/en-us/office/date-systems-in-excel-e7fe7167-48a9-4b96-bb53-5612a800b487)` format.
