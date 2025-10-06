@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 
 const sortedGardenPosts = (await getCollection("digitalGarden")).sort(
-  (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
+  (a, b) => b.data.lastUpdatedOn.getTime() - a.data.lastUpdatedOn.getTime(),
 );
 
 // Helper function to extract first paragraph from markdown content

@@ -28,7 +28,7 @@ const digitalGarden = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/digital-garden/" }),
   schema: collectionSchema.extend({
     description: z.string().optional(),
-    lastUpdatedOn: z.date().optional(),
+    lastUpdatedOn: z.date(),
   }),
 });
 

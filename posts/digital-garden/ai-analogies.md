@@ -1,7 +1,7 @@
 ---
 title: "AI Analogies"
 publishedOn: 2025-10-06
-modifiedOn: 2025-10-06
+lastUpdatedOn: 2025-10-06
 ---
 
 Ai and plastics (Sohom)

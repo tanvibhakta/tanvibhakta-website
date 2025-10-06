@@ -1,6 +1,7 @@
 ---
 title: "Consuming the web"
 publishedOn: 2025-07-08
+lastUpdatedOn: 2025-07-08
 ---
 
 There exists a web to consume outside of the Big Four of social media. Here is my process of figuring out how to consume it.
