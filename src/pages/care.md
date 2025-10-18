@@ -44,16 +44,48 @@ It might also be worthwhile to encourage me to leave my location, and walk aroun
 
 June 2025 edit: I am off of gluten and dairy for the next two months to observe the effect it has on my inflammation. All food and ordering options will need to be screened for this and I might run out of options and get frustrated faster. All food options in the above categories are indicative. If you could actively suggest items that fit the scenario that are also gluten/dairy free (or can be modified to be so) that would be incredible.
 
-## General pain days
+## Pain
 
-If the pain is actively concentrated in/around the neck and shoulder,
+### Concentrated around the neck and shoulder
 
 - cold compress with cotton wrapped around it, pressed to area of pain
 - hot water pack pressed to place
 - dynamic stretches
-  - If I have time and haven’t showered yet, my full calisthenics warm up routine - just to get the blood flowing
+  - If I have time and haven’t showered yet, [my full calisthenics]() warm up routine - just to get the blood flowing
   - neck rotations, direction stretches
   - loose jumps, arm swings, shoulder cars
   - Yuri’s shoulder stretches
 
-For general pain,
+If you know how to identify knots and can offer to remove them for me, that is very helpful during this time. I will not ask for you to do this unless I’m in a large amount of pain, but if you notice me massaging myself and offer - even if it’s just a thirty-second quick rub - know that it goes a long way.
+
+### Headache
+
+Hydration is the biggest one here. If I mention I have a headache coming up and you hand me a bottle of electral[1], I will love you forever.
+
+I could also have a headache if I haven’t eaten. See [Food](). I am more likely to eat food I am handed than seek it out myself.
+
+Can I breathe properly? When was the last time I saline cleansed my nose? If I don’t have my spray with me (there’s generally one in the car) can/should I take an antihistamine?
+
+Sometimes the headache is an offshoot of the neck/shoulder pain, in which case the cold press often really helps.
+
+### Right arm pain
+
+The right neck/shoulder is disproportionately affected by my redacted, and often leads to pain in the whole arm on flare days[2] or on high usage days[3]. It helps to hold hot things (mugs!) or cold things (I will keep an ice pack around)
+
+### general pain
+
+- have I taken a muscle relaxant?
+- I used to take lots of crocins, but I’ve stopped. Strangely, the coffee from caffeine or tea bothers me but in a Crocin or saridon helps with the pain.
+
+## General advice
+
+Hot water will make lots of things better[4]. Electral will make better what hot water alone will not.
+Ice packs are best wrapped in a bit of cotton cloth - one of my slips from the laundry bag is just fine, or one of the nice kitchen towels.
+
+[1]: The only correct electral is the WHO formula one, available in powder form to mix in water for Rs. 4/- (makes 200ml) and Rs. 20/- (makes 1L) respectively. In general if I am feeling unwell of any kind electral is a good helper.
+
+[2]: Flares are not a separate topic here because they can't be treated. We can only get rid of the individual symptoms, not the flare as a whole. The flares are cyclic. Sometimes they will be responses to osmething going on in my life. Sometimes they will exist for no reason. We just have to remember that we've had flares before and they've all gone away eventually, so this one will too.
+
+[3]: High usage days are when I'm typing/gaming/using my phone for long hours.
+
+[4]: The correct temperature to drink hot water is 55C (this is why I own a temperature controlled kettle)
