@@ -60,7 +60,7 @@ If you know how to identify knots and can offer to remove them for me, that is v
 
 ### Headache
 
-Hydration is the biggest one here. If I mention I have a headache coming up and you hand me a bottle of electral[1], I will love you forever.
+Hydration is the biggest one here. If I mention I have a headache coming up and you hand me a bottle of electral[^1], I will love you forever.
 
 I could also have a headache if I haven’t eaten. See [Food](). I am more likely to eat food I am handed than seek it out myself.
 
@@ -70,7 +70,7 @@ Sometimes the headache is an offshoot of the neck/shoulder pain, in which case t
 
 ### Right arm pain
 
-The right neck/shoulder is disproportionately affected by my redacted, and often leads to pain in the whole arm on flare days[2] or on high usage days[3]. It helps to hold hot things (mugs!) or cold things (I will keep an ice pack around)
+The right neck/shoulder is disproportionately affected by my redacted, and often leads to pain in the whole arm on flare days[^2] or on high usage days[^3]. It helps to hold hot things (mugs!) or cold things (I will keep an ice pack around)
 
 ### general pain
 
@@ -79,13 +79,13 @@ The right neck/shoulder is disproportionately affected by my redacted, and often
 
 ## General advice
 
-Hot water will make lots of things better[4]. Electral will make better what hot water alone will not.
+Hot water will make lots of things better[^4]. Electral will make better what hot water alone will not.
 Ice packs are best wrapped in a bit of cotton cloth - one of my slips from the laundry bag is just fine, or one of the nice kitchen towels.
 
-[1]: The only correct electral is the WHO formula one, available in powder form to mix in water for Rs. 4/- (makes 200ml) and Rs. 20/- (makes 1L) respectively. In general if I am feeling unwell of any kind electral is a good helper.
+[^1]: The only correct electral is the WHO formula one, available in powder form to mix in water for Rs. 4/- (makes 200ml) and Rs. 20/- (makes 1L) respectively. In general if I am feeling unwell of any kind electral is a good helper.
 
-[2]: Flares are not a separate topic here because they can't be treated. We can only get rid of the individual symptoms, not the flare as a whole. The flares are cyclic. Sometimes they will be responses to osmething going on in my life. Sometimes they will exist for no reason. We just have to remember that we've had flares before and they've all gone away eventually, so this one will too.
+[^2]: Flares are not a separate topic here because they can't be treated. We can only get rid of the individual symptoms, not the flare as a whole. The flares are cyclic. Sometimes they will be responses to osmething going on in my life. Sometimes they will exist for no reason. We just have to remember that we've had flares before and they've all gone away eventually, so this one will too.
 
-[3]: High usage days are when I'm typing/gaming/using my phone for long hours.
+[^3]: High usage days are when I'm typing/gaming/using my phone for long hours.
 
-[4]: The correct temperature to drink hot water is 55C (this is why I own a temperature controlled kettle)
+[^4]: The correct temperature to drink hot water is 55C (this is why I own a temperature controlled kettle)
