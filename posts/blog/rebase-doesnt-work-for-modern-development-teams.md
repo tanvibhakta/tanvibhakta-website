@@ -3,9 +3,7 @@ title: "Rebase doesn't work for modern development teams"
 publishedOn: 2025-10-18
 ---
 
-# Rebase doesn’t work for modern development teams
-
-Note: this is an opinionated post I wrote to try and understand my own thinking. I welcome opinions and my own as held here are subject to change.
+Note: this is an opinionated post I wrote to try and understand my own thinking. I welcome opinions. My own as held here are subject to change.
 
 I don’t think teams should standardise on using git rebase. I think it’s a fantastic idea in theory, but most teams shouldn’t use it.
 
