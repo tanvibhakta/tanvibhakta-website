@@ -3,7 +3,7 @@ import * as cheerio from "cheerio";
 import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs";
-import { exec } from "child_process";
+import { execSync } from "child_process";
 
 //TODO: https://linear.app/tanvibhakta-website/issue/TBW-44/query-all-external-links-periodically-and-add-a-little-[broken-link]
 const IGNORE_EXTERNAL = true;
@@ -79,7 +79,7 @@ async function findHtmlFiles(distDir: string): Promise<string[]> {
 
 describe("check links", () => {
   test("All internal links in built files are valid", async () => {
-    exec("npm run build");
+    execSync("pnpm run build", { stdio: "inherit" });
 
     const distDir = path.resolve(
       path.dirname(fileURLToPath(import.meta.url)),
