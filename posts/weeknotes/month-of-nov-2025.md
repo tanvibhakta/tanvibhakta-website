@@ -61,12 +61,12 @@ This has been a good month for reading. This list is evenly split between audiob
 
 - [Dracula](https://www.goodreads.com/book/show/17245.Dracula) (The full cast version is your best bet here)
 - [This is how you lose the time war](https://www.goodreads.com/book/show/43352954-this-is-how-you-lose-the-time-war)
-- [Everything is tuberculosis](www.goodreads.com/book/show/220341389-everything-is-tuberculosis)
-- [Make Room for love](www.goodreads.com/book/show/221285493-make-room-for-love)
-- [Turn back time](www.goodreads.com/book/show/116278.Turn_Back_Time)
-- [Gender Queer](www.goodreads.com/book/show/42837514-gender-queer)
+- [Everything is tuberculosis](https://www.goodreads.com/book/show/220341389-everything-is-tuberculosis)
+- [Make Room for love](https://www.goodreads.com/book/show/221285493-make-room-for-love)
+- [Turn back time](https://www.goodreads.com/book/show/116278.Turn_Back_Time)
+- [Gender Queer](https://www.goodreads.com/book/show/42837514-gender-queer)
 - about 350,000 words of fan fiction
-- [It has no name](www.goodreads.com/book/show/58550556-it-has-no-name)
+- [It has no name](https://www.goodreads.com/book/show/58550556-it-has-no-name)
 
 Some reviews on [my goodreads profile](https://www.goodreads.com/tanvibhakta)!
 
