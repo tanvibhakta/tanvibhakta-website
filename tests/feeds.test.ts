@@ -5,7 +5,7 @@ import {
   isCollectionExcludedFromMainFeed,
   getEligibleCollections,
   getMainFeedEligibleCollections,
-} from "../src/utils/feeds";
+} from "../src/config/feeds";
 
 // Mock the astro:content module
 vi.mock("astro:content", () => ({
