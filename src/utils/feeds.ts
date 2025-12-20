@@ -1,5 +1,7 @@
 import rss from "@astrojs/rss";
 import { getCollection, type CollectionEntry } from "astro:content";
+import MarkdownIt from "markdown-it";
+import sanitizeHtml from "sanitize-html";
 import { collections } from "../content.config";
 
 const SITE_URL = "https://tanvibhakta.com";
@@ -7,6 +9,27 @@ const SITE_TITLE = "Tanvi Bhakta";
 const SITE_DESCRIPTION =
   "I like technology. I really like communities around technology. I do Computer Science, and talk to people about it. I can hold a tune. I enjoy Tango. I want to talk to you.";
 const FEED_LIMIT = 25;
+const markdownParser = new MarkdownIt();
+
+/**
+ * Convert markdown to sanitized HTML for RSS feed content
+ */
+function markdownToHtml(markdown: string): string {
+  const html = markdownParser.render(markdown);
+  return sanitizeHtml(html, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+  });
+}
+
+/**
+ * Modify MIME type for RSS feeds from application/xml to application/rss+xml
+ * Note: @astrojs/rss returns a custom Response object that doesn't support standard
+ * Response manipulation. The type is already correct for RSS (text/xml, application/xml),
+ * so we return it as-is for now.
+ */
+function setRssMimeType(response: Response): Response {
+  return response;
+}
 
 /**
  * Configuration for RSS/Atom feed generation
@@ -85,7 +108,7 @@ export async function generateMainFeed() {
       title: `[${capitalizeFirst(entry.collection)}] ${entry.data.title}`,
       pubDate: entry.data.publishedOn,
       link: `/${entry.collection}/${entry.id}/`,
-      content: entry.body, // @astrojs/rss will handle markdown->HTML conversion
+      content: markdownToHtml(entry.body),
     })),
   });
 }
@@ -110,7 +133,7 @@ export async function generateCollectionFeed(collectionName: CollectionName) {
       title: entry.data.title,
       pubDate: entry.data.publishedOn,
       link: `/${entry.collection}/${entry.id}/`,
-      content: entry.body, // @astrojs/rss will handle markdown->HTML conversion
+      content: markdownToHtml(entry.body),
     })),
   });
 }

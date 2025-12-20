@@ -5,6 +5,8 @@ import {
   isCollectionExcludedFromMainFeed,
   getEligibleCollections,
   getMainFeedEligibleCollections,
+  generateMainFeed,
+  generateCollectionFeed,
 } from "../src/utils/feeds";
 
 // Mock the astro:content module
@@ -35,6 +37,33 @@ vi.mock("@astrojs/rss", () => ({
       }),
   ),
 }));
+
+// Mock markdown-it and sanitize-html
+vi.mock("markdown-it", () => {
+  return {
+    default: vi.fn(function () {
+      this.render = vi.fn((md: string) => {
+        // Simple markdown to HTML conversion for testing
+        let html = md;
+        html = html.replace(/^# (.*?)$/gm, "<h1>$1</h1>");
+        html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        html = html.replace(/^([^\n]+)$/gm, "<p>$1</p>");
+        return html;
+      });
+      return this;
+    }),
+  };
+});
+
+vi.mock("sanitize-html", () => {
+  const sanitizeDefault = vi.fn((html: string) => html);
+  sanitizeDefault.defaults = {
+    allowedTags: ["b", "i", "em", "strong", "p", "br"],
+  };
+  return {
+    default: sanitizeDefault,
+  };
+});
 
 // Mock the content config to avoid import issues
 vi.mock("../src/content.config", () => ({
@@ -155,5 +184,50 @@ describe("Feed Configuration", () => {
       expect(collections).toEqual(["blog", "weeknotes", "digitalGarden"]);
       expect(collections).not.toContain("poetry");
     });
+  });
+});
+
+describe("Feed Content Generation", () => {
+  beforeEach(async () => {
+    FEED_CONFIG.excludedCollections = [];
+    FEED_CONFIG.excludeFromMainFeed = [];
+
+    // Reset mocks before each test
+    const { getCollection: mockGetCollection } = await import("astro:content");
+    const rssModule = await import("@astrojs/rss");
+    vi.mocked(mockGetCollection).mockReset();
+    vi.mocked(rssModule.default).mockReset();
+  });
+
+  it("should render markdown content to HTML in feed items", async () => {
+    const { getCollection: mockGetCollection } = await import("astro:content");
+    const rssModule = await import("@astrojs/rss");
+    const mockRss = vi.mocked(rssModule.default);
+
+    // Mock content with markdown
+    const mockBlogEntry = {
+      id: "test-post",
+      collection: "blog",
+      data: {
+        title: "Test Post",
+        publishedOn: new Date("2025-01-01"),
+      },
+      body: "# Hello World\n\nThis is a **test** post with markdown.",
+    };
+
+    vi.mocked(mockGetCollection).mockResolvedValueOnce([mockBlogEntry]);
+
+    await generateMainFeed();
+
+    // Check what was passed to the rss function
+    expect(mockRss).toHaveBeenCalled();
+    const callArgs = mockRss.mock.calls[0][0];
+    const feedItems = callArgs.items;
+
+    // Verify the content is HTML, not markdown
+    expect(feedItems[0].content).toContain("<h1>");
+    expect(feedItems[0].content).toContain("<strong>");
+    expect(feedItems[0].content).not.toContain("# Hello World");
+    expect(feedItems[0].content).not.toContain("**test**");
   });
 });
