@@ -4,7 +4,7 @@ import MarkdownIt from "markdown-it";
 import sanitizeHtml from "sanitize-html";
 import { collections } from "../content.config";
 
-const SITE_URL = "https://tanvibhakta.com";
+const SITE_URL = "https://tanvibhakta.in";
 const SITE_TITLE = "Tanvi Bhakta";
 const SITE_DESCRIPTION =
   "I like technology. I really like communities around technology. I do Computer Science, and talk to people about it. I can hold a tune. I enjoy Tango. I want to talk to you.";
