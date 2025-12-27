@@ -25,7 +25,7 @@ I was woken from the nap by reports that Jamun had puked and was terribly low en
 
 I was reflecting with a friend that while my health has been pretty shit for the last year or so, and will continue to be shit for the foreseeable future, it isn’t actually volatile. I’ve gotten to a place where I know and am familiar with the rhythms of my body. I’m not healthy but my health is _stable_. That is very important and comforting to me.
 
-# Life
+## Life
 
 I cooked a lot this week. It helped that I was working from home, and that I wasn’t very tired from my work.
 
