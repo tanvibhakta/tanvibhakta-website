@@ -13,6 +13,12 @@ Since my last weeknote (two weeks ago) where I was stressing about interviewing 
 
 The BIG thing that happened this week is that I [finally](http://localhost:4323/weeknotes/week-of-december-25th-2024) threw a Christmas party. Lots of new friends showed up, and I did feel a little overwhelmed, but more people than I expected came early and really made themselves at home. I loved having people in my house, and I loved that my house could hold so many people. I think this is going to be a biannual event - the next one will possibly be in May :)
 
+Some data  
+4: days to plan party  
+9: instamart orders made during the course of the party  
+16: bottles of wine mulled  
+29: Number of people who showed up (including me!)
+
 Parties need
 
 1. A theme
@@ -21,12 +27,6 @@ Parties need
 4. Someone to run a group activity
 5. Some kind of make your own food station
    and everything else will get figured out eventually.
-
-Some data
-4: days to plan party
-9: instamart orders made during the course of the party
-16: bottles of wine mulled
-29: Number of people who showed up (including me!)
 
 ---
 
