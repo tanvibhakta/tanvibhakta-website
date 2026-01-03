@@ -11,7 +11,7 @@ Since my last weeknote (two weeks ago) where I was stressing about interviewing 
 
 ## Life
 
-The BIG thing that happened this week is that I [finally](http://localhost:4323/weeknotes/week-of-december-25th-2024) threw a Christmas party. Lots of new friends showed up, and I did feel a little overwhelmed, but more people than I expected came early and really made themselves at home. I loved having people in my house, and I loved that my house could hold so many people. I think this is going to be a biannual event - the next one will possibly be in May :)
+The BIG thing that happened this week is that I [finally](/weeknotes/week-of-december-25th-2024) threw a Christmas party. Lots of new friends showed up, and I did feel a little overwhelmed, but more people than I expected came early and really made themselves at home. I loved having people in my house, and I loved that my house could hold so many people. I think this is going to be a biannual event - the next one will possibly be in May :)
 
 Some data  
 4: days to plan party  
