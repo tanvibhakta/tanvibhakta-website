@@ -8,9 +8,13 @@ const sortedWeeknotes = (await getCollection("weeknotes")).sort(
 const latestWeeknote = sortedWeeknotes[0];
 const previousWeeknotes = sortedWeeknotes.slice(1);
 const { Content } = await render(latestWeeknote);
+
+const frontmatter = {
+  title: "Weeknotes",
+};
 ---
 
-<ProseLayout>
+<ProseLayout frontmatter={frontmatter}>
   {
     latestWeeknote && (
       <article>
