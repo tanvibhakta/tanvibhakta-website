@@ -8,7 +8,10 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest",
-    "prepare": "husky"
+    "prepare": "husky",
+    "worktree:create": "./scripts/worktree.sh",
+    "worktree:list": "git worktree list",
+    "worktree:delete": "./scripts/worktree-delete.sh"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.1",
