@@ -63,12 +63,10 @@ if [ -d "$REPO_ROOT/.claude" ]; then
   echo "  - Copied .claude/"
 fi
 
-# Copy node_modules if it exists
-if [ -d "$REPO_ROOT/node_modules" ]; then
-  echo "  - Copying node_modules/ (this may take a moment)..."
-  cp -r "$REPO_ROOT/node_modules" "$WORKTREE_PATH/node_modules"
-  echo "  - Copied node_modules/"
-fi
+# Install dependencies in the new worktree
+echo "  - Installing dependencies..."
+(cd "$WORKTREE_PATH" && pnpm install)
+echo "  - Installed node_modules/"
 
 echo ""
 echo -e "${GREEN}Done! To enter and start Claude:${NC}"
