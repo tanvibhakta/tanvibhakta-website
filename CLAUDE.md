@@ -4,11 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-- `npm run dev` - Start local development server at localhost:4321
-- `npm run build` - Build production site to ./dist/
-- `npm run preview` - Preview build locally before deploying
-- `npm test` - Run tests with Vitest
-- `npm run astro` - Run Astro CLI commands
+See README.md for the full list of commands including dev server, build, test, and git worktree scripts.
 
 ## Project Architecture
 
@@ -49,9 +45,8 @@ Uses Tailwind CSS 4.x with @tailwindcss/vite plugin and @tailwindcss/typography 
 
 ### Code Quality
 
-- ESLint with TypeScript support configured in eslint.config.js
-- Prettier formatting with lint-staged for pre-commit hooks
-- Husky for git hooks
+- ESLint with TypeScript support configured in `eslint.config.js`
+- Prettier + lint-staged + Husky for pre-commit formatting and tests (see README for details)
 
 ## Development Notes
 
