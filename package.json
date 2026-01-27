@@ -11,7 +11,9 @@
     "prepare": "husky",
     "worktree:create": "./scripts/worktree.sh",
     "worktree:list": "git worktree list",
-    "worktree:delete": "./scripts/worktree-delete.sh"
+    "worktree:delete": "./scripts/worktree-delete.sh",
+    "weeknotes:new": "node scripts/new-content.ts weeknotes",
+    "blog:new": "node scripts/new-content.ts blog"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.1",
