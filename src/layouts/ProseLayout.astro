@@ -1,6 +1,43 @@
 ---
 import Layout from "./Layout.astro";
+import { shortenWeeknoteTitles } from "../utils/date-helpers";
+
 const { frontmatter } = Astro.props;
+
+const path = Astro.url.pathname;
+let formattedTitle = "";
+
+const category = path.split("/").filter(Boolean)[0];
+
+if (frontmatter?.title) {
+  let displayTitle = frontmatter.title;
+
+  const isIndexPage =
+    frontmatter.title.toLowerCase() === category?.toLowerCase();
+
+  if (category === "weeknotes" && !isIndexPage) {
+    displayTitle = shortenWeeknoteTitles(frontmatter.title);
+  }
+
+  if (!isIndexPage) {
+    if (category === "blog" || category === "poetry") {
+      const categorySuffix =
+        category.charAt(0).toUpperCase() + category.slice(1);
+      formattedTitle = `${displayTitle} | ${categorySuffix}`;
+    } else if (category === "weeknotes") {
+      formattedTitle = `${displayTitle} | Weeknote`;
+    } else {
+      formattedTitle = displayTitle;
+    }
+  } else {
+    formattedTitle = displayTitle;
+  }
+} else {
+  formattedTitle = category
+    ? category.charAt(0).toUpperCase() + category.slice(1)
+    : "";
+}
+
 /** TODO: different formats for different kinds of pages
 - one-off pages should have: flex flex-col items-center justify-center
 - long form pages (like my current work page, random notes dumps, etc, should have less margins and left justification
@@ -9,6 +46,7 @@ const { frontmatter } = Astro.props;
 ---
 
 <Layout
+  title={formattedTitle}
   class="min-w-screen min-h-screen flex justify-center my-12 md:my-16 prose md:prose-lg ld:prose-xl prose-stone prose-headings:font-literata prose-headings:font-bold"
 >
   <div class="mx-8 md:w-1/2 leading-6">
