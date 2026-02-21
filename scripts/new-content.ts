@@ -87,7 +87,7 @@ function main() {
     console.log(`Created: ${collection.dir}/${filename}`);
   }
 
-  execSync(`webstorm "${filePath}"`, { stdio: "inherit" });
+  execSync(`zed "${filePath}"`, { stdio: "inherit" });
 }
 
 main();
