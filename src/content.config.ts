@@ -11,7 +11,9 @@ const collectionSchema = z.object({
 // TODO: Make this dynamic when Astro supports it better
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/blog/" }),
-  schema: collectionSchema,
+  schema: collectionSchema.extend({
+    draft: z.boolean().optional(),
+  }),
 });
 
 const weeknotes = defineCollection({
