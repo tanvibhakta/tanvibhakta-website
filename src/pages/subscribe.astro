@@ -6,11 +6,30 @@ import ProseLayout from "../layouts/ProseLayout.astro";
 const feeds = [
   { name: "All posts", url: "https://tanvibhakta.in/feed.xml" },
   { name: "Blog", url: "https://tanvibhakta.in/blog/feed.xml" },
-  { name: "Weeknotes", url: "https://tanvibhakta.in/weeknotes/feed.xml" },
-  { name: "Poetry", url: "https://tanvibhakta.in/poetry/feed.xml" },
   {
     name: "Digital Garden",
     url: "https://tanvibhakta.in/digitalGarden/feed.xml",
+  },
+  { name: "Poetry", url: "https://tanvibhakta.in/poetry/feed.xml" },
+  { name: "Weeknotes", url: "https://tanvibhakta.in/weeknotes/feed.xml" },
+];
+
+const lists = [
+  {
+    id: "6dce4",
+    value: "6dce4528-b942-4509-9442-6ca3eaa7bba3",
+    label: "All posts",
+  },
+  { id: "acb8d", value: "acb8d095-57c2-450c-8cab-a68af5c30054", label: "Blog" },
+  {
+    id: "d21fe",
+    value: "d21fe761-f360-4da2-a22b-4a73ca094849",
+    label: "Quarterly digest",
+  },
+  {
+    id: "60287",
+    value: "602876b6-cfc8-4b52-a61b-5506c146edd4",
+    label: "Weeknotes",
   },
 ];
 ---
@@ -46,7 +65,7 @@ const feeds = [
   </ul>
 
   <h2>Email</h2>
-  <p>You can also follow by email.</p>
+  <p>You can also route my new posts to your email inbox.</p>
 
   <form
     id="subscribe-form"
@@ -74,46 +93,20 @@ const feeds = [
       />
     </p>
 
-    <p class="mb-2">
-      <input
-        id="6dce4"
-        type="checkbox"
-        name="l"
-        class="rounded border-stone-300 text-stone-800 focus:ring-stone-500"
-        value="6dce4528-b942-4509-9442-6ca3eaa7bba3"
-      />
-      <label for="6dce4">All posts</label>
-    </p>
-    <p class="mb-2">
-      <input
-        id="60287"
-        type="checkbox"
-        name="l"
-        class="rounded border-stone-300 text-stone-800 focus:ring-stone-500"
-        value="602876b6-cfc8-4b52-a61b-5506c146edd4"
-      />
-      <label for="60287">Weeknotes</label>
-    </p>
-    <p class="mb-2">
-      <input
-        id="acb8d"
-        type="checkbox"
-        name="l"
-        class="rounded border-stone-300 text-stone-800 focus:ring-stone-500"
-        value="acb8d095-57c2-450c-8cab-a68af5c30054"
-      />
-      <label for="acb8d">Blog</label>
-    </p>
-    <p class="mb-4">
-      <input
-        id="d21fe"
-        type="checkbox"
-        name="l"
-        class="rounded border-stone-300 text-stone-800 focus:ring-stone-500"
-        value="d21fe761-f360-4da2-a22b-4a73ca094849"
-      />
-      <label for="d21fe">Quarterly digest</label>
-    </p>
+    {
+      lists.map((list, i) => (
+        <p class={i === lists.length - 1 ? "mb-4" : "mb-2"}>
+          <input
+            id={list.id}
+            type="checkbox"
+            name="l"
+            class="rounded border-stone-300 text-stone-800 focus:ring-stone-500"
+            value={list.value}
+          />
+          <label for={list.id}>{list.label}</label>
+        </p>
+      ))
+    }
 
     <input
       type="submit"
