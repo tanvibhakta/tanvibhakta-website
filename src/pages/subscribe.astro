@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon/components";
 import ProseLayout from "../layouts/ProseLayout.astro";
 
 const feeds = [
@@ -17,8 +18,9 @@ const feeds = [
   <h2>RSS</h2>
   <p>
     RSS lets you keep up with the updates on this blog without giving out your
-    email.
-    <a href="https://aboutfeeds.com">Here's how to get started.</a>
+    email. If you're unfamiliar with using them, <a
+      href="https://aboutfeeds.com">here's how to get started.</a
+    >
   </p>
 
   <ul class="list-none pl-0">
@@ -34,20 +36,7 @@ const feeds = [
             data-url={feed.url}
             aria-label={`Copy ${feed.name} feed URL`}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-            </svg>
+            <Icon name="lucide:copy" size={16} />
           </button>
           <span class="copied-msg text-sm text-stone-500 hidden">Copied!</span>
         </li>
