@@ -1,0 +1,16 @@
+---
+interface Props {
+  id?: string;
+  class?: string;
+}
+
+const { id, class: className } = Astro.props;
+---
+
+<span
+  id={id}
+  class:list={["feedback-msg text-sm text-stone-500 hidden", className]}
+  aria-live="polite"
+>
+  <slot />
+</span>

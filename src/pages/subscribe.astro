@@ -1,9 +1,10 @@
 ---
 import { Icon } from "astro-icon/components";
+import FeedbackMessage from "../components/FeedbackMessage.astro";
 import ProseLayout from "../layouts/ProseLayout.astro";
 
 const feeds = [
-  { name: "Everything", url: "https://tanvibhakta.in/feed.xml" },
+  { name: "All posts", url: "https://tanvibhakta.in/feed.xml" },
   { name: "Blog", url: "https://tanvibhakta.in/blog/feed.xml" },
   { name: "Weeknotes", url: "https://tanvibhakta.in/weeknotes/feed.xml" },
   { name: "Poetry", url: "https://tanvibhakta.in/poetry/feed.xml" },
@@ -38,7 +39,7 @@ const feeds = [
           >
             <Icon name="lucide:copy" size={16} />
           </button>
-          <span class="copied-msg text-sm text-stone-500 hidden">Copied!</span>
+          <FeedbackMessage>Copied!</FeedbackMessage>
         </li>
       ))
     }
@@ -48,6 +49,7 @@ const feeds = [
   <p>You can also follow by email.</p>
 
   <form
+    id="subscribe-form"
     method="post"
     action="https://epi.stic.earth/subscription/form"
     class="listmonk-form"
@@ -114,6 +116,7 @@ const feeds = [
       value="Subscribe"
       class="bg-stone-800 text-stone-100 px-4 py-2 rounded cursor-pointer hover:bg-stone-700"
     />
+    <FeedbackMessage id="subscribe-status" />
   </form>
 
   <p>
@@ -124,18 +127,62 @@ const feeds = [
 </ProseLayout>
 
 <script>
+  function showFeedback(el: Element, message?: string, duration = 2000) {
+    if (message) el.textContent = message;
+    el.classList.remove("hidden");
+    setTimeout(() => el.classList.add("hidden"), duration);
+  }
+
+  // Copy buttons
   document.querySelectorAll(".copy-btn").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const url = btn.getAttribute("data-url");
       if (!url) return;
 
       await navigator.clipboard.writeText(url);
-
       const msg = btn.nextElementSibling;
-      if (msg) {
-        msg.classList.remove("hidden");
-        setTimeout(() => msg.classList.add("hidden"), 2000);
-      }
+      if (msg) showFeedback(msg);
     });
+  });
+
+  // Subscribe form
+  const form = document.getElementById("subscribe-form") as HTMLFormElement;
+  const status = document.getElementById("subscribe-status")!;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = (form.querySelector('[name="email"]') as HTMLInputElement)
+      .value;
+    const name = (form.querySelector('[name="name"]') as HTMLInputElement)
+      .value;
+    const listUuids = Array.from(
+      form.querySelectorAll<HTMLInputElement>('[name="l"]:checked'),
+    ).map((cb) => cb.value);
+
+    if (listUuids.length === 0) {
+      showFeedback(status, "Please select at least one list.", 4000);
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, name, list_uuids: listUuids }),
+      });
+
+      if (res.ok) {
+        showFeedback(status, "You're subscribed!");
+      } else {
+        showFeedback(status, "Something went wrong. Please try again.", 4000);
+      }
+    } catch {
+      showFeedback(
+        status,
+        "Could not reach the server. Please try again.",
+        4000,
+      );
+    }
   });
 </script>
