@@ -1,0 +1,152 @@
+---
+import ProseLayout from "../layouts/ProseLayout.astro";
+
+const feeds = [
+  { name: "Everything", url: "https://tanvibhakta.in/feed.xml" },
+  { name: "Blog", url: "https://tanvibhakta.in/blog/feed.xml" },
+  { name: "Weeknotes", url: "https://tanvibhakta.in/weeknotes/feed.xml" },
+  { name: "Poetry", url: "https://tanvibhakta.in/poetry/feed.xml" },
+  {
+    name: "Digital Garden",
+    url: "https://tanvibhakta.in/digitalGarden/feed.xml",
+  },
+];
+---
+
+<ProseLayout frontmatter={{ title: "Keep up with me" }}>
+  <h2>RSS</h2>
+  <p>
+    RSS lets you keep up with the updates on this blog without giving out your
+    email.
+    <a href="https://aboutfeeds.com">Here's how to get started.</a>
+  </p>
+
+  <ul class="list-none pl-0">
+    {
+      feeds.map((feed) => (
+        <li class="flex items-center gap-2 flex-wrap">
+          <span class="min-w-40">{feed.name}</span>
+          <a href={feed.url} class="text-sm break-all">
+            {feed.url}
+          </a>
+          <button
+            class="copy-btn cursor-pointer border-none bg-transparent p-1 text-stone-500 hover:text-stone-800 transition-colors"
+            data-url={feed.url}
+            aria-label={`Copy ${feed.name} feed URL`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+          </button>
+          <span class="copied-msg text-sm text-stone-500 hidden">Copied!</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2>Email</h2>
+  <p>You can also follow by email.</p>
+
+  <form
+    method="post"
+    action="https://epi.stic.earth/subscription/form"
+    class="listmonk-form"
+  >
+    <input type="hidden" name="nonce" />
+
+    <p class="mb-3">
+      <input
+        type="email"
+        name="email"
+        required
+        placeholder="E-mail"
+        class="w-full border border-stone-300 rounded px-3 py-2"
+      />
+    </p>
+    <p class="mb-3">
+      <input
+        type="text"
+        name="name"
+        placeholder="Name (optional)"
+        class="w-full border border-stone-300 rounded px-3 py-2"
+      />
+    </p>
+
+    <p class="mb-2">
+      <input
+        id="6dce4"
+        type="checkbox"
+        name="l"
+        value="6dce4528-b942-4509-9442-6ca3eaa7bba3"
+      />
+      <label for="6dce4">All posts</label>
+    </p>
+    <p class="mb-2">
+      <input
+        id="60287"
+        type="checkbox"
+        name="l"
+        value="602876b6-cfc8-4b52-a61b-5506c146edd4"
+      />
+      <label for="60287">Weeknotes</label>
+    </p>
+    <p class="mb-2">
+      <input
+        id="acb8d"
+        type="checkbox"
+        name="l"
+        value="acb8d095-57c2-450c-8cab-a68af5c30054"
+      />
+      <label for="acb8d">Blog</label>
+    </p>
+    <p class="mb-4">
+      <input
+        id="d21fe"
+        type="checkbox"
+        name="l"
+        value="d21fe761-f360-4da2-a22b-4a73ca094849"
+      />
+      <label for="d21fe">Quarterly digest</label>
+    </p>
+
+    <input
+      type="submit"
+      value="Subscribe"
+      class="bg-stone-800 text-stone-100 px-4 py-2 rounded cursor-pointer hover:bg-stone-700"
+    />
+  </form>
+
+  <p>
+    As usual, you can email me at <a href="mailto:me@tanvibhakta.in"
+      >me@tanvibhakta.in</a
+    > to talk about anything.
+  </p>
+</ProseLayout>
+
+<script>
+  document.querySelectorAll(".copy-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const url = btn.getAttribute("data-url");
+      if (!url) return;
+
+      await navigator.clipboard.writeText(url);
+
+      const msg = btn.nextElementSibling;
+      if (msg) {
+        msg.classList.remove("hidden");
+        setTimeout(() => msg.classList.add("hidden"), 2000);
+      }
+    });
+  });
+</script>

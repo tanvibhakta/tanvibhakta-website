@@ -23,3 +23,9 @@
   to = "https://github.com/tanvibhakta"
   status = 301
   force = true
+
+[[redirects]]
+  from = "/api/subscribe"
+  to = "https://epi.stic.earth/api/public/subscription"
+  status = 200
+  force = true
