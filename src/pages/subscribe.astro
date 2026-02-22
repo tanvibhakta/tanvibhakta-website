@@ -62,7 +62,7 @@ const feeds = [
         name="email"
         required
         placeholder="E-mail"
-        class="w-full border border-stone-300 rounded px-3 py-2"
+        class="w-full rounded border-stone-300 focus:border-stone-500 focus:ring-stone-500"
       />
     </p>
     <p class="mb-3">
@@ -70,7 +70,7 @@ const feeds = [
         type="text"
         name="name"
         placeholder="Name (optional)"
-        class="w-full border border-stone-300 rounded px-3 py-2"
+        class="w-full rounded border-stone-300 focus:border-stone-500 focus:ring-stone-500"
       />
     </p>
 
@@ -79,6 +79,7 @@ const feeds = [
         id="6dce4"
         type="checkbox"
         name="l"
+        class="rounded border-stone-300 text-stone-800 focus:ring-stone-500"
         value="6dce4528-b942-4509-9442-6ca3eaa7bba3"
       />
       <label for="6dce4">All posts</label>
@@ -88,6 +89,7 @@ const feeds = [
         id="60287"
         type="checkbox"
         name="l"
+        class="rounded border-stone-300 text-stone-800 focus:ring-stone-500"
         value="602876b6-cfc8-4b52-a61b-5506c146edd4"
       />
       <label for="60287">Weeknotes</label>
@@ -97,6 +99,7 @@ const feeds = [
         id="acb8d"
         type="checkbox"
         name="l"
+        class="rounded border-stone-300 text-stone-800 focus:ring-stone-500"
         value="acb8d095-57c2-450c-8cab-a68af5c30054"
       />
       <label for="acb8d">Blog</label>
@@ -106,6 +109,7 @@ const feeds = [
         id="d21fe"
         type="checkbox"
         name="l"
+        class="rounded border-stone-300 text-stone-800 focus:ring-stone-500"
         value="d21fe761-f360-4da2-a22b-4a73ca094849"
       />
       <label for="d21fe">Quarterly digest</label>
@@ -114,7 +118,7 @@ const feeds = [
     <input
       type="submit"
       value="Subscribe"
-      class="bg-stone-800 text-stone-100 px-4 py-2 rounded cursor-pointer hover:bg-stone-700"
+      class="bg-stone-800 text-stone-100 px-4 py-2 rounded cursor-pointer hover:bg-stone-700 transition-colors"
     />
     <FeedbackMessage id="subscribe-status" />
   </form>
