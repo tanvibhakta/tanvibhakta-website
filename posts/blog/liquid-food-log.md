@@ -33,7 +33,7 @@ Meal 3: Cold miso soup
 - 1 tsp horse gram paste
 - half tsp white miso (after adding ice)
 
-Meal 4: A strawberry/banana/oat flour smoothie that Devanjal brought me.
+Meal 4: A strawberry/banana/oat flour smoothie that [Devanjal](https://devanjal.mataroa.blog) brought me.
 
 Meal 5: The last bits of ragi ganji.
 

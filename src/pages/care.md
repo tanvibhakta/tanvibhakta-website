@@ -4,7 +4,7 @@ layout: ../layouts/ProseLayout.astro
 
 # Care for Tanvi toolkit
 
-Generally speaking, if I am ill and physically in your space,
+Generally speaking, if I am ill and you are physically in my space,
 
 1. Take charge
 2. Don’t be incompetent
@@ -78,6 +78,22 @@ The right neck/shoulder is disproportionately affected by my redacted, and often
 - I used to take lots of crocins, but I’ve stopped. Strangely, the coffee from caffeine or tea bothers me but in a Crocin or saridon helps with the pain.
 
 ## General advice
+
+## Laryngitis
+
+This is unfortunately a recurring issue. In 2024, I had Laryngitis 4 times, and was on voice rest for a cumulative 10 weeks. I had acute laryngitis without realising it for two months at the beginning of the year for over two months. In 2025 I managed to stay away from the throat infections but unfortunately got hit in the first week of February in 2026, and that infection followed me the whole month.
+
+- no ginger in my food (it is good for a fever or a cold but actually hurts a sore throat).
+- avoid hot spices
+- avoid oily food and cold food (this one is a no-brainer)
+- avoid alcohol, actually (again, a throat irritant).
+- need to constantly keep my throat moist (which means I need to constantly sip on lukewarm water)
+
+I know some (very little) ISL, and it would mean the world to me if you make an effort to learn it during this time. I will also aim to minimise my talking as much as reasonable, so keep an eye on your phone - I will text you even if I'm right next to you. During voice rest I will often have long coversationns with friends where they are talking to me and I am responding via text.
+
+## Misc
+
+Here's [a log](/blog/liquid-food-log) from when I had to consume exclusively liquid food for 5 days.
 
 Hot water will make lots of things better[^4]. Electral will make better what hot water alone will not.
 Ice packs are best wrapped in a bit of cotton cloth - one of my slips from the laundry bag is just fine, or one of the nice kitchen towels.
