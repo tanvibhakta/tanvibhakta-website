@@ -1,8 +1,8 @@
 ---
-import { getCollection } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
+import { getPublishedEntries } from "../../utils/collections";
 
-const sortedGardenPosts = (await getCollection("digitalGarden")).sort(
+const sortedGardenPosts = (await getPublishedEntries("digitalGarden")).sort(
   (a, b) => b.data.lastUpdatedOn.getTime() - a.data.lastUpdatedOn.getTime(),
 );
 

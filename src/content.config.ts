@@ -5,15 +5,14 @@ import { glob } from "astro/loaders";
 const collectionSchema = z.object({
   title: z.string(),
   publishedOn: z.date(),
+  draft: z.boolean().optional(),
 });
 
 // Manually define collections for now
 // TODO: Make this dynamic when Astro supports it better
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/blog/" }),
-  schema: collectionSchema.extend({
-    draft: z.boolean().optional(),
-  }),
+  schema: collectionSchema,
 });
 
 const weeknotes = defineCollection({

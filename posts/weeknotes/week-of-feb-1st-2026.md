@@ -41,7 +41,7 @@ So much has changed about how I work in the last six months.
 1. I’m a full time employee instead of an independent contractor.
 2. I’m working closely with a team instead of building things by myself.
 3. I’m doing everything engineering instead of building design systems.
-4. I’m exclusively [using LLMs to write code](http://localhost:4321/blog/update-on-my-llm-usage-patterns-jan-2026) instead of writing any by hand myself.
+4. I’m exclusively [using LLMs to write code](/blog/update-on-my-llm-usage-patterns-jan-2026) instead of writing any by hand myself.
 
 The consequences:
 

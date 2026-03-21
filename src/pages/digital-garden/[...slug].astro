@@ -1,9 +1,10 @@
 ---
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
+import { getPublishedEntries } from "../../utils/collections";
 
 export async function getStaticPaths() {
-  const gardenPosts = await getCollection("digitalGarden");
+  const gardenPosts = await getPublishedEntries("digitalGarden");
   return gardenPosts.map((post) => ({
     params: { title: post.data.title, slug: post.id },
     props: { post },

@@ -1,9 +1,10 @@
 ---
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
+import { getPublishedEntries } from "../../utils/collections";
 
 export async function getStaticPaths() {
-  const poetry = await getCollection("poetry");
+  const poetry = await getPublishedEntries("poetry");
   return poetry.map((poem) => ({
     params: { title: poem.data.title, slug: poem.id },
     props: { poem },
