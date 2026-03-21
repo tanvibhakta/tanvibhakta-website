@@ -12,6 +12,11 @@ collections:
     folder: posts/blog
     create: true
     slug: "{{slug}}"
+    sortable_fields:
+      fields: [title, publishedOn]
+      default:
+        field: publishedOn
+        direction: descending
     fields:
       - { label: Title, name: title, widget: string }
       - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
@@ -23,6 +28,11 @@ collections:
     folder: posts/poetry
     create: true
     slug: "{{slug}}"
+    sortable_fields:
+      fields: [title, publishedOn]
+      default:
+        field: publishedOn
+        direction: descending
     fields:
       - { label: Title, name: title, widget: string }
       - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
@@ -34,6 +44,11 @@ collections:
     folder: posts/weeknotes
     create: true
     slug: "{{slug}}"
+    sortable_fields:
+      fields: [title, publishedOn]
+      default:
+        field: publishedOn
+        direction: descending
     fields:
       - { label: Title, name: title, widget: string }
       - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
@@ -45,6 +60,11 @@ collections:
     folder: posts/digital-garden
     create: true
     slug: "{{slug}}"
+    sortable_fields:
+      fields: [title, publishedOn, lastUpdatedOn]
+      default:
+        field: publishedOn
+        direction: descending
     fields:
       - { label: Title, name: title, widget: string }
       - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
