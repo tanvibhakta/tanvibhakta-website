@@ -230,4 +230,106 @@ describe("Feed Content Generation", () => {
     expect(feedItems[0].content).not.toContain("# Hello World");
     expect(feedItems[0].content).not.toContain("**test**");
   });
+
+  it("should exclude draft posts from the main feed", async () => {
+    const { getCollection: mockGetCollection } = await import("astro:content");
+    const rssModule = await import("@astrojs/rss");
+    const mockRss = vi.mocked(rssModule.default);
+
+    const mockPublishedPost = {
+      id: "published-post",
+      collection: "blog",
+      data: {
+        title: "Published Post",
+        publishedOn: new Date("2025-01-01"),
+        draft: false,
+      },
+      body: "Published content",
+    };
+
+    const mockDraftPost = {
+      id: "draft-post",
+      collection: "blog",
+      data: {
+        title: "Draft Post",
+        publishedOn: new Date("2025-01-02"),
+        draft: true,
+      },
+      body: "Draft content",
+    };
+
+    const mockNoDraftField = {
+      id: "no-draft-field",
+      collection: "blog",
+      data: {
+        title: "No Draft Field",
+        publishedOn: new Date("2025-01-03"),
+      },
+      body: "Content without draft field",
+    };
+
+    vi.mocked(mockGetCollection)
+      .mockResolvedValueOnce([
+        mockPublishedPost,
+        mockDraftPost,
+        mockNoDraftField,
+      ])
+      .mockResolvedValue([]);
+
+    mockRss.mockReturnValue(
+      new Response('<?xml version="1.0"?><rss></rss>', {
+        headers: { "Content-Type": "application/rss+xml" },
+      }),
+    );
+
+    await generateMainFeed();
+
+    expect(mockRss).toHaveBeenCalled();
+    const callArgs = mockRss.mock.calls[0][0];
+    const feedItems = callArgs.items;
+
+    // Should include published and no-draft-field, exclude draft
+    expect(feedItems).toHaveLength(2);
+    expect(feedItems.map((item) => item.title)).not.toContain(
+      expect.stringContaining("Draft Post"),
+    );
+  });
+
+  it("should exclude draft posts from collection feeds", async () => {
+    const { getCollection: mockGetCollection } = await import("astro:content");
+    const rssModule = await import("@astrojs/rss");
+    const mockRss = vi.mocked(rssModule.default);
+
+    vi.mocked(mockGetCollection).mockResolvedValue([
+      {
+        id: "pub",
+        collection: "poetry",
+        data: { title: "Published Poem", publishedOn: new Date("2025-01-01") },
+        body: "poem",
+      },
+      {
+        id: "draft",
+        collection: "poetry",
+        data: {
+          title: "Draft Poem",
+          publishedOn: new Date("2025-01-02"),
+          draft: true,
+        },
+        body: "draft poem",
+      },
+    ]);
+
+    mockRss.mockReturnValue(
+      new Response('<?xml version="1.0"?><rss></rss>', {
+        headers: { "Content-Type": "application/rss+xml" },
+      }),
+    );
+
+    await generateCollectionFeed("poetry");
+
+    expect(mockRss).toHaveBeenCalled();
+    const callArgs = mockRss.mock.calls[0][0];
+    expect(callArgs.items).toHaveLength(1);
+    expect(callArgs.items[0].title).toBe("Published Poem");
+  });
 });

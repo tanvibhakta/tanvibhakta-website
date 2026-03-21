@@ -76,7 +76,7 @@ export async function getAllCollectionEntries(): Promise<AnyCollectionEntry[]> {
 
   for (const collectionName of getMainFeedEligibleCollections()) {
     const entries = await getCollection(collectionName);
-    allEntries.push(...entries);
+    allEntries.push(...entries.filter((entry) => !entry.data.draft));
   }
 
   return allEntries;
@@ -85,7 +85,8 @@ export async function getAllCollectionEntries(): Promise<AnyCollectionEntry[]> {
 export async function getCollectionEntries(
   collectionName: CollectionName,
 ): Promise<CollectionEntry<CollectionName>[]> {
-  return await getCollection(collectionName);
+  const entries = await getCollection(collectionName);
+  return entries.filter((entry) => !entry.data.draft);
 }
 
 export async function generateMainFeed() {
