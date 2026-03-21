@@ -11,7 +11,11 @@ import {
 
 // Mock the astro:content module
 vi.mock("astro:content", () => ({
-  getCollection: vi.fn(() => Promise.resolve([])),
+  getCollection: vi.fn((_name: string, filter?: (entry: any) => boolean) =>
+    Promise.resolve([]).then((entries) =>
+      filter ? entries.filter(filter) : entries,
+    ),
+  ),
   defineCollection: vi.fn(),
   render: vi.fn(() =>
     Promise.resolve({ Content: () => "<p>Mock content</p>" }),
@@ -215,7 +219,12 @@ describe("Feed Content Generation", () => {
       body: "# Hello World\n\nThis is a **test** post with markdown.",
     };
 
-    vi.mocked(mockGetCollection).mockResolvedValueOnce([mockBlogEntry]);
+    vi.mocked(mockGetCollection).mockImplementation(
+      (_name: string, filter?: (entry: any) => boolean) => {
+        const entries = _name === "blog" ? [mockBlogEntry] : [];
+        return Promise.resolve(filter ? entries.filter(filter) : entries);
+      },
+    );
 
     await generateMainFeed();
 
@@ -268,13 +277,13 @@ describe("Feed Content Generation", () => {
       body: "Content without draft field",
     };
 
-    vi.mocked(mockGetCollection)
-      .mockResolvedValueOnce([
-        mockPublishedPost,
-        mockDraftPost,
-        mockNoDraftField,
-      ])
-      .mockResolvedValue([]);
+    const allEntries = [mockPublishedPost, mockDraftPost, mockNoDraftField];
+    vi.mocked(mockGetCollection).mockImplementation(
+      (_name: string, filter?: (entry: any) => boolean) => {
+        const entries = _name === "blog" ? allEntries : [];
+        return Promise.resolve(filter ? entries.filter(filter) : entries);
+      },
+    );
 
     mockRss.mockReturnValue(
       new Response('<?xml version="1.0"?><rss></rss>', {
@@ -300,7 +309,7 @@ describe("Feed Content Generation", () => {
     const rssModule = await import("@astrojs/rss");
     const mockRss = vi.mocked(rssModule.default);
 
-    vi.mocked(mockGetCollection).mockResolvedValue([
+    const poetryEntries = [
       {
         id: "pub",
         collection: "poetry",
@@ -317,7 +326,11 @@ describe("Feed Content Generation", () => {
         },
         body: "draft poem",
       },
-    ]);
+    ];
+    vi.mocked(mockGetCollection).mockImplementation(
+      (_name: string, filter?: (entry: any) => boolean) =>
+        Promise.resolve(filter ? poetryEntries.filter(filter) : poetryEntries),
+    );
 
     mockRss.mockReturnValue(
       new Response('<?xml version="1.0"?><rss></rss>', {

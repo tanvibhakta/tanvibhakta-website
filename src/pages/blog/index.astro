@@ -1,10 +1,10 @@
 ---
-import { getCollection } from "astro:content";
+import { getPublishedEntries } from "../../utils/collections";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 
-const sortedBlogPosts = (await getCollection("blog"))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime());
+const sortedBlogPosts = (await getPublishedEntries("blog")).sort(
+  (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
+);
 
 const frontmatter = {
   title: "Blog",

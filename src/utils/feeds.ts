@@ -3,6 +3,7 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import MarkdownIt from "markdown-it";
 import sanitizeHtml from "sanitize-html";
 import { collections } from "../content.config";
+import { isPublished } from "./collections";
 
 const SITE_URL = "https://tanvibhakta.in";
 const SITE_TITLE = "Tanvi Bhakta";
@@ -19,16 +20,6 @@ function markdownToHtml(markdown: string): string {
   return sanitizeHtml(html, {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
   });
-}
-
-/**
- * Modify MIME type for RSS feeds from application/xml to application/rss+xml
- * Note: @astrojs/rss returns a custom Response object that doesn't support standard
- * Response manipulation. The type is already correct for RSS (text/xml, application/xml),
- * so we return it as-is for now.
- */
-function setRssMimeType(response: Response): Response {
-  return response;
 }
 
 /**
@@ -75,8 +66,8 @@ export async function getAllCollectionEntries(): Promise<AnyCollectionEntry[]> {
   const allEntries: AnyCollectionEntry[] = [];
 
   for (const collectionName of getMainFeedEligibleCollections()) {
-    const entries = await getCollection(collectionName);
-    allEntries.push(...entries.filter((entry) => !entry.data.draft));
+    const entries = await getCollection(collectionName, isPublished);
+    allEntries.push(...entries);
   }
 
   return allEntries;
@@ -85,8 +76,7 @@ export async function getAllCollectionEntries(): Promise<AnyCollectionEntry[]> {
 export async function getCollectionEntries(
   collectionName: CollectionName,
 ): Promise<CollectionEntry<CollectionName>[]> {
-  const entries = await getCollection(collectionName);
-  return entries.filter((entry) => !entry.data.draft);
+  return getCollection(collectionName, isPublished);
 }
 
 export async function generateMainFeed() {

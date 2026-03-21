@@ -1,10 +1,7 @@
 ---
-import { getCollection } from "astro:content";
-import Layout from "../../layouts/Layout.astro";
 import ProseLayout from "../../layouts/ProseLayout.astro";
-const allPoetry = (await getCollection("poetry")).filter(
-  (item) => !item.data.draft,
-);
+import { getPublishedEntries } from "../../utils/collections";
+const allPoetry = await getPublishedEntries("poetry");
 
 const frontmatter = {
   title: "Poetry",

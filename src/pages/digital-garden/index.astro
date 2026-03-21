@@ -1,12 +1,10 @@
 ---
-import { getCollection } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
+import { getPublishedEntries } from "../../utils/collections";
 
-const sortedGardenPosts = (await getCollection("digitalGarden"))
-  .filter((item) => !item.data.draft)
-  .sort(
-    (a, b) => b.data.lastUpdatedOn.getTime() - a.data.lastUpdatedOn.getTime(),
-  );
+const sortedGardenPosts = (await getPublishedEntries("digitalGarden")).sort(
+  (a, b) => b.data.lastUpdatedOn.getTime() - a.data.lastUpdatedOn.getTime(),
+);
 
 // Helper function to extract first paragraph from markdown content
 function extractFirstParagraph(content: string): string {

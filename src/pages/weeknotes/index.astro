@@ -1,13 +1,16 @@
 ---
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
-const sortedWeeknotes = (await getCollection("weeknotes"))
-  .filter((item) => !item.data.draft)
-  .sort((a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime());
+import { getPublishedEntries } from "../../utils/collections";
+const sortedWeeknotes = (await getPublishedEntries("weeknotes")).sort(
+  (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
+);
 
 const latestWeeknote = sortedWeeknotes[0];
 const previousWeeknotes = sortedWeeknotes.slice(1);
-const { Content } = await render(latestWeeknote);
+const { Content } = latestWeeknote
+  ? await render(latestWeeknote)
+  : { Content: null };
 ---
 
 <ProseLayout>
