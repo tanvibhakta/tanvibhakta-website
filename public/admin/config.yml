@@ -1,0 +1,54 @@
+backend:
+  name: github
+  repo: tanvibhakta/tanvibhakta-website
+  branch: main
+
+media_folder: public/media
+public_folder: /media
+
+collections:
+  - name: blog
+    label: Blog
+    folder: posts/blog
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
+      - { label: Draft, name: draft, widget: boolean, default: true, required: false }
+      - { label: Body, name: body, widget: markdown }
+
+  - name: poetry
+    label: Poetry
+    folder: posts/poetry
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
+      - { label: Draft, name: draft, widget: boolean, default: true, required: false }
+      - { label: Body, name: body, widget: markdown }
+
+  - name: weeknotes
+    label: Weeknotes
+    folder: posts/weeknotes
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
+      - { label: Draft, name: draft, widget: boolean, default: true, required: false }
+      - { label: Body, name: body, widget: markdown }
+
+  - name: digitalGarden
+    label: Digital Garden
+    folder: posts/digital-garden
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
+      - { label: Last Updated, name: lastUpdatedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD, default: "{{now}}" }
+      - { label: Description, name: description, widget: string, required: false }
+      - { label: Draft, name: draft, widget: boolean, default: true, required: false }
+      - { label: Body, name: body, widget: markdown }
