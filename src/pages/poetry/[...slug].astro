@@ -3,7 +3,9 @@ import { getCollection, render } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 
 export async function getStaticPaths() {
-  const poetry = await getCollection("poetry");
+  const poetry = (await getCollection("poetry")).filter(
+    (item) => !item.data.draft,
+  );
   return poetry.map((poem) => ({
     params: { title: poem.data.title, slug: poem.id },
     props: { poem },

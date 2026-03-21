@@ -2,7 +2,9 @@
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import ProseLayout from "../../layouts/ProseLayout.astro";
-const allPoetry = await getCollection("poetry");
+const allPoetry = (await getCollection("poetry")).filter(
+  (item) => !item.data.draft,
+);
 
 const frontmatter = {
   title: "Poetry",

@@ -1,9 +1,9 @@
 ---
 import { getCollection, render } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
-const sortedWeeknotes = (await getCollection("weeknotes")).sort(
-  (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
-);
+const sortedWeeknotes = (await getCollection("weeknotes"))
+  .filter((item) => !item.data.draft)
+  .sort((a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime());
 
 const latestWeeknote = sortedWeeknotes[0];
 const previousWeeknotes = sortedWeeknotes.slice(1);
