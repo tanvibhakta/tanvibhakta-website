@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
 backend:
   name: github
   repo: tanvibhakta/tanvibhakta-website
@@ -72,3 +73,13 @@ collections:
       - { label: Description, name: description, widget: string, required: false }
       - { label: Draft, name: draft, widget: boolean, default: true, required: false }
       - { label: Body, name: body, widget: markdown }
+
+media_libraries:
+  default:
+    config:
+      transformations:
+        raster_image:
+          format: webp
+          quality: 85
+        svg:
+          optimize: true
