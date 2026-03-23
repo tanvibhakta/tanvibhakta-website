@@ -54,7 +54,10 @@ collections:
       - { label: Title, name: title, widget: string }
       - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
       - { label: Draft, name: draft, widget: boolean, default: true, required: false }
-      - { label: Body, name: body, widget: markdown }
+      - label: Body
+        name: body
+        widget: markdown
+        default: "## Work\n\n## Life\n\n## Health\n\n## Learning\n\n## Media Diet\n\n### Reading\n\n### Watching\n\n### Listening\n\n### Around the web\n"
 
   - name: digitalGarden
     label: Digital Garden
