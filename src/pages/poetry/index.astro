@@ -3,26 +3,46 @@ import ProseLayout from "../../layouts/ProseLayout.astro";
 import { getPublishedEntries } from "../../utils/collections";
 const allPoetry = await getPublishedEntries("poetry");
 
+const sorted = allPoetry.sort(
+  (a, b) => a.data.publishedOn.getTime() - b.data.publishedOn.getTime(),
+);
+
+const poetry2025 = sorted.filter(
+  (poem) => poem.data.publishedOn.getFullYear() === 2025,
+);
+const poetry2026 = sorted.filter(
+  (poem) => poem.data.publishedOn.getFullYear() === 2026,
+);
+
 const frontmatter = {
   title: "Poetry",
 };
 ---
 
 <ProseLayout frontmatter={frontmatter}>
+  <h2>Global Poetry Writing Month 2026</h2>
+  {
+    (
+      <ul>
+        {poetry2026.map((poem) => (
+          <li>
+            <a href={`/poetry/${poem.id}`}>{poem.data.title}</a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
   <h2>Global Poetry Writing Month 2025</h2>
   <a href={`/blog/global-poetry-writing-month-2025`}>Introductory post</a>
   <ul>
-    <p>
-      {
-        allPoetry.map((poem) => {
-          return (
-            <li>
-              <a href={`/poetry/${poem.id}`}>{poem.data.title}</a>
-            </li>
-          );
-        })
-      }
-    </p>
+    {
+      poetry2025.map((poem) => (
+        <li>
+          <a href={`/poetry/${poem.id}`}>{poem.data.title}</a>
+        </li>
+      ))
+    }
   </ul>
 </ProseLayout>
 
