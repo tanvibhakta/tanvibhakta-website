@@ -35,6 +35,19 @@ const COLLECTIONS = {
       return input.charAt(0).toUpperCase() + input.slice(1);
     },
   },
+  poetry: {
+    dir: "posts/poetry",
+    generateFilename: (input: string) => {
+      const slug = input
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-");
+      return `${slug}.md`;
+    },
+    generateTitle: (input: string) => {
+      return input.charAt(0).toUpperCase() + input.slice(1);
+    },
+  },
 } as const;
 
 type CollectionName = keyof typeof COLLECTIONS;

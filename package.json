@@ -13,7 +13,8 @@
     "worktree:list": "git worktree list",
     "worktree:delete": "./scripts/worktree-delete.sh",
     "weeknotes:new": "node scripts/new-content.ts weeknotes",
-    "blog:new": "node scripts/new-content.ts blog"
+    "blog:new": "node scripts/new-content.ts blog",
+    "poetry:new": "node scripts/new-content.ts poetry"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.1",
