@@ -18,14 +18,6 @@ All commands are run from the root of the project, from a terminal:
 | `pnpm astro ...`    | Run CLI commands like `astro add`, `astro check` |
 | `pnpm astro --help` | Get help using the Astro CLI                     |
 
-### Git Worktree Commands
-
-| Command                              | Action                                       |
-| :----------------------------------- | :------------------------------------------- |
-| `pnpm worktree:create <branch-name>` | Create an isolated worktree for feature work |
-| `pnpm worktree:list`                 | List all active worktrees                    |
-| `pnpm worktree:delete <branch-name>` | Clean up a worktree when done                |
-
 ### Git Hooks
 
 Pre-commit hook runs automatically:

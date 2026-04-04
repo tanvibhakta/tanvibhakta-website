@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-See README.md for the full list of commands including dev server, build, test, and git worktree scripts.
+See README.md for the full list of commands including dev server, build, and test.
 
 ## Project Architecture
 
