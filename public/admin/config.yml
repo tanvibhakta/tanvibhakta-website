@@ -13,6 +13,10 @@ collections:
     folder: posts/blog
     create: true
     slug: "{{slug}}"
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
     sortable_fields:
       fields: [title, publishedOn]
       default:
@@ -29,6 +33,10 @@ collections:
     folder: posts/poetry
     create: true
     slug: "{{slug}}"
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
     sortable_fields:
       fields: [title, publishedOn]
       default:
@@ -45,6 +53,10 @@ collections:
     folder: posts/weeknotes
     create: true
     slug: "{{slug}}"
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
     sortable_fields:
       fields: [title, publishedOn]
       default:
@@ -64,6 +76,10 @@ collections:
     folder: posts/digital-garden
     create: true
     slug: "{{slug}}"
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
     sortable_fields:
       fields: [title, publishedOn, lastUpdatedOn]
       default:
