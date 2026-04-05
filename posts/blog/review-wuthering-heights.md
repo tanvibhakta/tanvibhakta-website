@@ -1,5 +1,5 @@
 ---
-title: '[Review] Wuthering Heights'
+title: 'Review: Wuthering Heights'
 publishedOn: 2026-02-14
 draft: false
 ---
