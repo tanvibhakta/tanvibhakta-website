@@ -1,0 +1,92 @@
+---
+interface Props {
+  src: string;
+  title: string;
+}
+
+const { src, title } = Astro.props;
+---
+
+<hr />
+<div class="not-prose">
+  <p class="audio-player__title">{title}</p>
+
+  <figure class="audio-player" data-audio-src={src}>
+    <div class="audio-player__waveform" aria-hidden="true"></div>
+    <audio class="audio-player__native" controls preload="metadata" src={src}>
+      Your browser does not support the audio element.
+    </audio>
+  </figure>
+</div>
+<style>
+  .audio-player {
+    padding: 1rem;
+    border: 1px solid oklch(92% 0 0);
+    border-radius: 4px;
+    background: oklch(98.5% 0 0);
+  }
+
+  .audio-player__title {
+    font-family: "Open Sans", ui-sans-serif, system-ui;
+    margin-bottom: 0.5rem;
+  }
+
+  .audio-player__waveform {
+    width: 100%;
+    min-height: 70px;
+  }
+
+  .audio-player__waveform:empty {
+    display: none;
+  }
+
+  .audio-player__native {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .audio-player[data-wavesurfer-ready="true"] .audio-player__native {
+    display: none;
+  }
+</style>
+
+<script>
+  import WaveSurfer from "wavesurfer.js";
+
+  const players = document.querySelectorAll<HTMLElement>("[data-audio-src]");
+
+  players.forEach((player) => {
+    const src = player.dataset.audioSrc;
+    const waveformEl = player.querySelector<HTMLElement>(
+      ".audio-player__waveform",
+    );
+    if (!src || !waveformEl) return;
+
+    const ws = WaveSurfer.create({
+      container: waveformEl,
+      url: src,
+      waveColor: "oklch(70.8% 0 0)",
+      progressColor: "oklch(20.5% 0 0)",
+      cursorColor: "oklch(50.5% 0.213 27.518)",
+      barWidth: 1,
+      barGap: 2,
+      barHeight: 1,
+      fillParent: true,
+      normalize: true,
+      dragToSeek: true,
+      mediaControls: true,
+      height: 70,
+    });
+
+    ws.on("ready", () => {
+      player.dataset.wavesurferReady = "true";
+    });
+
+    ws.on("error", (err) => {
+      console.error("wavesurfer failed to load audio:", src, err);
+      // keep native audio visible on failure
+      delete player.dataset.wavesurferReady;
+      waveformEl.innerHTML = "";
+    });
+  });
+</script>

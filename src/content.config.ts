@@ -10,9 +10,14 @@ const collectionSchema = z.object({
 
 // Manually define collections for now
 // TODO: Make this dynamic when Astro supports it better
+const audioSchema = {
+  audio: z.string().optional(),
+  audioTitle: z.string().optional(),
+};
+
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/blog/" }),
-  schema: collectionSchema,
+  schema: collectionSchema.extend(audioSchema),
 });
 
 const weeknotes = defineCollection({
@@ -22,7 +27,7 @@ const weeknotes = defineCollection({
 
 const poetry = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/poetry/" }),
-  schema: collectionSchema,
+  schema: collectionSchema.extend(audioSchema),
 });
 
 const digitalGarden = defineCollection({

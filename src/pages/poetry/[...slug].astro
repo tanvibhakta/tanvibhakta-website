@@ -1,6 +1,7 @@
 ---
 import { render } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
+import AudioPlayer from "../../components/AudioPlayer.astro";
 import { getPublishedEntries } from "../../utils/collections";
 
 export async function getStaticPaths() {
@@ -17,4 +18,12 @@ const { Content } = await render(poem);
 
 <ProseLayout frontmatter={poem.data}>
   <Content />
+  {
+    poem.data.audio && (
+      <AudioPlayer
+        src={poem.data.audio}
+        title={poem.data.audioTitle ?? "Listen to this poem"}
+      />
+    )
+  }
 </ProseLayout>
