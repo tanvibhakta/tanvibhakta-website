@@ -1,6 +1,8 @@
 ---
-title: "Day 0: Harve kaani"
+title: 'Day 0: Harve kaani'
 publishedOn: 2026-03-31
+audio: /media/audio/megel-ghara-kaani.ogg
+audioTitle: ''
 ---
 
 Ek badaav ashilo
