@@ -1,6 +1,8 @@
 ---
 title: "Conflict is a valuable relationship metric"
 publishedOn: 2025-10-20
+tags:
+  - philosophy
 ---
 
 Some friends and I have a standing dinner hang every Tuesday evening, the location of which changes often. This week, we were supposed to meet at my place so I could get some long-standing chores out of the way. But some wires were crossed, two friends unwittingly staged a coup, and we had to meet at a different friend’s place. Ordinarily this would have been fine but having to go in to office + flare being generally bad this week meant that I was Not Happy with the turn of events. By the time I met my friends, it was clear that the whole location change was unnecessary. So what did I do? I had a tantrum.

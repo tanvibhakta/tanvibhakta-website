@@ -1,6 +1,8 @@
 ---
 title: "Totems"
 publishedOn: 2025-07-05
+tags:
+  - philosophy
 ---
 
 Indie Web Carnival prompt for July 2025: [Totems](https://www.maxwelljoslyn.com/2025/07/01/1).

@@ -1,6 +1,8 @@
 ---
 title: "Update on my llm usage patterns (Jan 2026)"
 publishedOn: 2026-01-31
+tags:
+  - ai-usage
 ---
 
 Since [my last update](/blog/thoughts-on-ai-june-2025), I’ve gone all-in on [git worktrees](https://code.claude.com/docs/en/common-workflows#run-parallel-claude-code-sessions-with-git-worktrees).

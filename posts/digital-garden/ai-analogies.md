@@ -2,6 +2,8 @@
 title: "AI Analogies"
 publishedOn: 2025-10-06
 lastUpdatedOn: 2025-10-06
+tags:
+  - ai-usage
 ---
 
 Analogies are powerful learning/thinking devices that shape popular opinion. I'm attempting to collect the ones that pertain to the AI phenomenon that started sweeping the world about March 2024 that particularly tickled me.

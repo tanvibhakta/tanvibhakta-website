@@ -1,6 +1,8 @@
 ---
 title: GloPoWriMo 2026
 publishedOn: 2026-03-31
+tags:
+  - konkani
 ---
 
 Another year, another [month of poetry](https://www.napowrimo.net/).

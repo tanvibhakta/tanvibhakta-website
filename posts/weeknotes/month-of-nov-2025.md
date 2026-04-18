@@ -1,6 +1,8 @@
 ---
 title: "Month of November, 2025"
 publishedOn: 2025-11-29
+tags:
+  - ai-usage
 ---
 
 It’s time for a month note!

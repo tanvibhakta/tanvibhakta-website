@@ -1,6 +1,8 @@
 ---
 title: "Week of Apr 11th, 2026"
 publishedOn: 2026-04-11
+tags:
+  - ai-usage
 ---
 
 ## Work

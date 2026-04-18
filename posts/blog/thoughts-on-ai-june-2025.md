@@ -1,6 +1,8 @@
 ---
 title: "Thoughts on AI in programming (June 2025)"
 publishedOn: 2025-06-08
+tags:
+  - ai-usage
 ---
 
 I've been pretty indifferent to how AI usage has been promulgating across my profession over the last two months. AI [raises the _floor_](https://addyo.substack.com/p/the-70-problem-hard-truths-about), not the _ceiling_ of quality (I believe I operate closer to the ceiling), environmental usage concerns ([heavily in debate](https://archive.is/6afYv)), general distance from where the hype is happening ([I got off twitter 6 months ago](/weeknotes/week-of-feb-19th-2025)), and honestly the field was moving too fast for me to believe I could catch up[^1].

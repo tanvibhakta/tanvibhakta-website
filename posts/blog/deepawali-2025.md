@@ -1,6 +1,8 @@
 ---
 title: "Deepawali 2025"
 publishedOn: 2025-10-25
+tags:
+  - konkani
 ---
 
 Deepawali has always been the biggest festival my family and I have celebrated growing up. Traditionally,

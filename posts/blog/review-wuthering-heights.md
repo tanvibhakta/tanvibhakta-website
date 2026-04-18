@@ -1,7 +1,9 @@
 ---
-title: 'Review: Wuthering Heights'
+title: "Review: Wuthering Heights"
 publishedOn: 2026-02-14
 draft: false
+tags:
+  - reviews
 ---
 
 1. It is a very 2026 movie
