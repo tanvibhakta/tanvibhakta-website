@@ -33,3 +33,6 @@ CLAUDE.local.md
 _site
 .sass-cache
 .jekyll-metadata
+
+# git worktrees
+.worktrees/
