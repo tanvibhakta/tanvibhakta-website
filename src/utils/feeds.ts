@@ -27,7 +27,7 @@ function markdownToHtml(markdown: string): string {
  */
 export const FEED_CONFIG = {
   // Collections to exclude from feed generation entirely
-  excludedCollections: [] as string[],
+  excludedCollections: ["pages"] as string[],
   // Collections to exclude from the main unified feed (but still get individual feeds)
   excludeFromMainFeed: [] as string[],
 };

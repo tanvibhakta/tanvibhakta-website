@@ -38,9 +38,18 @@ const digitalGarden = defineCollection({
   }),
 });
 
+const pages = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./posts/pages/" }),
+  schema: z.object({
+    title: z.string(),
+    draft: z.boolean().optional(),
+  }),
+});
+
 export const collections = {
   blog,
   weeknotes,
   poetry,
   digitalGarden,
+  pages,
 };
