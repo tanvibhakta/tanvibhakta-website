@@ -1,0 +1,49 @@
+---
+import { getPublishedEntries } from "../../utils/collections";
+import ProseLayout from "../../layouts/ProseLayout.astro";
+import { TAGS } from "../../content.config";
+
+const allPosts = [
+  ...(await getPublishedEntries("blog")),
+  ...(await getPublishedEntries("weeknotes")),
+  ...(await getPublishedEntries("poetry")),
+  ...(await getPublishedEntries("digitalGarden")),
+];
+
+const tagCounts = Object.fromEntries(
+  TAGS.map((tag) => [
+    tag,
+    allPosts.filter((p) => p.data.tags?.includes(tag)).length,
+  ]),
+);
+
+const frontmatter = { title: "Tags" };
+---
+
+<ProseLayout frontmatter={frontmatter}>
+  <ul>
+    <p>
+      {
+        TAGS.map((tag) => (
+          <li>
+            <a href={`/tags/${tag}`}>{tag}</a>
+            <span class="count">{tagCounts[tag]} posts</span>
+          </li>
+        ))
+      }
+    </p>
+  </ul>
+</ProseLayout>
+
+<style>
+  ul {
+    list-style: none;
+  }
+
+  .count {
+    font-size: 0.9rem;
+    font-variant: small-caps;
+    margin-left: 0.5rem;
+    opacity: 0.6;
+  }
+</style>

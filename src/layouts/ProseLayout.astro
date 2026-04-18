@@ -14,5 +14,40 @@ const { frontmatter } = Astro.props;
   <div class="mx-8 md:w-1/2 leading-6">
     {frontmatter?.title && <h1>{frontmatter.title}</h1>}
     <slot />
+    {
+      frontmatter?.tags && frontmatter.tags.length > 0 && (
+        <div class="tags">
+          {frontmatter.tags.map((tag: string) => (
+            <a href={`/tags/${tag}`} class="tag">
+              {tag}
+            </a>
+          ))}
+        </div>
+      )
+    }
   </div>
 </Layout>
+
+<style>
+  .tags {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--tw-prose-hr, #d6d3d1);
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 0.8rem;
+    font-variant: small-caps;
+    text-decoration: none;
+    color: inherit;
+    opacity: 0.6;
+  }
+
+  .tag:hover {
+    opacity: 1;
+    text-decoration: underline;
+  }
+</style>

@@ -1,0 +1,81 @@
+---
+import { getPublishedEntries } from "../../utils/collections";
+import ProseLayout from "../../layouts/ProseLayout.astro";
+import { TAGS } from "../../content.config";
+import type { Tag } from "../../content.config";
+
+export async function getStaticPaths() {
+  return TAGS.map((tag) => ({ params: { tag } }));
+}
+
+const { tag } = Astro.params as { tag: Tag };
+
+const allPosts = [
+  ...(await getPublishedEntries("blog")).map((p) => ({
+    ...p,
+    collection: "blog" as const,
+    href: `/blog/${p.id}`,
+  })),
+  ...(await getPublishedEntries("weeknotes")).map((p) => ({
+    ...p,
+    collection: "weeknotes" as const,
+    href: `/weeknotes/${p.id}`,
+  })),
+  ...(await getPublishedEntries("poetry")).map((p) => ({
+    ...p,
+    collection: "poetry" as const,
+    href: `/poetry/${p.id}`,
+  })),
+  ...(await getPublishedEntries("digitalGarden")).map((p) => ({
+    ...p,
+    collection: "digital-garden" as const,
+    href: `/digital-garden/${p.id}`,
+  })),
+];
+
+const tagged = allPosts
+  .filter((p) => p.data.tags?.includes(tag))
+  .sort((a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime());
+
+const frontmatter = { title: tag };
+---
+
+<ProseLayout frontmatter={frontmatter}>
+  <p><a href="/tags">← all tags</a></p>
+  {
+    tagged.length === 0 ? (
+      <p>No posts tagged with this yet.</p>
+    ) : (
+      <ul>
+        <p>
+          {tagged.map((post) => (
+            <li>
+              <a href={post.href}>{post.data.title}</a>
+              <span class="meta">
+                {post.collection} ·{" "}
+                {post.data.publishedOn.toLocaleDateString("en-US", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </span>
+            </li>
+          ))}
+        </p>
+      </ul>
+    )
+  }
+</ProseLayout>
+
+<style>
+  ul {
+    list-style: none;
+  }
+
+  .meta {
+    font-size: 0.9rem;
+    font-variant: small-caps;
+    margin-left: 0.5rem;
+    opacity: 0.6;
+  }
+</style>
