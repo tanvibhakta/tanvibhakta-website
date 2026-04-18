@@ -33,9 +33,31 @@ const allPosts = [
   })),
 ];
 
-const tagged = allPosts
-  .filter((p) => p.data.tags?.includes(tag))
-  .sort((a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime());
+const byCollection = {
+  blog: allPosts
+    .filter((p) => p.collection === "blog" && p.data.tags?.includes(tag))
+    .sort(
+      (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
+    ),
+  weeknotes: allPosts
+    .filter((p) => p.collection === "weeknotes" && p.data.tags?.includes(tag))
+    .sort(
+      (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
+    ),
+  "digital-garden": allPosts
+    .filter(
+      (p) => p.collection === "digital-garden" && p.data.tags?.includes(tag),
+    )
+    .sort(
+      (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
+    ),
+};
+
+const sections = [
+  { key: "blog" as const, label: "Blog" },
+  { key: "weeknotes" as const, label: "Weeknotes" },
+  { key: "digital-garden" as const, label: "Digital Garden" },
+];
 
 const frontmatter = { title: tag };
 ---
@@ -43,27 +65,29 @@ const frontmatter = { title: tag };
 <ProseLayout frontmatter={frontmatter}>
   <p><a href="/tags">← all tags</a></p>
   {
-    tagged.length === 0 ? (
-      <p>No posts tagged with this yet.</p>
-    ) : (
-      <ul>
-        <p>
-          {tagged.map((post) => (
-            <li>
-              <a href={post.href}>{post.data.title}</a>
-              <span class="meta">
-                {post.collection} ·{" "}
-                {post.data.publishedOn.toLocaleDateString("en-US", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}
-              </span>
-            </li>
-          ))}
-        </p>
-      </ul>
-    )
+    sections
+      .filter(({ key }) => byCollection[key].length > 0)
+      .map(({ key, label }) => (
+        <section>
+          <h2>{label}</h2>
+          <ul>
+            <p>
+              {byCollection[key].map((post) => (
+                <li>
+                  <a href={post.href}>{post.data.title}</a>
+                  <span class="date">
+                    {post.data.publishedOn.toLocaleDateString("en-US", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </span>
+                </li>
+              ))}
+            </p>
+          </ul>
+        </section>
+      ))
   }
 </ProseLayout>
 
@@ -72,7 +96,7 @@ const frontmatter = { title: tag };
     list-style: none;
   }
 
-  .meta {
+  .date {
     font-size: 0.9rem;
     font-variant: small-caps;
     margin-left: 0.5rem;
