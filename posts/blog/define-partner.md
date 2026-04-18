@@ -1,6 +1,8 @@
 ---
 title: "Define: partner"
 publishedOn: 2026-01-02
+tags:
+  - philosophy
 audio: /media/audio/define-partner.oga
 audioTitle: "Listen to a first draft of this blog:"
 ---

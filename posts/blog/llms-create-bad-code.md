@@ -1,6 +1,8 @@
 ---
 title: 'LLMs create "bad" code'
 publishedOn: 2025-09-09
+tags:
+  - ai-usage
 ---
 
 In the last two days, I’ve departed radically with my code gen usage. I’m no longer using it to augment my work, I’m orchestrating it, sitting back, and merely approving the results.

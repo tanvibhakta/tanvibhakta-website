@@ -1,6 +1,8 @@
 ---
 title: Minting Tanvi Bucks
 publishedOn: 2026-03-29
+tags:
+  - philosophy
 ---
 
 Follow [Sahiti](https://itihas.review/)’s excellent rant to me about [how incentives work](https://www.astralcodexten.com/i/166959786/part-four-how-alpha-works-part-2-incentives), I have implemented an economy for myself.
@@ -19,7 +21,7 @@ I earn 50 Tanvi Bucks every time I
 2. Work less than 8 hours a day (this is a problem, I’m generally at my desk for 9 to 12 and my body HATES it)
 3. Do some other unpleasant tasks - yesterday I earned 50 Tanvi Bucks for responding to ten people I’ve been putting off in the last week (there was some unnecessary shame involved that kept me from doing so immediately)
 
-Smaller, more consistent ways to earn 
+Smaller, more consistent ways to earn
 
 - 50 Tanvi Bucks for a blog post
 - 20 Tanvi Bucks for a poetry submission to GloPoWriMo
@@ -27,7 +29,7 @@ Smaller, more consistent ways to earn
 
 I have some other big number Tanvi Bucks I’m set to earn when I finish larger projects. Admin-type tasks, and Important but not Urgent tasks are a good category to make Tanvi Bucks from!
 
-***
+---
 
 Given a number, humans are wired to make it go up. I find that I often have the desire to do things, but I’m doing so much that by the end of the day intrinsic motivation alone is not enough to push me. Thus tasks that will generate Tanvi Bucks are by nature prioritised - and I will only assign Tanvi Bucks to tasks that will result in net gains for me but are mildly unpleasant.
 

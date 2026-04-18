@@ -1,6 +1,8 @@
 ---
 title: "Lollapalooza 2026"
 publishedOn: 2026-02-08
+tags:
+  - reviews
 ---
 
 This is the 4th edition of [Lollapalooza India](https://lollaindia.com/), and the 4th time I’m attending it.

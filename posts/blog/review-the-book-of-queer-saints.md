@@ -1,6 +1,8 @@
 ---
 title: "Review: The Book of Queer Saints"
 publishedOn: 2025-07-23
+tags:
+  - reviews
 ---
 
 I read this book as part of [Queer Read Bangalore](https://coolingpearls.wordpress.com/category/book-club-queer-reads-bangalore/)’s read along for July.

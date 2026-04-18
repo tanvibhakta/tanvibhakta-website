@@ -1,6 +1,8 @@
 ---
 title: "Stop snorting narrative"
 publishedOn: 2025-07-11
+tags:
+  - philosophy
 ---
 
 I’ve been addicted to keeping my brain occupied for as long as I can remember. From grades 2 to 5 I would come home and immediately call my friends[^1], just to not _feel alone_, and I’d chatter with them for hours on end. By Grade 6, I knew my way around the pirate sites well enough that I could download all the books my heart desired. I used these books as a way to escape the dreary reality of childhood, a habit that served me well in my hostel years (no internet, but I _lived_ next to the library? Yes please!).

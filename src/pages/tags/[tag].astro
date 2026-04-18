@@ -1,0 +1,105 @@
+---
+import { getPublishedEntries } from "../../utils/collections";
+import ProseLayout from "../../layouts/ProseLayout.astro";
+import { TAGS } from "../../content.config";
+import type { Tag } from "../../content.config";
+
+export async function getStaticPaths() {
+  return TAGS.map((tag) => ({ params: { tag } }));
+}
+
+const { tag } = Astro.params as { tag: Tag };
+
+const allPosts = [
+  ...(await getPublishedEntries("blog")).map((p) => ({
+    ...p,
+    collection: "blog" as const,
+    href: `/blog/${p.id}`,
+  })),
+  ...(await getPublishedEntries("weeknotes")).map((p) => ({
+    ...p,
+    collection: "weeknotes" as const,
+    href: `/weeknotes/${p.id}`,
+  })),
+  ...(await getPublishedEntries("poetry")).map((p) => ({
+    ...p,
+    collection: "poetry" as const,
+    href: `/poetry/${p.id}`,
+  })),
+  ...(await getPublishedEntries("digitalGarden")).map((p) => ({
+    ...p,
+    collection: "digital-garden" as const,
+    href: `/digital-garden/${p.id}`,
+  })),
+];
+
+const byCollection = {
+  blog: allPosts
+    .filter((p) => p.collection === "blog" && p.data.tags?.includes(tag))
+    .sort(
+      (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
+    ),
+  weeknotes: allPosts
+    .filter((p) => p.collection === "weeknotes" && p.data.tags?.includes(tag))
+    .sort(
+      (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
+    ),
+  "digital-garden": allPosts
+    .filter(
+      (p) => p.collection === "digital-garden" && p.data.tags?.includes(tag),
+    )
+    .sort(
+      (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
+    ),
+};
+
+const sections = [
+  { key: "blog" as const, label: "Blog" },
+  { key: "weeknotes" as const, label: "Weeknotes" },
+  { key: "digital-garden" as const, label: "Digital Garden" },
+];
+
+const frontmatter = { title: tag };
+---
+
+<ProseLayout frontmatter={frontmatter}>
+  <p><a href="/tags">← all tags</a></p>
+  {
+    sections
+      .filter(({ key }) => byCollection[key].length > 0)
+      .map(({ key, label }) => (
+        <section>
+          <h2>{label}</h2>
+          <ul>
+            <p>
+              {byCollection[key].map((post) => (
+                <li>
+                  <a href={post.href}>{post.data.title}</a>
+                  <span class="date">
+                    {post.data.publishedOn.toLocaleDateString("en-US", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </span>
+                </li>
+              ))}
+            </p>
+          </ul>
+        </section>
+      ))
+  }
+</ProseLayout>
+
+<style>
+  ul {
+    list-style: none;
+  }
+
+  .date {
+    font-size: 0.9rem;
+    font-variant: small-caps;
+    margin-left: 0.5rem;
+    opacity: 0.6;
+  }
+</style>

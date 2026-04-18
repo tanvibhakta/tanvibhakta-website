@@ -1,6 +1,9 @@
 ---
 title: "Week of Feb 1st, 2026"
 publishedOn: 2026-02-08
+tags:
+  - ai-usage
+  - konkani
 ---
 
 ## Life
