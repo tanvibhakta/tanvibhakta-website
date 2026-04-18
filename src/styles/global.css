@@ -38,3 +38,19 @@ a:visited {
 @theme {
   --font-literata: "Literata", serif;
 }
+
+.para-link {
+  opacity: 0;
+  color: oklch(50.5% 0.213 27.518); /*red-800*/
+  text-decoration: none;
+  transition: opacity 0.15s ease-in-out;
+}
+
+p:hover .para-link {
+  opacity: 1;
+}
+
+.para-link:hover {
+  opacity: 1;
+  filter: none;
+}
