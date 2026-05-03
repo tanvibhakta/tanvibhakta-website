@@ -1,6 +1,6 @@
 ---
 import Layout from "./Layout.astro";
-const { frontmatter } = Astro.props;
+const { frontmatter, readingTimeMinutes } = Astro.props;
 /** TODO: different formats for different kinds of pages
 - one-off pages should have: flex flex-col items-center justify-center
 - long form pages (like my current work page, random notes dumps, etc, should have less margins and left justification
@@ -12,7 +12,16 @@ const { frontmatter } = Astro.props;
   class="min-w-screen min-h-screen flex justify-center my-12 md:my-16 prose md:prose-lg ld:prose-xl prose-stone prose-headings:font-literata prose-headings:font-bold"
 >
   <div class="mx-8 md:w-1/2 leading-6 pb-8">
-    {frontmatter?.title && <h1>{frontmatter.title}</h1>}
+    {
+      frontmatter?.title && (
+        <header class="title-block">
+          <h1>{frontmatter.title}</h1>
+          {readingTimeMinutes && (
+            <p class="reading-time">{readingTimeMinutes} min read</p>
+          )}
+        </header>
+      )
+    }
     <slot />
     {
       frontmatter?.tags && frontmatter.tags.length > 0 && (
@@ -29,6 +38,25 @@ const { frontmatter } = Astro.props;
 </Layout>
 
 <style>
+  .title-block {
+    margin-bottom: 2rem;
+  }
+
+  .title-block :global(h1) {
+    margin-bottom: 0.25rem;
+  }
+
+  .reading-time {
+    display: block;
+    font-size: 0.85rem;
+    font-style: italic;
+    font-variant: small-caps;
+    letter-spacing: 0.03em;
+    color: var(--tw-prose-captions, rgba(0, 0, 0, 0.55));
+    opacity: 0.7;
+    margin: 0;
+  }
+
   .tags {
     margin-top: 2rem;
     display: flex;
