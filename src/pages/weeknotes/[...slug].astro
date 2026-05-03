@@ -15,6 +15,6 @@ const { weeknote } = Astro.props;
 const { Content } = await render(weeknote);
 ---
 
-<ProseLayout frontmatter={weeknote.data}>
+<ProseLayout frontmatter={weeknote.data} hidePublishedOn>
   <Content />
 </ProseLayout>
