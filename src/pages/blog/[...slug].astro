@@ -3,6 +3,7 @@ import { render } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 import AudioPlayer from "../../components/AudioPlayer.astro";
 import { getPublishedEntries } from "../../utils/collections";
+import { getReadingTimeMinutes } from "../../utils/reading-time";
 
 export async function getStaticPaths() {
   const blogPosts = await getPublishedEntries("blog");
@@ -14,9 +15,10 @@ export async function getStaticPaths() {
 
 const { blogPost } = Astro.props;
 const { Content } = await render(blogPost);
+const readingTimeMinutes = getReadingTimeMinutes(blogPost.body);
 ---
 
-<ProseLayout frontmatter={blogPost.data}>
+<ProseLayout frontmatter={blogPost.data} readingTimeMinutes={readingTimeMinutes}>
   <Content />
   {
     blogPost.data.audio && (
