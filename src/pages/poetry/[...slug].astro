@@ -16,7 +16,7 @@ const { poem } = Astro.props;
 const { Content } = await render(poem);
 ---
 
-<ProseLayout frontmatter={poem.data}>
+<ProseLayout frontmatter={poem.data} category="poetry">
   <Content />
   {
     poem.data.audio && (

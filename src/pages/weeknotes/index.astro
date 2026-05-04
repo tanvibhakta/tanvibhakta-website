@@ -13,7 +13,7 @@ const { Content } = latestWeeknote
   : { Content: null };
 ---
 
-<ProseLayout>
+<ProseLayout frontmatter={{ title: "Weeknotes" }}>
   {
     latestWeeknote && (
       <article>
