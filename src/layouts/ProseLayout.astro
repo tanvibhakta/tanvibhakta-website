@@ -27,13 +27,16 @@ const publishedOnIso = showPublishedOn ? publishedOn.toISOString() : undefined;
       frontmatter?.title && (
         <header class="title-block">
           <h1>{frontmatter.title}</h1>
-          {publishedOnFormatted && (
-            <time class="published-on" datetime={publishedOnIso}>
-              {publishedOnFormatted}
-            </time>
-          )}
-          {readingTimeMinutes && (
-            <p class="reading-time">{readingTimeMinutes} min read</p>
+          {(publishedOnFormatted || readingTimeMinutes) && (
+            <p class="post-meta">
+              {publishedOnFormatted && (
+                <time datetime={publishedOnIso}>{publishedOnFormatted}</time>
+              )}
+              {publishedOnFormatted && readingTimeMinutes && (
+                <span aria-hidden="true"> · </span>
+              )}
+              {readingTimeMinutes && <span>{readingTimeMinutes} min read</span>}
+            </p>
           )}
         </header>
       )
@@ -55,22 +58,18 @@ const publishedOnIso = showPublishedOn ? publishedOn.toISOString() : undefined;
 
 <style>
   .title-block {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
 
   .title-block :global(h1) {
     margin-bottom: 0.25rem;
   }
 
-  .published-on,
-  .reading-time {
-    display: block;
+  .post-meta {
     font-size: 0.85rem;
-    font-style: italic;
     font-variant: small-caps;
     letter-spacing: 0.03em;
-    color: var(--tw-prose-captions, rgba(0, 0, 0, 0.55));
-    opacity: 0.7;
+    color: var(--tw-prose-body, rgba(0, 0, 0, 0.75));
     margin: 0;
   }
 
