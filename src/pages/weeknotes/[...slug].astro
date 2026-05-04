@@ -17,6 +17,10 @@ const { Content } = await render(weeknote);
 const readingTimeMinutes = getReadingTimeMinutes(weeknote.body);
 ---
 
-<ProseLayout frontmatter={weeknote.data} readingTimeMinutes={readingTimeMinutes}>
+<ProseLayout
+  frontmatter={weeknote.data}
+  readingTimeMinutes={readingTimeMinutes}
+  hidePublishedOn
+>
   <Content />
 </ProseLayout>
