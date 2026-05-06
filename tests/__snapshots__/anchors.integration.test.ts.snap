@@ -1,0 +1,26 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`kitchen-sink fixture snapshot > anchored elements in _anchor-fixture render with stable structure 1`] = `
+"<p id="p-1"> → #p-1  | "This is the first paragraph. It should get an anch"
+<p id="p-2"> → #p-2  | "This is the second paragraph, separated from the f"
+<h2 id="a-second-level-heading"> → #a-second-level-heading  | "A second-level heading"
+<p id="p-3"> → #p-3  | "Some content under the heading. The heading itself"
+<h3 id="a-third-level-heading-with-punctuation-yes"> → #a-third-level-heading-with-punctuation-yes  | "A third-level heading with punctuation: yes!"
+<p id="p-4"> → #p-4  | "More content here."
+<p id="p-5"> → #p-5  | "A tight unordered list:"
+<li id="li-1"> → #li-1  | "Apples"
+<li id="li-2"> → #li-2  | "Oranges"
+<li id="li-3"> → #li-3  | "Bananas"
+<p id="p-6"> → #p-6  | "A tight ordered list:"
+<li id="li-4"> → #li-4  | "First step"
+<li id="li-5"> → #li-5  | "Second step"
+<li id="li-6"> → #li-6  | "Third step"
+<p id="p-7"> → #p-7  | "A loose list (each item is wrapped in a paragraph)"
+<li id="(no-id)"> → (no-anchor)  | "First loose item with a longer body that justifies"
+<p id="p-8"> → #p-8  | "First loose item with a longer body that justifies"
+<li id="(no-id)"> → (no-anchor)  | "Second loose item, also longer, also wrapped in it"
+<p id="p-9"> → #p-9  | "Second loose item, also longer, also wrapped in it"
+<p id="p-10"> → #p-10  | "A blockquote:"
+<p id="p-11"> → #p-11  | "Quoted paragraph inside a blockquote."
+<p id="p-12"> → #p-12  | "Final paragraph after everything.""
+`;

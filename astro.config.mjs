@@ -6,7 +6,9 @@ import tailwindcss from "@tailwindcss/vite";
 import mdx from '@astrojs/mdx';
 import icon from 'astro-icon';
 import remarkBreaks from 'remark-breaks';
-import { rehypeParagraphAnchors } from './src/plugins/rehype-paragraph-anchors.mjs';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import { rehypeAnchors } from './src/plugins/rehype-anchors.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -16,7 +18,19 @@ export default defineConfig({
 
   markdown: {
     remarkPlugins: [remarkBreaks],
-    rehypePlugins: [rehypeParagraphAnchors],
+    rehypePlugins: [
+      rehypeSlug,
+      [rehypeAutolinkHeadings, {
+        behavior: 'append',
+        properties: {
+          className: ['anchor-link'],
+          ariaLabel: 'Link to this section',
+        },
+        content: { type: 'text', value: ' #' },
+        test: (node) => node.tagName !== 'h1',
+      }],
+      rehypeAnchors,
+    ],
   },
 
   redirects: {
