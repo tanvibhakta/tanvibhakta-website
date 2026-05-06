@@ -39,18 +39,15 @@ a:visited {
   --font-literata: "Literata", serif;
 }
 
-.para-link {
+.anchor-link {
   opacity: 0;
   color: oklch(50.5% 0.213 27.518); /*red-800*/
   text-decoration: none;
   transition: opacity 0.15s ease-in-out;
 }
 
-p:hover .para-link {
-  opacity: 1;
-}
-
-.para-link:hover {
+:is(p, li, h2, h3, h4, h5, h6):hover > .anchor-link,
+.anchor-link:hover {
   opacity: 1;
   filter: none;
 }

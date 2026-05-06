@@ -22,6 +22,8 @@
     "astro-icon": "^1.1.5",
     "markdown-it": "^14.1.0",
     "reading-time": "^1.5.0",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-slug": "^6.0.0",
     "sanitize-html": "^2.17.0",
     "sharp": "^0.34.5",
     "tailwindcss": "^4.1.4",
