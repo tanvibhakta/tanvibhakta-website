@@ -1,0 +1,72 @@
+---
+type Section = { label: string; href: string };
+
+const NAV_ITEMS: readonly Section[] = [
+  { label: "Work", href: "/work" },
+  { label: "Blog", href: "/blog" },
+  { label: "Weeknotes", href: "/weeknotes" },
+] as const;
+
+const KNOWN_SECTIONS: readonly Section[] = [
+  ...NAV_ITEMS,
+  { label: "Poetry", href: "/poetry" },
+  { label: "Digital Garden", href: "/digital-garden" },
+  { label: "Tags", href: "/tags" },
+  { label: "Subscribe", href: "/subscribe" },
+] as const;
+
+function titleCase(slug: string): string {
+  return slug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+function getCurrentSection(path: string): Section | undefined {
+  const known = [...KNOWN_SECTIONS]
+    .sort((a, b) => b.href.length - a.href.length)
+    .find((s) => path === s.href || path.startsWith(`${s.href}/`));
+  if (known) return known;
+
+  const firstSegment = path.split("/").filter(Boolean)[0];
+  if (!firstSegment || firstSegment === "404") return undefined;
+  return { label: titleCase(firstSegment), href: `/${firstSegment}` };
+}
+
+const current = getCurrentSection(Astro.url.pathname);
+const inMainNav =
+  current && NAV_ITEMS.some((item) => item.href === current.href);
+const items: Section[] =
+  !current || inMainNav ? [...NAV_ITEMS] : [current, ...NAV_ITEMS];
+---
+
+<header
+  class="not-prose w-full max-w-5xl mx-auto px-6 md:px-10 my-6 flex items-center justify-between gap-6"
+>
+  <a href="/" class="text-neutral-800! font-literata text-2xl sm:text-3xl">
+    Tanvi Bhakta
+  </a>
+
+  <nav aria-label="Primary">
+    <ul
+      class="flex flex-wrap items-center justify-end list-none p-0 m-0 gap-4 sm:gap-6 sm:text-lg"
+    >
+      {
+        items.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              aria-current={current?.href === item.href ? "page" : undefined}
+              class:list={[
+                current?.href === item.href &&
+                  "underline underline-offset-2 decoration-2",
+              ]}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
