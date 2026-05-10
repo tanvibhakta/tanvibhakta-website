@@ -4,12 +4,16 @@ import { glob } from "astro/loaders";
 export const TAGS = ["ai-usage", "konkani", "philosophy", "reviews"] as const;
 export type Tag = (typeof TAGS)[number];
 
-// Common schema for all collections
+// Common schema for all collections.
+// `anchors` toggles the rehype-anchors plugin per entry — set false to skip
+// generating per-paragraph / per-list-item `#` links. Collection-wide
+// defaults are configured via the plugin's `skip` option in astro.config.
 const collectionSchema = z.object({
   title: z.string(),
   publishedOn: z.date(),
   draft: z.boolean().optional(),
   tags: z.array(z.enum(TAGS)).optional().default([]),
+  anchors: z.boolean().optional(),
 });
 
 // Manually define collections for now

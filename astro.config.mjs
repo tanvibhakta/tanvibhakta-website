@@ -29,7 +29,7 @@ export default defineConfig({
         content: { type: 'text', value: ' #' },
         test: (node) => node.tagName !== 'h1',
       }],
-      rehypeAnchors,
+      [rehypeAnchors, { skip: (file) => /[\\/]posts[\\/]poetry[\\/]/.test(file?.path ?? "") }],
     ],
   },
 
