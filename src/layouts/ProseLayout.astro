@@ -1,5 +1,6 @@
 ---
 import Layout from "./Layout.astro";
+import Nav from "../components/Nav.astro";
 import { shortenWeeknoteTitles } from "../utils/date-helpers";
 
 const { frontmatter, category, readingTimeMinutes, hidePublishedOn } =
@@ -37,9 +38,12 @@ const publishedOnIso = showPublishedOn ? publishedOn.toISOString() : undefined;
 
 <Layout
   title={pageTitle}
-  class="min-w-screen min-h-screen flex justify-center my-12 md:my-16 prose md:prose-lg ld:prose-xl prose-stone prose-headings:font-literata prose-headings:font-bold"
+  class="min-w-screen min-h-screen flex flex-col items-center text-stone-800 bg-stone-100"
 >
-  <div class="mx-8 md:w-1/2 leading-6 pb-8">
+  <Nav />
+  <article
+    class="mx-8 md:w-1/2 leading-6 pb-8 mt-6 md:mt-8 prose md:prose-lg ld:prose-xl prose-stone prose-headings:font-literata prose-headings:font-bold"
+  >
     {
       frontmatter?.title && (
         <header class="title-block">
@@ -70,7 +74,7 @@ const publishedOnIso = showPublishedOn ? publishedOn.toISOString() : undefined;
         </div>
       )
     }
-  </div>
+  </article>
 </Layout>
 
 <style>
