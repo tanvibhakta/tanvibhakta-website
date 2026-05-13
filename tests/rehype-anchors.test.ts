@@ -22,9 +22,15 @@ function text(value: string): HastText {
   return { type: "text", value };
 }
 
-function run(tree: { type: "root"; children: HastNode[] }) {
+function run(
+  tree: { type: "root"; children: HastNode[] },
+  pluginArgs: {
+    options?: Parameters<typeof rehypeAnchors>[0];
+    file?: object;
+  } = {},
+) {
   // @ts-expect-error - hast tree shape
-  rehypeAnchors()(tree);
+  rehypeAnchors(pluginArgs.options)(tree, pluginArgs.file);
   return tree;
 }
 
@@ -145,6 +151,54 @@ describe("rehypeAnchors (paragraphs + list items)", () => {
     // blockquote untouched, but inner <p> still gets anchored
     const innerP = (tree.children[1] as HastElement).children[0] as HastElement;
     expect(lastChild(innerP).properties.href).toBe("#p-1");
+  });
+
+  test("frontmatter anchors:false skips the entire entry", () => {
+    const tree = {
+      type: "root" as const,
+      children: [elem("p", {}, [text("hi")])],
+    };
+    run(tree, {
+      file: { data: { astro: { frontmatter: { anchors: false } } } },
+    });
+
+    const p = tree.children[0] as HastElement;
+    expect(p.properties.id).toBeUndefined();
+    expect(p.children).toHaveLength(1);
+  });
+
+  test("config-level skip predicate skips matching files", () => {
+    const tree = {
+      type: "root" as const,
+      children: [elem("p", {}, [text("hi")])],
+    };
+    run(tree, {
+      options: { skip: (file) => file?.path?.includes("/poetry/") },
+      file: {
+        path: "/posts/poetry/day-1.md",
+        data: { astro: { frontmatter: {} } },
+      },
+    });
+
+    const p = tree.children[0] as HastElement;
+    expect(p.properties.id).toBeUndefined();
+  });
+
+  test("frontmatter anchors:true overrides a config-level skip", () => {
+    const tree = {
+      type: "root" as const,
+      children: [elem("p", {}, [text("hi")])],
+    };
+    run(tree, {
+      options: { skip: () => true },
+      file: {
+        path: "/posts/poetry/day-1.md",
+        data: { astro: { frontmatter: { anchors: true } } },
+      },
+    });
+
+    const p = tree.children[0] as HastElement;
+    expect(p.properties.id).toBe("p-1");
   });
 
   test("anchor link uses anchor-link class with appropriate aria-label", () => {

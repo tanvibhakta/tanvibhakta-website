@@ -1,7 +1,28 @@
 import { visit } from "unist-util-visit";
 
-export function rehypeAnchors() {
-  return (tree) => {
+/**
+ * Adds `#`-style permalink anchors to every paragraph and list item.
+ *
+ * Disabling:
+ *   - Per-entry: set `anchors: false` in the markdown file's frontmatter.
+ *   - Collection-wide / path-based: pass a `skip` predicate when registering
+ *     the plugin in `astro.config.mjs`, e.g.
+ *
+ *       [rehypeAnchors, { skip: (file) => file.path?.includes("/poetry/") }]
+ *
+ * Frontmatter `anchors: false` always wins; `skip` is a default applied per
+ * file path. The plugin runs once per file at content-sync time.
+ */
+export function rehypeAnchors(options = {}) {
+  const { skip } = options;
+
+  return (tree, file) => {
+    const fm = file?.data?.astro?.frontmatter;
+    if (fm?.anchors === false) return;
+    if (fm?.anchors !== true && typeof skip === "function" && skip(file)) {
+      return;
+    }
+
     let pCount = 0;
     let liCount = 0;
 
