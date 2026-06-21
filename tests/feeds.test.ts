@@ -377,7 +377,7 @@ describe("Feed Content Generation", () => {
     expect(callArgs.items[0].title).toBe("Published Poem");
   });
 
-  it("should derive a feed title from the body for title-less notes", async () => {
+  it("should use the publish date as the feed title for title-less notes", async () => {
     const { getCollection: mockGetCollection } = await import("astro:content");
     const rssModule = await import("@astrojs/rss");
     const mockRss = vi.mocked(rssModule.default);
@@ -386,7 +386,7 @@ describe("Feed Content Generation", () => {
       {
         id: "2026-06-21-1200",
         collection: "notes",
-        data: { publishedOn: new Date("2026-06-21") },
+        data: { publishedOn: new Date("2026-06-21T12:00:00Z") },
         body: "Just shipped a tiny new content type for short posts.",
       },
     ];
@@ -404,38 +404,8 @@ describe("Feed Content Generation", () => {
     await generateCollectionFeed("notes");
 
     const callArgs = mockRss.mock.calls[0][0];
-    expect(callArgs.items[0].title).toBe(
-      "Just shipped a tiny new content type for short posts.",
-    );
-  });
-
-  it("should fall back to the date when a note body is empty", async () => {
-    const { getCollection: mockGetCollection } = await import("astro:content");
-    const rssModule = await import("@astrojs/rss");
-    const mockRss = vi.mocked(rssModule.default);
-
-    const noteEntries = [
-      {
-        id: "2026-06-21-1300",
-        collection: "notes",
-        data: { publishedOn: new Date("2026-06-21T12:00:00Z") },
-        body: "   ",
-      },
-    ];
-    vi.mocked(mockGetCollection).mockImplementation(
-      (_name: string, filter?: (entry: any) => boolean) =>
-        Promise.resolve(filter ? noteEntries.filter(filter) : noteEntries),
-    );
-
-    mockRss.mockReturnValue(
-      new Response('<?xml version="1.0"?><rss></rss>', {
-        headers: { "Content-Type": "application/rss+xml" },
-      }),
-    );
-
-    await generateCollectionFeed("notes");
-
-    const callArgs = mockRss.mock.calls[0][0];
-    expect(callArgs.items[0].title).toMatch(/2026/);
+    // Title-less notes fall back to their formatted date, never the body.
+    expect(callArgs.items[0].title).toMatch(/^[A-Z][a-z]+ \d{1,2}, 2026$/);
+    expect(callArgs.items[0].title).not.toContain("shipped");
   });
 });

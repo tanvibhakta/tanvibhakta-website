@@ -4,6 +4,7 @@ import MarkdownIt from "markdown-it";
 import sanitizeHtml from "sanitize-html";
 import { collections } from "../content.config";
 import { isPublished } from "./collections";
+import { formatLongDate } from "./date-helpers";
 
 const SITE_URL = "https://tanvibhakta.in";
 const SITE_TITLE = "Tanvi Bhakta";
@@ -63,29 +64,13 @@ function capitalizeFirst(str: string): string {
 }
 
 /**
- * Derive a feed item title. Most collections have an explicit `title`.
- * Title-less collections (e.g. notes) fall back to the first non-empty line
- * of the body, truncated, and finally to the formatted publish date.
+ * The title for a feed item. Titled collections use their `title`; the
+ * title-less `notes` collection falls back to its formatted publish date —
+ * the same string shown as the note's heading on the site.
  */
 function feedItemTitle(entry: AnyCollectionEntry): string {
   const data = entry.data as { title?: string; publishedOn: Date };
-  if (data.title) return data.title;
-
-  const firstLine =
-    entry.body
-      ?.split("\n")
-      .map((line) => line.trim())
-      .find((line) => line.length > 0) ?? "";
-  const stripped = firstLine.replace(/^[#>\-*\s]+/, "").trim();
-  if (stripped) {
-    return stripped.length > 60 ? `${stripped.slice(0, 59)}…` : stripped;
-  }
-
-  return data.publishedOn.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  return data.title ?? formatLongDate(data.publishedOn);
 }
 
 export async function getAllCollectionEntries(): Promise<AnyCollectionEntry[]> {

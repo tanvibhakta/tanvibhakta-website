@@ -229,10 +229,6 @@ collections:
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{hour}}{{minute}}"
     summary: "{{body}}"
-    view_filters:
-      - label: Drafts
-        field: draft
-        pattern: true
     sortable_fields:
       fields: [publishedOn]
       default:
@@ -247,13 +243,6 @@ collections:
           time_format: false,
           format: YYYY-MM-DD,
           default: "{{now}}",
-        }
-      - {
-          label: Draft,
-          name: draft,
-          widget: boolean,
-          default: true,
-          required: false,
         }
       - label: Tags
         name: tags

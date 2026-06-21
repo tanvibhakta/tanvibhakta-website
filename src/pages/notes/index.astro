@@ -2,6 +2,7 @@
 import { render } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 import { getPublishedEntries } from "../../utils/collections";
+import { formatLongDate } from "../../utils/date-helpers";
 
 const notes = (await getPublishedEntries("notes")).sort(
   (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
@@ -13,12 +14,6 @@ const renderedNotes = await Promise.all(
     Content: (await render(note)).Content,
   })),
 );
-
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-});
 
 const frontmatter = {
   title: "Notes",
@@ -36,7 +31,7 @@ const frontmatter = {
             class="text-sm tracking-wide opacity-75 no-underline [font-variant:small-caps] hover:underline"
           >
             <time datetime={note.data.publishedOn.toISOString()}>
-              {dateFormatter.format(note.data.publishedOn)}
+              {formatLongDate(note.data.publishedOn)}
             </time>
           </a>
         </header>
