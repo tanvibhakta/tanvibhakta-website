@@ -46,6 +46,18 @@ const digitalGarden = defineCollection({
   }),
 });
 
+// Short-form, title-less posts (microblog / IndieWeb "notes"). Just a body,
+// a timestamp, and optional tags — no `title`, so it gets its own schema.
+const notes = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./posts/notes/" }),
+  schema: z.object({
+    publishedOn: z.date(),
+    draft: z.boolean().optional(),
+    tags: z.array(z.enum(TAGS)).optional().default([]),
+    anchors: z.boolean().optional(),
+  }),
+});
+
 const pages = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/pages/" }),
   schema: z.object({
@@ -59,5 +71,6 @@ export const collections = {
   weeknotes,
   poetry,
   digitalGarden,
+  notes,
   pages,
 };

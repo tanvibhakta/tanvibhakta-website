@@ -6,6 +6,21 @@ import { shortenWeeknoteTitles } from "../utils/date-helpers";
 const { frontmatter, category, readingTimeMinutes, hidePublishedOn } =
   Astro.props;
 
+const publishedOn: Date | undefined = frontmatter?.publishedOn;
+const showPublishedOn = !hidePublishedOn && publishedOn instanceof Date;
+const publishedOnFormatted = showPublishedOn
+  ? publishedOn.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  : null;
+const publishedOnIso = showPublishedOn ? publishedOn.toISOString() : undefined;
+
+// Notes are title-less: fall back to the date for the <title> tag and show a
+// date-only header instead of an <h1>.
+const isNotes = category === "notes";
+
 let pageTitle = "";
 if (frontmatter?.title) {
   if (category === "weeknotes") {
@@ -17,23 +32,14 @@ if (frontmatter?.title) {
   } else {
     pageTitle = frontmatter.title;
   }
+} else if (isNotes && publishedOnFormatted) {
+  pageTitle = `${publishedOnFormatted} | Notes`;
 }
 /** TODO: different formats for different kinds of pages
 - one-off pages should have: flex flex-col items-center justify-center
 - long form pages (like my current work page, random notes dumps, etc, should have less margins and left justification
 -  blog posts also should be treated differently.
   */
-
-const publishedOn: Date | undefined = frontmatter?.publishedOn;
-const showPublishedOn = !hidePublishedOn && publishedOn instanceof Date;
-const publishedOnFormatted = showPublishedOn
-  ? publishedOn.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
-  : null;
-const publishedOnIso = showPublishedOn ? publishedOn.toISOString() : undefined;
 ---
 
 <Layout
@@ -45,9 +51,9 @@ const publishedOnIso = showPublishedOn ? publishedOn.toISOString() : undefined;
     class="mx-8 md:w-1/2 leading-6 pb-8 mt-6 md:mt-8 prose md:prose-lg ld:prose-xl prose-stone prose-headings:font-literata prose-headings:font-bold"
   >
     {
-      frontmatter?.title && (
+      (frontmatter?.title || (isNotes && publishedOnFormatted)) && (
         <header class="title-block">
-          <h1>{frontmatter.title}</h1>
+          {frontmatter?.title && <h1>{frontmatter.title}</h1>}
           {(publishedOnFormatted || readingTimeMinutes) && (
             <p class="post-meta">
               {publishedOnFormatted && (

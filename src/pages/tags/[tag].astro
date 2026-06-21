@@ -31,6 +31,11 @@ const allPosts = [
     collection: "digital-garden" as const,
     href: `/digital-garden/${p.id}`,
   })),
+  ...(await getPublishedEntries("notes")).map((p) => ({
+    ...p,
+    collection: "notes" as const,
+    href: `/notes/${p.id}`,
+  })),
 ];
 
 const byCollection = {
@@ -51,12 +56,18 @@ const byCollection = {
     .sort(
       (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
     ),
+  notes: allPosts
+    .filter((p) => p.collection === "notes" && p.data.tags?.includes(tag))
+    .sort(
+      (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
+    ),
 };
 
 const sections = [
   { key: "blog" as const, label: "Blog" },
   { key: "weeknotes" as const, label: "Weeknotes" },
   { key: "digital-garden" as const, label: "Digital Garden" },
+  { key: "notes" as const, label: "Notes" },
 ];
 
 const frontmatter = { title: tag };
@@ -74,7 +85,9 @@ const frontmatter = { title: tag };
             <p>
               {byCollection[key].map((post) => (
                 <li>
-                  <a href={post.href}>{post.data.title}</a>
+                  <a href={post.href}>
+                    {(post.data as { title?: string }).title ?? "Note"}
+                  </a>
                   <span class="date">
                     {post.data.publishedOn.toLocaleDateString("en-US", {
                       day: "numeric",

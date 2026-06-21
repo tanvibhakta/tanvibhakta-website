@@ -25,15 +25,33 @@ collections:
         direction: descending
     fields:
       - { label: Title, name: title, widget: string }
-      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
-      - { label: Draft, name: draft, widget: boolean, default: true, required: false }
+      - {
+          label: Publish Date,
+          name: publishedOn,
+          widget: datetime,
+          date_format: YYYY-MM-DD,
+          time_format: false,
+          format: YYYY-MM-DD,
+        }
+      - {
+          label: Draft,
+          name: draft,
+          widget: boolean,
+          default: true,
+          required: false,
+        }
       - label: Audio
         name: audio
         widget: file
         required: false
         media_folder: /public/media/audio
         public_folder: /media/audio
-      - { label: Audio Title, name: audioTitle, widget: string, required: false }
+      - {
+          label: Audio Title,
+          name: audioTitle,
+          widget: string,
+          required: false,
+        }
       - label: Tags
         name: tags
         widget: select
@@ -62,15 +80,33 @@ collections:
         direction: descending
     fields:
       - { label: Title, name: title, widget: string }
-      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
-      - { label: Draft, name: draft, widget: boolean, default: true, required: false }
+      - {
+          label: Publish Date,
+          name: publishedOn,
+          widget: datetime,
+          date_format: YYYY-MM-DD,
+          time_format: false,
+          format: YYYY-MM-DD,
+        }
+      - {
+          label: Draft,
+          name: draft,
+          widget: boolean,
+          default: true,
+          required: false,
+        }
       - label: Audio
         name: audio
         widget: file
         required: false
         media_folder: /public/media/audio
         public_folder: /media/audio
-      - { label: Audio Title, name: audioTitle, widget: string, required: false }
+      - {
+          label: Audio Title,
+          name: audioTitle,
+          widget: string,
+          required: false,
+        }
       - label: Tags
         name: tags
         widget: select
@@ -99,8 +135,21 @@ collections:
         direction: descending
     fields:
       - { label: Title, name: title, widget: string }
-      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
-      - { label: Draft, name: draft, widget: boolean, default: true, required: false }
+      - {
+          label: Publish Date,
+          name: publishedOn,
+          widget: datetime,
+          date_format: YYYY-MM-DD,
+          time_format: false,
+          format: YYYY-MM-DD,
+        }
+      - {
+          label: Draft,
+          name: draft,
+          widget: boolean,
+          default: true,
+          required: false,
+        }
       - label: Tags
         name: tags
         widget: select
@@ -132,10 +181,80 @@ collections:
         direction: descending
     fields:
       - { label: Title, name: title, widget: string }
-      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
-      - { label: Last Updated, name: lastUpdatedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD, default: "{{now}}" }
-      - { label: Description, name: description, widget: string, required: false }
-      - { label: Draft, name: draft, widget: boolean, default: true, required: false }
+      - {
+          label: Publish Date,
+          name: publishedOn,
+          widget: datetime,
+          date_format: YYYY-MM-DD,
+          time_format: false,
+          format: YYYY-MM-DD,
+        }
+      - {
+          label: Last Updated,
+          name: lastUpdatedOn,
+          widget: datetime,
+          date_format: YYYY-MM-DD,
+          time_format: false,
+          format: YYYY-MM-DD,
+          default: "{{now}}",
+        }
+      - {
+          label: Description,
+          name: description,
+          widget: string,
+          required: false,
+        }
+      - {
+          label: Draft,
+          name: draft,
+          widget: boolean,
+          default: true,
+          required: false,
+        }
+      - label: Tags
+        name: tags
+        widget: select
+        multiple: true
+        required: false
+        options:
+          - { label: "AI Usage", value: "ai-usage" }
+          - { label: "Konkani", value: "konkani" }
+          - { label: "Philosophy", value: "philosophy" }
+          - { label: "Reviews", value: "reviews" }
+      - { label: Body, name: body, widget: markdown }
+
+  - name: notes
+    label: Notes
+    folder: posts/notes
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{hour}}{{minute}}"
+    summary: "{{body}}"
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
+    sortable_fields:
+      fields: [publishedOn]
+      default:
+        field: publishedOn
+        direction: descending
+    fields:
+      - {
+          label: Publish Date,
+          name: publishedOn,
+          widget: datetime,
+          date_format: YYYY-MM-DD,
+          time_format: false,
+          format: YYYY-MM-DD,
+          default: "{{now}}",
+        }
+      - {
+          label: Draft,
+          name: draft,
+          widget: boolean,
+          default: true,
+          required: false,
+        }
       - label: Tags
         name: tags
         widget: select
@@ -159,7 +278,13 @@ collections:
         pattern: true
     fields:
       - { label: Title, name: title, widget: string }
-      - { label: Draft, name: draft, widget: boolean, default: true, required: false }
+      - {
+          label: Draft,
+          name: draft,
+          widget: boolean,
+          default: true,
+          required: false,
+        }
       - { label: Body, name: body, widget: markdown }
 
 media_libraries:
