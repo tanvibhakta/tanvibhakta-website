@@ -1,7 +1,7 @@
 ---
 import Layout from "./Layout.astro";
 import Nav from "../components/Nav.astro";
-import { shortenWeeknoteTitles } from "../utils/date-helpers";
+import { shortenWeeknoteTitles, formatLongDate } from "../utils/date-helpers";
 
 const { frontmatter, category, readingTimeMinutes, hidePublishedOn, noindex } =
   Astro.props;
@@ -9,11 +9,7 @@ const { frontmatter, category, readingTimeMinutes, hidePublishedOn, noindex } =
 const publishedOn: Date | undefined = frontmatter?.publishedOn;
 const showPublishedOn = !hidePublishedOn && publishedOn instanceof Date;
 const publishedOnFormatted = showPublishedOn
-  ? publishedOn.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
+  ? formatLongDate(publishedOn)
   : null;
 const publishedOnIso = showPublishedOn ? publishedOn.toISOString() : undefined;
 

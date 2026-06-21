@@ -3,6 +3,7 @@ import { getAllTaggedPosts, getAllTags } from "../../utils/collections";
 import { TAGGED_COLLECTIONS } from "../../utils/tagged-collections";
 import { SECTIONS } from "../../content.config";
 import ProseLayout from "../../layouts/ProseLayout.astro";
+import { formatLongDate } from "../../utils/date-helpers";
 
 export async function getStaticPaths() {
   return (await getAllTags()).map((tag) => ({ params: { tag } }));
@@ -34,20 +35,18 @@ const frontmatter = { title: tag };
         <h2>{label}</h2>
         <ul>
           <p>
-            {posts.map((post) => (
-              <li>
-                <a href={post.href}>
-                  {(post.data as { title?: string }).title ?? "Note"}
-                </a>
-                <span class="date">
-                  {post.data.publishedOn.toLocaleDateString("en-US", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </span>
-              </li>
-            ))}
+            {posts.map((post) => {
+              const title = (post.data as { title?: string }).title;
+              const date = formatLongDate(post.data.publishedOn);
+              // Title-less notes use their date as the link text, so there's
+              // no separate date to repeat alongside it.
+              return (
+                <li>
+                  <a href={post.href}>{title ?? date}</a>
+                  {title && <span class="date">{date}</span>}
+                </li>
+              );
+            })}
           </p>
         </ul>
       </section>
