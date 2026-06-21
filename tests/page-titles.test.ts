@@ -73,6 +73,29 @@ describe("Page Titles", () => {
     expect(extractTitle(html)).toBe(`Digital Garden | ${SITE_TAB_TITLE}`);
   });
 
+  test("Notes index has correct title", async () => {
+    const html = await fs.promises.readFile(
+      path.join(distDir, "notes/index.html"),
+      "utf8",
+    );
+    expect(extractTitle(html)).toBe("Notes | Tanvi's Web Home");
+  });
+
+  test("Note has date title with Notes suffix", async () => {
+    const notesDir = path.join(distDir, "notes");
+    const entries = await fs.promises.readdir(notesDir);
+    const posts = entries.filter(
+      (e) =>
+        e !== "feed.xml" && fs.statSync(path.join(notesDir, e)).isDirectory(),
+    );
+
+    const html = await fs.promises.readFile(
+      path.join(notesDir, posts[0], "index.html"),
+      "utf8",
+    );
+    expect(extractTitle(html)).toMatch(/^.+ \| Notes \| Tanvi's Web Home$/);
+  });
+
   test("Blog post has title with Blog suffix", async () => {
     const blogDir = path.join(distDir, "blog");
     const entries = await fs.promises.readdir(blogDir);

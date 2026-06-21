@@ -36,7 +36,9 @@ const frontmatter = { title: tag };
           <p>
             {posts.map((post) => (
               <li>
-                <a href={post.href}>{post.data.title}</a>
+                <a href={post.href}>
+                  {(post.data as { title?: string }).title ?? "Note"}
+                </a>
                 <span class="date">
                   {post.data.publishedOn.toLocaleDateString("en-US", {
                     day: "numeric",

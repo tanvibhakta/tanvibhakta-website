@@ -37,7 +37,10 @@ export default defineConfig({
       ],
       [
         rehypeAnchors,
-        { skip: (file) => /[\\/]posts[\\/]poetry[\\/]/.test(file?.path ?? "") },
+        {
+          skip: (file) =>
+            /[\\/]posts[\\/](poetry|notes)[\\/]/.test(file?.path ?? ""),
+        },
       ],
     ],
   },

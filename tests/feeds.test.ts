@@ -76,6 +76,7 @@ vi.mock("../src/content.config", () => ({
     weeknotes: {},
     poetry: {},
     digitalGarden: {},
+    notes: {},
   },
   COLLECTION_SEGMENTS: {
     blog: "blog",
@@ -135,20 +136,26 @@ describe("Feed Configuration", () => {
         "weeknotes",
         "poetry",
         "digitalGarden",
+        "notes",
       ]);
     });
 
     it("should exclude collections from eligibility", () => {
       FEED_CONFIG.excludedCollections = ["poetry"];
       const collections = getEligibleCollections();
-      expect(collections).toEqual(["blog", "weeknotes", "digitalGarden"]);
+      expect(collections).toEqual([
+        "blog",
+        "weeknotes",
+        "digitalGarden",
+        "notes",
+      ]);
       expect(collections).not.toContain("poetry");
     });
 
     it("should exclude multiple collections from eligibility", () => {
       FEED_CONFIG.excludedCollections = ["poetry", "weeknotes"];
       const collections = getEligibleCollections();
-      expect(collections).toEqual(["blog", "digitalGarden"]);
+      expect(collections).toEqual(["blog", "digitalGarden", "notes"]);
       expect(collections).not.toContain("poetry");
       expect(collections).not.toContain("weeknotes");
     });
@@ -162,20 +169,31 @@ describe("Feed Configuration", () => {
         "weeknotes",
         "poetry",
         "digitalGarden",
+        "notes",
       ]);
     });
 
     it("should exclude collections entirely when in excludedCollections", () => {
       FEED_CONFIG.excludedCollections = ["poetry"];
       const collections = getMainFeedEligibleCollections();
-      expect(collections).toEqual(["blog", "weeknotes", "digitalGarden"]);
+      expect(collections).toEqual([
+        "blog",
+        "weeknotes",
+        "digitalGarden",
+        "notes",
+      ]);
       expect(collections).not.toContain("poetry");
     });
 
     it("should exclude collections from main feed when in excludeFromMainFeed", () => {
       FEED_CONFIG.excludeFromMainFeed = ["poetry"];
       const collections = getMainFeedEligibleCollections();
-      expect(collections).toEqual(["blog", "weeknotes", "digitalGarden"]);
+      expect(collections).toEqual([
+        "blog",
+        "weeknotes",
+        "digitalGarden",
+        "notes",
+      ]);
       expect(collections).not.toContain("poetry");
     });
 
@@ -183,7 +201,7 @@ describe("Feed Configuration", () => {
       FEED_CONFIG.excludedCollections = ["poetry"];
       FEED_CONFIG.excludeFromMainFeed = ["weeknotes"];
       const collections = getMainFeedEligibleCollections();
-      expect(collections).toEqual(["blog", "digitalGarden"]);
+      expect(collections).toEqual(["blog", "digitalGarden", "notes"]);
       expect(collections).not.toContain("poetry");
       expect(collections).not.toContain("weeknotes");
     });
@@ -192,8 +210,21 @@ describe("Feed Configuration", () => {
       FEED_CONFIG.excludedCollections = ["poetry"];
       FEED_CONFIG.excludeFromMainFeed = ["poetry"]; // Same collection in both
       const collections = getMainFeedEligibleCollections();
-      expect(collections).toEqual(["blog", "weeknotes", "digitalGarden"]);
+      expect(collections).toEqual([
+        "blog",
+        "weeknotes",
+        "digitalGarden",
+        "notes",
+      ]);
       expect(collections).not.toContain("poetry");
+    });
+
+    it("excludes notes from the main feed by default", () => {
+      // Restore the real default the app ships with
+      FEED_CONFIG.excludeFromMainFeed = ["notes"];
+      const collections = getMainFeedEligibleCollections();
+      expect(collections).not.toContain("notes");
+      expect(getEligibleCollections()).toContain("notes");
     });
   });
 });
@@ -351,5 +382,67 @@ describe("Feed Content Generation", () => {
     const callArgs = mockRss.mock.calls[0][0];
     expect(callArgs.items).toHaveLength(1);
     expect(callArgs.items[0].title).toBe("Published Poem");
+  });
+
+  it("should derive a feed title from the body for title-less notes", async () => {
+    const { getCollection: mockGetCollection } = await import("astro:content");
+    const rssModule = await import("@astrojs/rss");
+    const mockRss = vi.mocked(rssModule.default);
+
+    const noteEntries = [
+      {
+        id: "2026-06-21-1200",
+        collection: "notes",
+        data: { publishedOn: new Date("2026-06-21") },
+        body: "Just shipped a tiny new content type for short posts.",
+      },
+    ];
+    vi.mocked(mockGetCollection).mockImplementation(
+      (_name: string, filter?: (entry: any) => boolean) =>
+        Promise.resolve(filter ? noteEntries.filter(filter) : noteEntries),
+    );
+
+    mockRss.mockReturnValue(
+      new Response('<?xml version="1.0"?><rss></rss>', {
+        headers: { "Content-Type": "application/rss+xml" },
+      }),
+    );
+
+    await generateCollectionFeed("notes");
+
+    const callArgs = mockRss.mock.calls[0][0];
+    expect(callArgs.items[0].title).toBe(
+      "Just shipped a tiny new content type for short posts.",
+    );
+  });
+
+  it("should fall back to the date when a note body is empty", async () => {
+    const { getCollection: mockGetCollection } = await import("astro:content");
+    const rssModule = await import("@astrojs/rss");
+    const mockRss = vi.mocked(rssModule.default);
+
+    const noteEntries = [
+      {
+        id: "2026-06-21-1300",
+        collection: "notes",
+        data: { publishedOn: new Date("2026-06-21T12:00:00Z") },
+        body: "   ",
+      },
+    ];
+    vi.mocked(mockGetCollection).mockImplementation(
+      (_name: string, filter?: (entry: any) => boolean) =>
+        Promise.resolve(filter ? noteEntries.filter(filter) : noteEntries),
+    );
+
+    mockRss.mockReturnValue(
+      new Response('<?xml version="1.0"?><rss></rss>', {
+        headers: { "Content-Type": "application/rss+xml" },
+      }),
+    );
+
+    await generateCollectionFeed("notes");
+
+    const callArgs = mockRss.mock.calls[0][0];
+    expect(callArgs.items[0].title).toMatch(/2026/);
   });
 });

@@ -26,7 +26,7 @@ export const FEED_CONFIG = {
   // Collections to exclude from feed generation entirely
   excludedCollections: ["pages"] as string[],
   // Collections to exclude from the main unified feed (but still get individual feeds)
-  excludeFromMainFeed: [] as string[],
+  excludeFromMainFeed: ["notes"] as string[],
 };
 
 type CollectionName = keyof typeof collections;
@@ -57,6 +57,32 @@ export function getMainFeedEligibleCollections(): CollectionName[] {
 
 function capitalizeFirst(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/**
+ * Derive a feed item title. Most collections have an explicit `title`.
+ * Title-less collections (e.g. notes) fall back to the first non-empty line
+ * of the body, truncated, and finally to the formatted publish date.
+ */
+function feedItemTitle(entry: AnyCollectionEntry): string {
+  const data = entry.data as { title?: string; publishedOn: Date };
+  if (data.title) return data.title;
+
+  const firstLine =
+    entry.body
+      ?.split("\n")
+      .map((line) => line.trim())
+      .find((line) => line.length > 0) ?? "";
+  const stripped = firstLine.replace(/^[#>\-*\s]+/, "").trim();
+  if (stripped) {
+    return stripped.length > 60 ? `${stripped.slice(0, 59)}…` : stripped;
+  }
+
+  return data.publishedOn.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 }
 
 export async function getAllCollectionEntries(): Promise<AnyCollectionEntry[]> {
@@ -93,7 +119,7 @@ export async function generateMainFeed() {
     description: SITE_DESCRIPTION,
     site: SITE_URL,
     items: sortedEntries.map((entry) => ({
-      title: `[${capitalizeFirst(entry.collection)}] ${entry.data.title}`,
+      title: `[${capitalizeFirst(entry.collection)}] ${feedItemTitle(entry)}`,
       pubDate: entry.data.publishedOn,
       link: `${getEntryPath(entry.collection, entry.id)}/`,
       content: markdownToHtml(entry.body),
@@ -118,7 +144,7 @@ export async function generateCollectionFeed(collectionName: CollectionName) {
     description: `${capitalizeFirst(collectionName)} posts from ${SITE_TITLE}`,
     site: SITE_URL,
     items: sortedEntries.map((entry) => ({
-      title: entry.data.title,
+      title: feedItemTitle(entry),
       pubDate: entry.data.publishedOn,
       link: `${getEntryPath(entry.collection, entry.id)}/`,
       content: markdownToHtml(entry.body),

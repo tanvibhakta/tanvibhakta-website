@@ -9,4 +9,5 @@ export const TAGGED_COLLECTIONS = [
   "weeknotes",
   "poetry",
   "digitalGarden",
+  "notes",
 ] as const;
