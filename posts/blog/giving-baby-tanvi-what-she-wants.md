@@ -9,7 +9,7 @@ Growing children recreate what they know. When my brother was born (and I was ha
 
 My best friend and I learnt [P language](https://couragetotremble.blog/2007/08/09/p-language/), wrote parodies of pop songs about loving pizza, and invented new melodies inspired by evanescence. When I was younger, creation was just something I did with all the energy that was generated from consumption and a boredom and a long commute.
 
-Then, I discovered that an internet existed beyond Club Penguin and [4share.com](4share.com) (a website to share pdfs of novels). My most vivid experience of consuming blogs was [remittancegirl.com](remittancegirl.com) (NSFW) - a blog by an author containing ~~erotica~~ erotic literature that she treating with such care, intention, and quality that I thought... hmm. I would like to be the kind of person that produces work like this.
+Then, I discovered that an internet existed beyond Club Penguin and [4share.com](https://4share.com) (a website to share pdfs of novels). My most vivid experience of consuming blogs was [remittancegirl.com](https://remittancegirl.com) (NSFW) - a blog by an author containing ~~erotica~~ erotic literature that she treating with such care, intention, and quality that I thought... hmm. I would like to be the kind of person that produces work like this.
 
 Failures so far:
 
@@ -23,6 +23,6 @@ Failures so far:
 
 Over the last two years, I have gotten into the habit of [writing up my week](/weeknotes), and slowly built up the muscle of developing clarity of thought enough to [Blog](/blog). But I want a real blog - a _web log_, if you will - that allows me to come back to my own thoughts and track progress, draw conclusions, witness (my) history. I’ve [written before](blog/website-2026) about what I want from this blog, and that doesn’t change. But the personal-website side of the internet can be a lonely place, and if I am not fundamentally writing for myself, the writing will not happen.
 
-Big inspiration: [visakan](https://visakanv.com/#:~:text=I%E2%80%99m%20most%20active%20on%20Twitter%2E%20I%E2%80%99m%20known%20for%20my%20elaborate%2C%20interwoven%20threads)’s twitter, [itihas.review](itihas.review).
+Big inspiration: [visakan](https://visakanv.com/#:~:text=I%E2%80%99m%20most%20active%20on%20Twitter%2E%20I%E2%80%99m%20known%20for%20my%20elaborate%2C%20interwoven%20threads)’s twitter, [itihas.review](https://itihas.review).
 
 I have very poor autobiographical memory, and I want this blog to be proof-of-life for all my major thoughts. I miss writing about low-stakes bullshit that is nonetheless important to my self-perception. Did the tree really fall in the forest if no one was there to hear it? My lonely 4-year-old self just wants to be heard to know that she exists, and everything that has followed has been in pursuit of making that happen.
