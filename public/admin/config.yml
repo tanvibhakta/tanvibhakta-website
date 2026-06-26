@@ -34,7 +34,10 @@ collections:
         media_folder: /public/media/audio
         public_folder: /media/audio
       - { label: Audio Title, name: audioTitle, widget: string, required: false }
-      - label: Tags
+      # Shared tag options (aliased as *tags_field below). Keep the values in
+      # sync with TAGS in src/content.config.ts.
+      - &tags_field
+        label: Tags
         name: tags
         widget: select
         multiple: true
@@ -71,16 +74,7 @@ collections:
         media_folder: /public/media/audio
         public_folder: /media/audio
       - { label: Audio Title, name: audioTitle, widget: string, required: false }
-      - label: Tags
-        name: tags
-        widget: select
-        multiple: true
-        required: false
-        options:
-          - { label: "AI Usage", value: "ai-usage" }
-          - { label: "Konkani", value: "konkani" }
-          - { label: "Philosophy", value: "philosophy" }
-          - { label: "Reviews", value: "reviews" }
+      - *tags_field
       - { label: Body, name: body, widget: markdown }
 
   - name: weeknotes
@@ -101,16 +95,7 @@ collections:
       - { label: Title, name: title, widget: string }
       - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
       - { label: Draft, name: draft, widget: boolean, default: true, required: false }
-      - label: Tags
-        name: tags
-        widget: select
-        multiple: true
-        required: false
-        options:
-          - { label: "AI Usage", value: "ai-usage" }
-          - { label: "Konkani", value: "konkani" }
-          - { label: "Philosophy", value: "philosophy" }
-          - { label: "Reviews", value: "reviews" }
+      - *tags_field
       - label: Body
         name: body
         widget: markdown
@@ -136,16 +121,7 @@ collections:
       - { label: Last Updated, name: lastUpdatedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD, default: "{{now}}" }
       - { label: Description, name: description, widget: string, required: false }
       - { label: Draft, name: draft, widget: boolean, default: true, required: false }
-      - label: Tags
-        name: tags
-        widget: select
-        multiple: true
-        required: false
-        options:
-          - { label: "AI Usage", value: "ai-usage" }
-          - { label: "Konkani", value: "konkani" }
-          - { label: "Philosophy", value: "philosophy" }
-          - { label: "Reviews", value: "reviews" }
+      - *tags_field
       - { label: Body, name: body, widget: markdown }
 
   - name: notes
@@ -161,16 +137,7 @@ collections:
         direction: descending
     fields:
       - { label: Published, name: publishedOn, widget: datetime, format: "YYYY-MM-DDTHH:mm:ss", default: "{{now}}" }
-      - label: Tags
-        name: tags
-        widget: select
-        multiple: true
-        required: false
-        options:
-          - { label: "AI Usage", value: "ai-usage" }
-          - { label: "Konkani", value: "konkani" }
-          - { label: "Philosophy", value: "philosophy" }
-          - { label: "Reviews", value: "reviews" }
+      - *tags_field
       - { label: Body, name: body, widget: markdown }
 
   - name: pages
