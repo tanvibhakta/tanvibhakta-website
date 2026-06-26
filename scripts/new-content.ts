@@ -68,6 +68,16 @@ function formatDate(date: Date): string {
   return date.toISOString().split("T")[0];
 }
 
+// A naive local wall-clock timestamp ("YYYY-MM-DDTHH:mm:ss", no offset) stamped
+// at creation time. Notes display this exact wall clock (see formatNoteTimestamp).
+function formatLocalTimestamp(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return (
+    `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` +
+    `T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
+  );
+}
+
 function generateFrontmatter(title: string, publishedOn: Date): string {
   // Validate with Zod before generating
   const validated = frontmatterSchema.parse({ title, publishedOn });
@@ -82,7 +92,7 @@ publishedOn: ${formatDate(validated.publishedOn)}
 
 function generateTitlelessFrontmatter(publishedOn: Date): string {
   return `---
-publishedOn: ${formatDate(publishedOn)}
+publishedOn: ${formatLocalTimestamp(publishedOn)}
 ---
 
 `;

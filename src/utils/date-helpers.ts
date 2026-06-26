@@ -6,6 +6,30 @@ export function formatLongDate(date: Date): string {
   });
 }
 
+/**
+ * Timestamp shown on notes, e.g. "6:40pm · Fri, Jun 26 2026".
+ *
+ * Notes store a naive wall-clock timestamp (no offset), which is read back as
+ * a fixed UTC instant. Formatting in UTC therefore renders exactly the time
+ * that was authored, regardless of the build server's timezone.
+ */
+export function formatNoteTimestamp(date: Date): string {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "UTC",
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).formatToParts(date);
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((p) => p.type === type)?.value ?? "";
+  const time = `${get("hour")}:${get("minute")}${get("dayPeriod").toLowerCase()}`;
+  return `${time} · ${get("weekday")}, ${get("month")} ${get("day")} ${get("year")}`;
+}
+
 export function getOrdinalSuffix(n: number): string {
   const s = ["th", "st", "nd", "rd"];
   const v = n % 100;
