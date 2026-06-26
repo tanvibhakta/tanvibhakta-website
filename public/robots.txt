@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 
-Sitemap: https://tanvibhakta.in/sitemap.xml
+Sitemap: https://tanvibhakta.in/sitemap-index.xml

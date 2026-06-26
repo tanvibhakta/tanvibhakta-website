@@ -4,6 +4,7 @@ import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 
 import mdx from '@astrojs/mdx';
+import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
 import remarkBreaks from 'remark-breaks';
 import rehypeSlug from 'rehype-slug';
@@ -50,5 +51,16 @@ export default defineConfig({
     }
   },
 
-  integrations: [mdx(), icon()]
+  integrations: [
+    mdx(),
+    icon(),
+    sitemap({
+      // Keep admin tooling, machine-readable feeds, and underscore-prefixed
+      // fixture pages (e.g. /_anchor-fixture) out of the sitemap.
+      filter: (page) =>
+        !page.includes('/admin') &&
+        !page.endsWith('/feed.xml') &&
+        !/\/_/.test(new URL(page).pathname),
+    }),
+  ]
 });
