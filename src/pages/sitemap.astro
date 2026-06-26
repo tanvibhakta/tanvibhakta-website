@@ -1,123 +1,69 @@
 ---
 import ProseLayout from "../layouts/ProseLayout.astro";
-import { getPublishedEntries } from "../utils/collections";
-import { TAGS } from "../content.config";
 
-const dateOpts = { day: "numeric", month: "long", year: "numeric" } as const;
-const fmt = (d: Date) => d.toLocaleDateString("en-US", dateOpts);
-
-const byNewest = <T extends { data: { publishedOn: Date } }>(a: T, b: T) =>
-  b.data.publishedOn.getTime() - a.data.publishedOn.getTime();
-
-const blog = (await getPublishedEntries("blog")).sort(byNewest);
-const poetry = (await getPublishedEntries("poetry")).sort(byNewest);
-const weeknotes = (await getPublishedEntries("weeknotes")).sort(byNewest);
-const garden = (await getPublishedEntries("digitalGarden")).sort(
-  (a, b) => b.data.lastUpdatedOn.getTime() - a.data.lastUpdatedOn.getTime(),
-);
-
-// Standalone pages: hand-authored routes plus the `pages` collection,
-// excluding underscore-prefixed fixtures (e.g. _anchor-fixture).
-const standalonePages = [
-  { href: "/", title: "Home" },
-  { href: "/work", title: "Work" },
-  { href: "/subscribe", title: "Subscribe" },
-  ...(await getPublishedEntries("pages"))
-    .filter((p) => !p.id.startsWith("_"))
-    .map((p) => ({ href: `/${p.id}`, title: p.data.title })),
-].sort((a, b) => a.title.localeCompare(b.title));
+// A curated, top-level table of contents — one entry per section, with a
+// short explanation. Individual posts live on their section index pages,
+// not here. The exhaustive machine-readable list is at /sitemap.xml.
+const sections = [
+  { href: "/", title: "Home", blurb: "Who I am, in six lines." },
+  {
+    href: "/blog",
+    title: "Blog",
+    blurb: "Long-form posts, mostly on technology and the life around it.",
+  },
+  {
+    href: "/poetry",
+    title: "Poetry",
+    blurb: "Poems, some with audio readings.",
+  },
+  {
+    href: "/weeknotes",
+    title: "Weeknotes",
+    blurb: "Short, regular notes on life and work.",
+  },
+  {
+    href: "/digital-garden",
+    title: "Digital Garden",
+    blurb: "Evolving notes I tend and update over time.",
+  },
+  {
+    href: "/tags",
+    title: "Tags",
+    blurb: "Browse posts by topic.",
+  },
+  {
+    href: "/work",
+    title: "Work",
+    blurb: "What I do, with links to my resume and code.",
+  },
+  {
+    href: "/subscribe",
+    title: "Subscribe",
+    blurb: "RSS feeds for every section, or all posts at once.",
+  },
+];
 
 const frontmatter = { title: "Sitemap" };
 ---
 
 <ProseLayout frontmatter={frontmatter}>
   <p>
-    Everything on this site, in one place. There's also a <a
-      href="/sitemap-index.xml">machine-readable sitemap</a
-    > for search engines.
+    A map of everything here. For the full list of individual posts, follow a
+    section to its archive. Search engines can use the <a href="/sitemap.xml"
+      >machine-readable sitemap</a
+    >.
   </p>
 
-  <section>
-    <h2>Pages</h2>
-    <ul>
-      {
-        standalonePages.map((page) => (
-          <li>
-            <a href={page.href}>{page.title}</a>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
-
-  <section>
-    <h2><a href="/blog">Blog</a></h2>
-    <ul>
-      {
-        blog.map((post) => (
-          <li>
-            <a href={`/blog/${post.id}`}>{post.data.title}</a>
-            <span class="date">{fmt(post.data.publishedOn)}</span>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
-
-  <section>
-    <h2><a href="/poetry">Poetry</a></h2>
-    <ul>
-      {
-        poetry.map((post) => (
-          <li>
-            <a href={`/poetry/${post.id}`}>{post.data.title}</a>
-            <span class="date">{fmt(post.data.publishedOn)}</span>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
-
-  <section>
-    <h2><a href="/weeknotes">Weeknotes</a></h2>
-    <ul>
-      {
-        weeknotes.map((post) => (
-          <li>
-            <a href={`/weeknotes/${post.id}`}>{post.data.title}</a>
-            <span class="date">{fmt(post.data.publishedOn)}</span>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
-
-  <section>
-    <h2><a href="/digital-garden">Digital Garden</a></h2>
-    <ul>
-      {
-        garden.map((post) => (
-          <li>
-            <a href={`/digital-garden/${post.id}`}>{post.data.title}</a>
-            <span class="date">{fmt(post.data.lastUpdatedOn)}</span>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
-
-  <section>
-    <h2><a href="/tags">Tags</a></h2>
-    <ul>
-      {
-        TAGS.map((tag) => (
-          <li>
-            <a href={`/tags/${tag}`}>{tag}</a>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+  <ul>
+    {
+      sections.map((section) => (
+        <li>
+          <a href={section.href}>{section.title}</a>
+          <span class="blurb">{section.blurb}</span>
+        </li>
+      ))
+    }
+  </ul>
 </ProseLayout>
 
 <style>
@@ -126,10 +72,13 @@ const frontmatter = { title: "Sitemap" };
     padding-left: 0;
   }
 
-  .date {
+  li {
+    margin-bottom: 0.75rem;
+  }
+
+  .blurb {
+    display: block;
     font-size: 0.9rem;
-    font-variant: small-caps;
-    margin-left: 0.5rem;
-    opacity: 0.6;
+    opacity: 0.7;
   }
 </style>
