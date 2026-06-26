@@ -88,6 +88,10 @@ describe("Page Titles", () => {
         e !== "feed.xml" && fs.statSync(path.join(notesDir, e)).isDirectory(),
     );
 
+    // Notes are permalinked by an xkcd-style sequential number.
+    expect(posts.every((p) => /^\d+$/.test(p))).toBe(true);
+    expect(posts).toContain("1");
+
     const html = await fs.promises.readFile(
       path.join(notesDir, posts[0], "index.html"),
       "utf8",

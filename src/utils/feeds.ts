@@ -5,6 +5,7 @@ import sanitizeHtml from "sanitize-html";
 import { collections } from "../content.config";
 import { isPublished } from "./collections";
 import { formatLongDate } from "./date-helpers";
+import { getNoteNumbers } from "./notes";
 
 const SITE_URL = "https://tanvibhakta.in";
 const SITE_TITLE = "Tanvi Bhakta";
@@ -118,6 +119,10 @@ export async function generateMainFeed() {
 export async function generateCollectionFeed(collectionName: CollectionName) {
   const entries = await getCollectionEntries(collectionName);
 
+  // Notes are permalinked by number, not by filename id.
+  const noteNumbers =
+    collectionName === "notes" ? await getNoteNumbers() : null;
+
   // Sort by date and limit
   const sortedEntries = entries
     .sort(
@@ -134,7 +139,9 @@ export async function generateCollectionFeed(collectionName: CollectionName) {
     items: sortedEntries.map((entry) => ({
       title: feedItemTitle(entry),
       pubDate: entry.data.publishedOn,
-      link: `/${entry.collection}/${entry.id}/`,
+      link: noteNumbers
+        ? `/notes/${noteNumbers.get(entry.id)}/`
+        : `/${entry.collection}/${entry.id}/`,
       content: markdownToHtml(entry.body),
     })),
   });

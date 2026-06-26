@@ -2,27 +2,26 @@
 import { render } from "astro:content";
 import NotesLayout from "../../layouts/NotesLayout.astro";
 import Note from "../../components/Note.astro";
-import { getPublishedEntries } from "../../utils/collections";
+import { getNumberedNotes } from "../../utils/notes";
 
-const notes = (await getPublishedEntries("notes")).sort(
-  (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
-);
-
-const renderedNotes = await Promise.all(
-  notes.map(async (note) => ({
+// Numbered oldest-first, displayed newest-first.
+const numbered = await getNumberedNotes();
+const rendered = await Promise.all(
+  [...numbered].reverse().map(async ({ note, number }) => ({
     note,
+    number,
     Content: (await render(note)).Content,
   })),
 );
 ---
 
 <NotesLayout title="Notes">
-  {renderedNotes.length === 0 && <p>No notes yet.</p>}
+  {rendered.length === 0 && <p>No notes yet.</p>}
   {
-    renderedNotes.map(({ note, Content }) => (
+    rendered.map(({ note, number, Content }) => (
       <Note
         publishedOn={note.data.publishedOn}
-        href={`/notes/${note.id}`}
+        href={`/notes/${number}`}
         tags={note.data.tags}
       >
         <Content />
