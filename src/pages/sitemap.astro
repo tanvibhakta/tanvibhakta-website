@@ -1,0 +1,88 @@
+---
+import ProseLayout from "../layouts/ProseLayout.astro";
+
+// A curated, top-level table of contents — one entry per section, with a
+// short explanation. Individual posts live on their section index pages,
+// not here. The exhaustive machine-readable list is at /sitemap-index.xml.
+const sections = [
+  { href: "/", blurb: "home" },
+  {
+    href: "/blog",
+    blurb: "coherent ideas",
+  },
+  {
+    href: "/care",
+    blurb: "guide to taking care of me",
+  },
+  {
+    href: "/digital-garden",
+    blurb: "(abandoned) garden",
+  },
+  {
+    href: "/now",
+    blurb: "what im doing now",
+  },
+  {
+    href: "/poetry",
+    blurb: "Poems, some with audio readings.",
+  },
+  {
+    href: "/subscribe",
+    blurb: "RSS feeds for every section",
+  },
+  {
+    href: "/tags",
+    blurb: "lists all tags used across the site. cross-category",
+  },
+  {
+    href: "/weeknotes",
+    blurb: "Short, (ir)regular notes on life and work.",
+  },
+  {
+    href: "/work",
+    blurb: "resume ++ ",
+  },
+];
+
+const frontmatter = { title: "Sitemap" };
+---
+
+<ProseLayout frontmatter={frontmatter}>
+  <p>
+    This website has a lot of pages not linked from anywhere else except here! welcome to the inquisitive discerning reader's browsing experience :)
+  </p>
+
+  <ul>
+    {
+      sections.map((section) => (
+        <li>
+          <a href={section.href}>{section.href}</a>
+          <span class="blurb">{section.blurb}</span>
+        </li>
+      ))
+    }
+  </ul>
+</ProseLayout>
+
+<style>
+  /* Two columns: href on the left, blurb on the right, aligned across rows.
+     `display: contents` on each <li> lets its link and blurb become direct
+     grid cells so they line up in shared columns. */
+  ul {
+    list-style: none;
+    padding-left: 0;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.5rem 1.5rem;
+    align-items: baseline;
+  }
+
+  li {
+    display: contents;
+  }
+
+  .blurb {
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+</style>
