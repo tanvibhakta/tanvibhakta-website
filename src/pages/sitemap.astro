@@ -3,7 +3,7 @@ import ProseLayout from "../layouts/ProseLayout.astro";
 
 // A curated, top-level table of contents — one entry per section, with a
 // short explanation. Individual posts live on their section index pages,
-// not here. The exhaustive machine-readable list is at /sitemap.xml.
+// not here. The exhaustive machine-readable list is at /sitemap-index.xml.
 const sections = [
   { href: "/", blurb: "home" },
   {
@@ -65,17 +65,23 @@ const frontmatter = { title: "Sitemap" };
 </ProseLayout>
 
 <style>
+  /* Two columns: href on the left, blurb on the right, aligned across rows.
+     `display: contents` on each <li> lets its link and blurb become direct
+     grid cells so they line up in shared columns. */
   ul {
     list-style: none;
     padding-left: 0;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.5rem 1.5rem;
+    align-items: baseline;
   }
 
   li {
-    margin-bottom: 0.75rem;
+    display: contents;
   }
 
   .blurb {
-    display: block;
     font-size: 0.9rem;
     opacity: 0.7;
   }
