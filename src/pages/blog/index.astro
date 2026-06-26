@@ -1,14 +1,13 @@
 ---
 import { getPublishedEntries } from "../../utils/collections";
 import ProseLayout from "../../layouts/ProseLayout.astro";
+import { SECTIONS } from "../../content.config";
 
 const sortedBlogPosts = (await getPublishedEntries("blog")).sort(
   (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
 );
 
-const frontmatter = {
-  title: "Blog",
-};
+const frontmatter = SECTIONS.blog;
 ---
 
 <ProseLayout frontmatter={frontmatter}>
