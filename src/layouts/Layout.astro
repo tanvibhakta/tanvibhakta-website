@@ -1,6 +1,13 @@
 ---
 import "/src/styles/global.css";
+import { SITE_NAME, getPageName } from "../utils/sections";
+
 const { class: className, title } = Astro.props;
+
+// An explicit title (e.g. "Post · Blog" from ProseLayout) wins; otherwise
+// derive the page name from the route. Homepage gets just the site name.
+const pageName = title || getPageName(Astro.url.pathname);
+const documentTitle = pageName ? `${pageName} | ${SITE_NAME}` : SITE_NAME;
 ---
 
 <html lang="en">
@@ -57,7 +64,7 @@ const { class: className, title } = Astro.props;
       type="image/svg+xml"
       href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22256%22 height=%22256%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%22110%22>🪭</text></svg>"
     />
-    <title>{`${title ? `${title} | ` : ""}Tanvi's Web Home`}</title>
+    <title>{documentTitle}</title>
     <script
       defer
       data-domain="tanvibhakta.in"

@@ -32,6 +32,14 @@ describe("Page Titles", () => {
     expect(extractTitle(html)).toBe("Tanvi's Web Home");
   });
 
+  test("Work page derives its title from the route", async () => {
+    const html = await fs.promises.readFile(
+      path.join(distDir, "work/index.html"),
+      "utf8",
+    );
+    expect(extractTitle(html)).toBe("Work | Tanvi's Web Home");
+  });
+
   test("Blog index has correct title", async () => {
     const html = await fs.promises.readFile(
       path.join(distDir, "blog/index.html"),
