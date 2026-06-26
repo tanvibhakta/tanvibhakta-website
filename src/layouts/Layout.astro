@@ -1,6 +1,8 @@
 ---
 import "/src/styles/global.css";
-const { class: className, title, noindex } = Astro.props;
+const { class: className, title, description, noindex } = Astro.props;
+
+const fullTitle = `${title ? `${title} | ` : ""}Tanvi's Web Home`;
 ---
 
 <html lang="en">
@@ -11,6 +13,14 @@ const { class: className, title, noindex } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <meta name="author" content="Tanvi Bhakta" />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    {description && <meta name="description" content={description} />}
+
+    <!-- Open Graph / share cards -->
+    <meta property="og:title" content={title || "Tanvi Bhakta"} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
 
     <!--For IndieAuth https://indieweb.org/IndieAuth-->
     <link href="https://github.com/tanvibhakta" rel="me" />
@@ -52,7 +62,7 @@ const { class: className, title, noindex } = Astro.props;
       type="image/svg+xml"
       href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22256%22 height=%22256%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%22110%22>🪭</text></svg>"
     />
-    <title>{`${title ? `${title} | ` : ""}Tanvi's Web Home`}</title>
+    <title>{fullTitle}</title>
     <script
       defer
       data-domain="tanvibhakta.in"

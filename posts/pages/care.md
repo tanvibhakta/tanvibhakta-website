@@ -1,5 +1,6 @@
 ---
 title: Care for Tanvi toolkit
+description: guide to taking care of me
 ---
 
 Generally speaking, if I am ill and you are physically in my space,
@@ -21,9 +22,9 @@ It's because I can't stomach the idea of food. The trick is to get me excited ab
 Sometimes I don't like the idea of anything from outside, or want to avoid the expense.
 
 - present various taste options to me. For example
-    - spicy and fatty, like chilli oil?
-    - how about spicy and nutty and a little sour, like sumac?
-    - earthy and sour and nutty, like zaatar?
+  - spicy and fatty, like chilli oil?
+  - how about spicy and nutty and a little sour, like sumac?
+  - earthy and sour and nutty, like zaatar?
 - If I'm at home, getting me to go up to my pantry and suggesting easy things I can make with the things that catch my eye is a great idea.
 
 I might not want a big meal. Some snack options
@@ -49,10 +50,10 @@ June 2025 edit: I am off of gluten and dairy for the next two months to observe 
 - cold compress with cotton wrapped around it, pressed to area of pain
 - hot water pack pressed to place
 - ~~dynamic stretches~~
-    - ~~If I have time and haven't showered yet, [my full calisthenics]() warm up routine - just to get the blood flowing~~
-    - ~~neck rotations, direction stretches~~
-    - ~~loose jumps, arm swings, shoulder cars~~
-    - ~~Yuri's shoulder stretches~~
+  - ~~If I have time and haven't showered yet, [my full calisthenics]() warm up routine - just to get the blood flowing~~
+  - ~~neck rotations, direction stretches~~
+  - ~~loose jumps, arm swings, shoulder cars~~
+  - ~~Yuri's shoulder stretches~~
 
 If you know how to identify knots and can offer to remove them for me, that is very helpful during this time. I will not ask for you to do this unless I'm in a large amount of pain, but if you notice me massaging myself and offer - even if it's just a thirty-second quick rub - know that it goes a long way.
 
@@ -70,7 +71,7 @@ Sometimes the headache is an offshoot of the neck/shoulder pain, in which case t
 
 The right neck/shoulder is disproportionately affected by my redacted, and often leads to pain in the whole arm on flare days[^2] or on high usage days[^3]. It helps to hold hot things (mugs!) or cold things (I will keep an ice pack around)
 
-Standing IYTW isometrics help a surprising amount. A short note on why is in the [blog](https://tanvibhakta.in/blog/til-fixing-it-when-my-right-arm-gets-useless/). 
+Standing IYTW isometrics help a surprising amount. A short note on why is in the [blog](https://tanvibhakta.in/blog/til-fixing-it-when-my-right-arm-gets-useless/).
 
 ### general pain
 
