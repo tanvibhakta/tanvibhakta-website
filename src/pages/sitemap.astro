@@ -5,41 +5,42 @@ import ProseLayout from "../layouts/ProseLayout.astro";
 // short explanation. Individual posts live on their section index pages,
 // not here. The exhaustive machine-readable list is at /sitemap.xml.
 const sections = [
-  { href: "/", title: "Home", blurb: "Who I am, in six lines." },
+  { href: "/", blurb: "home" },
   {
     href: "/blog",
-    title: "Blog",
-    blurb: "Long-form posts, mostly on technology and the life around it.",
+    blurb: "coherent ideas",
   },
   {
-    href: "/poetry",
-    title: "Poetry",
-    blurb: "Poems, some with audio readings.",
-  },
-  {
-    href: "/weeknotes",
-    title: "Weeknotes",
-    blurb: "Short, regular notes on life and work.",
+    href: "/care",
+    blurb: "guide to taking care of me",
   },
   {
     href: "/digital-garden",
-    title: "Digital Garden",
-    blurb: "Evolving notes I tend and update over time.",
+    blurb: "(abandoned) garden",
   },
   {
-    href: "/tags",
-    title: "Tags",
-    blurb: "Browse posts by topic.",
+    href: "/now",
+    blurb: "what im doing now",
   },
   {
-    href: "/work",
-    title: "Work",
-    blurb: "What I do, with links to my resume and code.",
+    href: "/poetry",
+    blurb: "Poems, some with audio readings.",
   },
   {
     href: "/subscribe",
-    title: "Subscribe",
-    blurb: "RSS feeds for every section, or all posts at once.",
+    blurb: "RSS feeds for every section",
+  },
+  {
+    href: "/tags",
+    blurb: "lists all tags used across the site. cross-category",
+  },
+  {
+    href: "/weeknotes",
+    blurb: "Short, (ir)regular notes on life and work.",
+  },
+  {
+    href: "/work",
+    blurb: "resume ++ ",
   },
 ];
 
@@ -48,17 +49,14 @@ const frontmatter = { title: "Sitemap" };
 
 <ProseLayout frontmatter={frontmatter}>
   <p>
-    A map of everything here. For the full list of individual posts, follow a
-    section to its archive. Search engines can use the <a
-      href="/sitemap-index.xml">machine-readable sitemap</a
-    >.
+    This website has a lot of pages not linked from anywhere else except here! welcome to the inquisitive discerning reader's browsing experience :)
   </p>
 
   <ul>
     {
       sections.map((section) => (
         <li>
-          <a href={section.href}>{section.title}</a>
+          <a href={section.href}>{section.href}</a>
           <span class="blurb">{section.blurb}</span>
         </li>
       ))
