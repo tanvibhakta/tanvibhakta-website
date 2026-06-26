@@ -61,6 +61,8 @@ const { class: className, title } = Astro.props;
       window.plausible =
         window.plausible ||
         function () {
+          // Plausible's official loader snippet relies on `arguments`; keep verbatim.
+          // eslint-disable-next-line prefer-rest-params
           (window.plausible.q = window.plausible.q || []).push(arguments);
         };
     </script>

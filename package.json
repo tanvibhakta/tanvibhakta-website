@@ -7,6 +7,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "vitest",
     "prepare": "husky",
     "weeknotes:new": "node scripts/new-content.ts weeknotes",
@@ -56,7 +60,11 @@
     "node": ">=24"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,json,css,scss,md,astro}": [
+    "*.{js,mjs,cjs,jsx,ts,tsx,astro}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,jsonc,css,scss,md,mdx,yml,yaml,html}": [
       "prettier --write"
     ]
   }
