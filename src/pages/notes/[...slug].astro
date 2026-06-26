@@ -1,7 +1,9 @@
 ---
 import { render } from "astro:content";
-import ProseLayout from "../../layouts/ProseLayout.astro";
+import NotesLayout from "../../layouts/NotesLayout.astro";
+import Note from "../../components/Note.astro";
 import { getPublishedEntries } from "../../utils/collections";
+import { formatNoteTimestamp } from "../../utils/date-helpers";
 
 export async function getStaticPaths() {
   const notes = await getPublishedEntries("notes");
@@ -15,6 +17,8 @@ const { note } = Astro.props;
 const { Content } = await render(note);
 ---
 
-<ProseLayout frontmatter={note.data} category="notes">
-  <Content />
-</ProseLayout>
+<NotesLayout title={`${formatNoteTimestamp(note.data.publishedOn)} | Notes`}>
+  <Note publishedOn={note.data.publishedOn} tags={note.data.tags}>
+    <Content />
+  </Note>
+</NotesLayout>

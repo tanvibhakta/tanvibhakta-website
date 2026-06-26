@@ -1,7 +1,7 @@
 ---
 import { getPublishedEntries } from "../../utils/collections";
 import ProseLayout from "../../layouts/ProseLayout.astro";
-import { formatLongDate } from "../../utils/date-helpers";
+import { formatLongDate, formatNoteTimestamp } from "../../utils/date-helpers";
 import { TAGS } from "../../content.config";
 import type { Tag } from "../../content.config";
 
@@ -86,13 +86,22 @@ const frontmatter = { title: tag };
             <p>
               {byCollection[key].map((post) => {
                 const title = (post.data as { title?: string }).title;
-                const date = formatLongDate(post.data.publishedOn);
-                // Title-less notes use their date as the link text, so there's
-                // no separate date to repeat alongside it.
-                return (
+                // Titled posts link by title; title-less notes have no title
+                // to fake, so they link by their timestamp (a semantic <time>).
+                return title ? (
                   <li>
-                    <a href={post.href}>{title ?? date}</a>
-                    {title && <span class="date">{date}</span>}
+                    <a href={post.href}>{title}</a>
+                    <span class="date">
+                      {formatLongDate(post.data.publishedOn)}
+                    </span>
+                  </li>
+                ) : (
+                  <li>
+                    <a href={post.href}>
+                      <time datetime={post.data.publishedOn.toISOString()}>
+                        {formatNoteTimestamp(post.data.publishedOn)}
+                      </time>
+                    </a>
                   </li>
                 );
               })}
