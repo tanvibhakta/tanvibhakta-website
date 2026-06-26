@@ -1,8 +1,8 @@
 ---
 import { render } from "astro:content";
-import ProseLayout from "../../layouts/ProseLayout.astro";
+import NotesLayout from "../../layouts/NotesLayout.astro";
+import Note from "../../components/Note.astro";
 import { getPublishedEntries } from "../../utils/collections";
-import { formatLongDate } from "../../utils/date-helpers";
 
 const notes = (await getPublishedEntries("notes")).sort(
   (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
@@ -14,41 +14,19 @@ const renderedNotes = await Promise.all(
     Content: (await render(note)).Content,
   })),
 );
-
-const frontmatter = {
-  title: "Notes",
-};
 ---
 
-<ProseLayout frontmatter={frontmatter}>
+<NotesLayout title="Notes">
   {renderedNotes.length === 0 && <p>No notes yet.</p>}
   {
     renderedNotes.map(({ note, Content }) => (
-      <article class="my-10">
-        <header class="not-prose mb-2">
-          <a
-            href={`/notes/${note.id}`}
-            class="text-sm tracking-wide opacity-75 no-underline [font-variant:small-caps] hover:underline"
-          >
-            <time datetime={note.data.publishedOn.toISOString()}>
-              {formatLongDate(note.data.publishedOn)}
-            </time>
-          </a>
-        </header>
+      <Note
+        publishedOn={note.data.publishedOn}
+        href={`/notes/${note.id}`}
+        tags={note.data.tags}
+      >
         <Content />
-        {note.data.tags && note.data.tags.length > 0 && (
-          <div class="mt-4 flex flex-wrap gap-2">
-            {note.data.tags.map((tag) => (
-              <a
-                href={`/tags/${tag}`}
-                class="text-xs text-inherit no-underline opacity-60 [font-variant:small-caps] hover:underline hover:opacity-100"
-              >
-                {tag}
-              </a>
-            ))}
-          </div>
-        )}
-      </article>
+      </Note>
     ))
   }
-</ProseLayout>
+</NotesLayout>
