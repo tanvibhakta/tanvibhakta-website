@@ -33,7 +33,7 @@ function extractLinks(html: string, baseUrl: string): Map<string, string> {
       try {
         const normalizedUrl = new URL(href, baseUrl).toString();
         links.set(normalizedUrl, href);
-      } catch (error) {
+      } catch {
         console.warn(`Invalid URL: ${href} on page ${baseUrl}`);
       }
     }
@@ -151,7 +151,7 @@ describe("check links", () => {
         if (isInternalLink(url, baseUrl) || originalHref.startsWith("/")) {
           try {
             const urlObj = new URL(url);
-            let pathname = urlObj.pathname;
+            const pathname = urlObj.pathname;
 
             // Handle paths with or without trailing slash
             let filePath: string;
