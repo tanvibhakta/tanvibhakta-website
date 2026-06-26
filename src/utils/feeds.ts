@@ -4,6 +4,8 @@ import MarkdownIt from "markdown-it";
 import sanitizeHtml from "sanitize-html";
 import { collections } from "../content.config";
 import { isPublished } from "./collections";
+import { formatLongDate } from "./date-helpers";
+import { getNoteNumbers } from "./notes";
 
 const SITE_URL = "https://tanvibhakta.in";
 const SITE_TITLE = "Tanvi Bhakta";
@@ -29,7 +31,7 @@ export const FEED_CONFIG = {
   // Collections to exclude from feed generation entirely
   excludedCollections: ["pages"] as string[],
   // Collections to exclude from the main unified feed (but still get individual feeds)
-  excludeFromMainFeed: [] as string[],
+  excludeFromMainFeed: ["notes"] as string[],
 };
 
 type CollectionName = keyof typeof collections;
@@ -60,6 +62,16 @@ export function getMainFeedEligibleCollections(): CollectionName[] {
 
 function capitalizeFirst(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/**
+ * The title for a feed item. Titled collections use their `title`; the
+ * title-less `notes` collection falls back to its formatted publish date —
+ * the same string shown as the note's heading on the site.
+ */
+function feedItemTitle(entry: AnyCollectionEntry): string {
+  const data = entry.data as { title?: string; publishedOn: Date };
+  return data.title ?? formatLongDate(data.publishedOn);
 }
 
 export async function getAllCollectionEntries(): Promise<AnyCollectionEntry[]> {
@@ -96,7 +108,7 @@ export async function generateMainFeed() {
     description: SITE_DESCRIPTION,
     site: SITE_URL,
     items: sortedEntries.map((entry) => ({
-      title: `[${capitalizeFirst(entry.collection)}] ${entry.data.title}`,
+      title: `[${capitalizeFirst(entry.collection)}] ${feedItemTitle(entry)}`,
       pubDate: entry.data.publishedOn,
       link: `/${entry.collection}/${entry.id}/`,
       content: markdownToHtml(entry.body),
@@ -106,6 +118,10 @@ export async function generateMainFeed() {
 
 export async function generateCollectionFeed(collectionName: CollectionName) {
   const entries = await getCollectionEntries(collectionName);
+
+  // Notes are permalinked by number, not by filename id.
+  const noteNumbers =
+    collectionName === "notes" ? await getNoteNumbers() : null;
 
   // Sort by date and limit
   const sortedEntries = entries
@@ -121,9 +137,11 @@ export async function generateCollectionFeed(collectionName: CollectionName) {
     description: `${capitalizeFirst(collectionName)} posts from ${SITE_TITLE}`,
     site: SITE_URL,
     items: sortedEntries.map((entry) => ({
-      title: entry.data.title,
+      title: feedItemTitle(entry),
       pubDate: entry.data.publishedOn,
-      link: `/${entry.collection}/${entry.id}/`,
+      link: noteNumbers
+        ? `/notes/${noteNumbers.get(entry.id)}/`
+        : `/${entry.collection}/${entry.id}/`,
       content: markdownToHtml(entry.body),
     })),
   });

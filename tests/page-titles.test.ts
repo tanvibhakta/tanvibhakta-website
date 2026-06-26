@@ -32,6 +32,14 @@ describe("Page Titles", () => {
     expect(extractTitle(html)).toBe("Tanvi's Web Home");
   });
 
+  test("Work page derives its title from the route", async () => {
+    const html = await fs.promises.readFile(
+      path.join(distDir, "work/index.html"),
+      "utf8",
+    );
+    expect(extractTitle(html)).toBe("Work | Tanvi's Web Home");
+  });
+
   test("Blog index has correct title", async () => {
     const html = await fs.promises.readFile(
       path.join(distDir, "blog/index.html"),
@@ -62,6 +70,33 @@ describe("Page Titles", () => {
       "utf8",
     );
     expect(extractTitle(html)).toBe("Digital Garden | Tanvi's Web Home");
+  });
+
+  test("Notes index has correct title", async () => {
+    const html = await fs.promises.readFile(
+      path.join(distDir, "notes/index.html"),
+      "utf8",
+    );
+    expect(extractTitle(html)).toBe("Notes | Tanvi's Web Home");
+  });
+
+  test("Note has date title with Notes suffix", async () => {
+    const notesDir = path.join(distDir, "notes");
+    const entries = await fs.promises.readdir(notesDir);
+    const posts = entries.filter(
+      (e) =>
+        e !== "feed.xml" && fs.statSync(path.join(notesDir, e)).isDirectory(),
+    );
+
+    // Notes are permalinked by an xkcd-style sequential number.
+    expect(posts.every((p) => /^\d+$/.test(p))).toBe(true);
+    expect(posts).toContain("1");
+
+    const html = await fs.promises.readFile(
+      path.join(notesDir, posts[0], "index.html"),
+      "utf8",
+    );
+    expect(extractTitle(html)).toMatch(/^.+ \| Notes \| Tanvi's Web Home$/);
   });
 
   test("Blog post has title with Blog suffix", async () => {

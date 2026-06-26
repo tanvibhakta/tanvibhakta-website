@@ -1,0 +1,24 @@
+---
+import { render } from "astro:content";
+import NotesLayout from "../../layouts/NotesLayout.astro";
+import Note from "../../components/Note.astro";
+import { getNumberedNotes } from "../../utils/notes";
+import { formatNoteTimestamp } from "../../utils/date-helpers";
+
+export async function getStaticPaths() {
+  const numbered = await getNumberedNotes();
+  return numbered.map(({ note, number }) => ({
+    params: { slug: String(number) },
+    props: { note },
+  }));
+}
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+---
+
+<NotesLayout title={`${formatNoteTimestamp(note.data.publishedOn)} | Notes`}>
+  <Note publishedOn={note.data.publishedOn} tags={note.data.tags}>
+    <Content />
+  </Note>
+</NotesLayout>

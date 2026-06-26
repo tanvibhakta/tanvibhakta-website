@@ -8,6 +8,7 @@ const allPosts = [
   ...(await getPublishedEntries("weeknotes")),
   ...(await getPublishedEntries("poetry")),
   ...(await getPublishedEntries("digitalGarden")),
+  ...(await getPublishedEntries("notes")),
 ];
 
 const tagCounts = Object.fromEntries(

@@ -1,0 +1,31 @@
+---
+import { render } from "astro:content";
+import NotesLayout from "../../layouts/NotesLayout.astro";
+import Note from "../../components/Note.astro";
+import { getNumberedNotes } from "../../utils/notes";
+
+// Numbered oldest-first, displayed newest-first.
+const numbered = await getNumberedNotes();
+const rendered = await Promise.all(
+  [...numbered].reverse().map(async ({ note, number }) => ({
+    note,
+    number,
+    Content: (await render(note)).Content,
+  })),
+);
+---
+
+<NotesLayout title="Notes">
+  {rendered.length === 0 && <p>No notes yet.</p>}
+  {
+    rendered.map(({ note, number, Content }) => (
+      <Note
+        publishedOn={note.data.publishedOn}
+        href={`/notes/${number}`}
+        tags={note.data.tags}
+      >
+        <Content />
+      </Note>
+    ))
+  }
+</NotesLayout>

@@ -1,37 +1,5 @@
 ---
-type Section = { label: string; href: string };
-
-const NAV_ITEMS: readonly Section[] = [
-  { label: "Work", href: "/work" },
-  { label: "Blog", href: "/blog" },
-  { label: "Weeknotes", href: "/weeknotes" },
-] as const;
-
-const KNOWN_SECTIONS: readonly Section[] = [
-  ...NAV_ITEMS,
-  { label: "Poetry", href: "/poetry" },
-  { label: "Digital Garden", href: "/digital-garden" },
-  { label: "Tags", href: "/tags" },
-  { label: "Subscribe", href: "/subscribe" },
-] as const;
-
-function titleCase(slug: string): string {
-  return slug
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
-
-function getCurrentSection(path: string): Section | undefined {
-  const known = [...KNOWN_SECTIONS]
-    .sort((a, b) => b.href.length - a.href.length)
-    .find((s) => path === s.href || path.startsWith(`${s.href}/`));
-  if (known) return known;
-
-  const firstSegment = path.split("/").filter(Boolean)[0];
-  if (!firstSegment || firstSegment === "404") return undefined;
-  return { label: titleCase(firstSegment), href: `/${firstSegment}` };
-}
+import { NAV_ITEMS, getCurrentSection, type Section } from "../utils/sections";
 
 const current = getCurrentSection(Astro.url.pathname);
 const inMainNav =

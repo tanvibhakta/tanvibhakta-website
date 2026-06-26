@@ -46,6 +46,18 @@ const digitalGarden = defineCollection({
   }),
 });
 
+// Short-form, title-less posts (microblog / IndieWeb "notes"). The markdown
+// body is the content; frontmatter is just a full-precision timestamp and
+// optional tags — no `title`, no `draft` (notes publish immediately), and no
+// `anchors` (the rehype-anchors plugin is skipped for notes in astro.config).
+const notes = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./posts/notes/" }),
+  schema: z.object({
+    publishedOn: z.date(),
+    tags: z.array(z.enum(TAGS)).optional().default([]),
+  }),
+});
+
 const pages = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/pages/" }),
   schema: z.object({
@@ -59,5 +71,6 @@ export const collections = {
   weeknotes,
   poetry,
   digitalGarden,
+  notes,
   pages,
 };
