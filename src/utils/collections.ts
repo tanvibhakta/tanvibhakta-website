@@ -4,6 +4,7 @@ import {
   SECTIONS,
   type collections,
 } from "../content.config";
+import { getNoteNumbers } from "./notes";
 import { TAGGED_COLLECTIONS } from "./tagged-collections";
 
 export type CollectionName = keyof typeof collections;
@@ -44,12 +45,17 @@ export async function getDraftEntries(collectionName: CollectionName) {
  * annotated with their collection's display label and their page href.
  */
 export async function getAllTaggedPosts() {
+  // Notes are permalinked by number, not by filename id.
+  const noteNumbers = await getNoteNumbers();
   const perCollection = await Promise.all(
     TAGGED_COLLECTIONS.map(async (name) =>
       (await getPublishedEntries(name)).map((p) => ({
         ...p,
         label: SECTIONS[name].title,
-        href: getEntryPath(name, p.id),
+        href:
+          name === "notes"
+            ? `/notes/${noteNumbers.get(p.id)}`
+            : getEntryPath(name, p.id),
       })),
     ),
   );

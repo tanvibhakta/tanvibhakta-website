@@ -20,13 +20,12 @@ const machineTime = publishedOn.toISOString();
   <footer
     class="not-prose mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm tracking-wide opacity-75 [font-variant:small-caps]"
   >
+    <time datetime={machineTime}>{timestamp}</time>
     {
-      href ? (
+      href && (
         <a href={href} class="text-inherit no-underline hover:underline">
-          <time datetime={machineTime}>{timestamp}</time>
+          permalink
         </a>
-      ) : (
-        <time datetime={machineTime}>{timestamp}</time>
       )
     }
     {

@@ -46,10 +46,11 @@ const frontmatter = { title: tag };
                 </li>
               ) : (
                 <li>
-                  <a href={post.href}>
-                    <time datetime={post.data.publishedOn.toISOString()}>
-                      {formatNoteTimestamp(post.data.publishedOn)}
-                    </time>
+                  <time datetime={post.data.publishedOn.toISOString()}>
+                    {formatNoteTimestamp(post.data.publishedOn)}
+                  </time>
+                  <a href={post.href} class="date">
+                    permalink
                   </a>
                 </li>
               );
