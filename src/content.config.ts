@@ -1,7 +1,13 @@
 import { z, defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 
-export const TAGS = ["ai-usage", "konkani", "philosophy", "reviews"] as const;
+export const TAGS = [
+  "ai-usage",
+  "health",
+  "konkani",
+  "philosophy",
+  "reviews",
+] as const;
 export type Tag = (typeof TAGS)[number];
 
 // Common schema for all collections.
