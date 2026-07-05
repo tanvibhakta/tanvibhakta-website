@@ -1,7 +1,8 @@
 ---
-title: "Creative processes"
+title: Creative processes
 publishedOn: 2025-07-19
 lastUpdatedOn: 2025-07-19
+description: ''
 ---
 
 This garden attempts to document how I approach my various creative activities.
@@ -22,13 +23,13 @@ Screenshot 2025-07-19 at 12.44.51 PM.png
 
 The whole process from start to publish takes about 2 hours every week. That’s a lot of effort! But for now, it seems important so I will keep doing it.
 
----
+***
 
 (Feb 2025)
 
 I use the nudge of the weeknote to also update my read/watched/listened to status on Goodreads/imdb/letterboxed etc. I also use the opportunity to send new books to my kindle, schedule plans for the upcoming weeks, etc.
 
----
+***
 
 (Nov 2025)
 
@@ -38,7 +39,7 @@ The point of the week note is to catch my friends up on my life. So,
 2. I always open my calendar app when I’m writing (especially the life update) because it’s a good proxy for what I did over the last week.
 3. I open up my rss feed reader’s history section, and sometimes my browser’s history section to pick out things for my “around the web section”
 
----
+***
 
 ## Blog posts
 
@@ -87,7 +88,7 @@ To add those two verses, we did what I think was novel. We listened to the beat 
 
 The other thing I did that helped lots was steal. The beat was dreamy and Raveena-like, and I couldn’t figure out a flow over it that didn’t just sound like someone was saying a verse. I know Chance the Rapper does similar kind of music, so I listened to a bunch of his songs until I found something with a similar time signature... then I just rapped his verse over my beat to see if that flow would work. And it did! That was a good starting point for me.
 
----
+***
 
 The idea is that rap is just metered poetry, right? Of course not, that’s a horrible oversimplification. But we have to start somewhere. So if rap is just metered poetry, I need to write some poetry to a meter and then see if I can put a beat around it.
 
@@ -97,13 +98,13 @@ The idea is that rap is just metered poetry, right? Of course not, that’s a ho
 
 (From /blog/week-of-july-16th-2025/)
 
----
+***
 
 Second attempt (April 2025)
 
 I picked a song that was stuck in my head (It was introduction by Faris Shafi, don’t ask), picked a paragraph that I liked, and tried to copy the flow. This song is trilingual. I’m not sure why, but the lines that came to me were in Konkani, not English. It was one verse of pretty shit struggle rap, but I was quite proud of it.
 
----
+***
 
 Very first attempt (April 2025)
 
@@ -127,7 +128,8 @@ Things I wish I had started digital gardens for:
 - Driving
 - Tango
 - Drumming
+- Learning Mandarin
 
----
+***
 
 This post started out as a prompt from IndieWebClub #6
