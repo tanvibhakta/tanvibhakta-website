@@ -19,6 +19,6 @@ In the time since this change, I am one year through working the hardest job I h
 
 It's time for a new laptop password. While I figure it out, I'm trying to remind myself - there is a certain magic to repetition.
 
-[^1]: Cal Newport: Deep Work. See also: obvious.in office redesign principles (link to exact blog post currently lost to the void)
+[^1]: Cal Newport: [Deep Work](https://www.goodreads.com/book/show/25744928-deep-work). See also: obvious.in office redesign principles (link to exact blog post currently lost to the void)
 
 [^2]: At the end of May 2025, a few friends caught up with [Pooja Saxena](https://anexasajoop.in/) who was in town for coffee. We were shooting the shit and the conversation turned to how the work just needs to be done. Pooja talked about how her and [Prateek](https://prtksxna.com/) kept each other work accountable via gentle ribbing, and also how when [her dad](https://github.com/sanjayaksaxena) (who is now in his sixties!) complains that the work he has to do to get a [passion project](https://github.com/winkjs/wink-nlp) done is hard, she doesn’t have patience for it because he just has to sit down and do it - and she tells him so. This conversation left a deep impression on me. She is right.
