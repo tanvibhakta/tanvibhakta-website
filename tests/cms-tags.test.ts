@@ -3,6 +3,7 @@ import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs";
 import { parse } from "yaml";
+import { TAGGED_COLLECTIONS } from "../src/utils/tagged-collections";
 
 // Tags are free-form: typing a new tag on a post in the CMS is all it takes
 // to create it, and the site derives the tag list from the posts themselves
@@ -51,8 +52,13 @@ const collectionsWithTags = collections.filter((c) =>
 );
 
 describe("CMS tags field", () => {
-  test("at least one collection exposes a tags field", () => {
-    expect(collectionsWithTags.length).toBeGreaterThan(0);
+  test("collections with a tags field match the TAGGED_COLLECTIONS registry", () => {
+    // Both sides of the tagging system derive from the registry, so a
+    // collection gaining or losing a tags field in the CMS must be
+    // registered there too — otherwise its tags silently never surface.
+    expect(collectionsWithTags.map((c) => c.name).sort()).toEqual(
+      TAGGED_COLLECTIONS.map((c) => c.name).sort(),
+    );
   });
 
   test.each(collectionsWithTags.map((c) => [c.name, c] as const))(
@@ -70,10 +76,9 @@ describe("CMS tags field", () => {
 });
 
 describe("tag hygiene", () => {
-  const contentDirs = ["blog", "poetry", "weeknotes", "digital-garden"];
   const usedTags = new Map<string, string[]>(); // tag -> files using it
 
-  for (const dir of contentDirs) {
+  for (const { path: dir } of TAGGED_COLLECTIONS) {
     const folder = path.join(root, "posts", dir);
     for (const file of fs.readdirSync(folder)) {
       if (!file.endsWith(".md")) continue;

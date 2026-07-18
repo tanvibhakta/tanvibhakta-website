@@ -1,5 +1,6 @@
 import { getCollection } from "astro:content";
 import { COLLECTION_SEGMENTS, type collections } from "../content.config";
+import { TAGGED_COLLECTIONS } from "./tagged-collections";
 
 export type CollectionName = keyof typeof collections;
 
@@ -35,16 +36,31 @@ export async function getDraftEntries(collectionName: CollectionName) {
 }
 
 /**
- * All tags in use across published posts, sorted. Tags are free-form (typed
- * directly on posts in the CMS), so the posts themselves are the source of
- * truth for which tags exist.
+ * All published posts from the tagged collections (see TAGGED_COLLECTIONS),
+ * annotated with their collection's display label and their page href.
  */
-export async function getAllTags(): Promise<string[]> {
-  const posts = [
-    ...(await getPublishedEntries("blog")),
-    ...(await getPublishedEntries("weeknotes")),
-    ...(await getPublishedEntries("poetry")),
-    ...(await getPublishedEntries("digitalGarden")),
-  ];
+export async function getAllTaggedPosts() {
+  const perCollection = await Promise.all(
+    TAGGED_COLLECTIONS.map(async (c) =>
+      (await getPublishedEntries(c.name)).map((p) => ({
+        ...p,
+        label: c.label,
+        href: `/${c.path}/${p.id}`,
+      })),
+    ),
+  );
+  return perCollection.flat();
+}
+
+/**
+ * The tags in use across a set of posts, deduplicated and sorted. Tags are
+ * free-form (typed directly on posts in the CMS), so the posts themselves
+ * are the source of truth for which tags exist.
+ */
+export function collectTags(posts: { data: { tags?: string[] } }[]): string[] {
   return [...new Set(posts.flatMap((p) => p.data.tags ?? []))].sort();
+}
+
+export async function getAllTags(): Promise<string[]> {
+  return collectTags(await getAllTaggedPosts());
 }

@@ -1,16 +1,10 @@
 ---
-import { getPublishedEntries, getAllTags } from "../../utils/collections";
+import { getAllTaggedPosts, collectTags } from "../../utils/collections";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 import { STANDALONE_PAGES } from "../../content.config";
 
-const allPosts = [
-  ...(await getPublishedEntries("blog")),
-  ...(await getPublishedEntries("weeknotes")),
-  ...(await getPublishedEntries("poetry")),
-  ...(await getPublishedEntries("digitalGarden")),
-];
-
-const tags = await getAllTags();
+const allPosts = await getAllTaggedPosts();
+const tags = collectTags(allPosts);
 
 const tagCounts = Object.fromEntries(
   tags.map((tag) => [
