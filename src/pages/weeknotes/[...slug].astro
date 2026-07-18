@@ -1,8 +1,6 @@
 ---
-import { render } from "astro:content";
-import ProseLayout from "../../layouts/ProseLayout.astro";
+import EntryPage from "../../components/EntryPage.astro";
 import { getPublishedEntries } from "../../utils/collections";
-import { getReadingTimeMinutes } from "../../utils/reading-time";
 
 export async function getStaticPaths() {
   const weeknotes = await getPublishedEntries("weeknotes");
@@ -13,15 +11,6 @@ export async function getStaticPaths() {
 }
 
 const { weeknote } = Astro.props;
-const { Content } = await render(weeknote);
-const readingTimeMinutes = getReadingTimeMinutes(weeknote.body);
 ---
 
-<ProseLayout
-  frontmatter={weeknote.data}
-  category="weeknotes"
-  readingTimeMinutes={readingTimeMinutes}
-  hidePublishedOn
->
-  <Content />
-</ProseLayout>
+<EntryPage entry={weeknote} collection="weeknotes" />

@@ -1,32 +1,28 @@
 ---
-import { render } from "astro:content";
-import ProseLayout from "../../layouts/ProseLayout.astro";
-import AudioPlayer from "../../components/AudioPlayer.astro";
-import { getReadingTimeMinutes } from "../../utils/reading-time";
+import EntryPage from "../../components/EntryPage.astro";
+import {
+  COLLECTION_SEGMENTS,
+  getDraftEntries,
+  type CollectionName,
+} from "../../utils/collections";
 
 // Hidden-but-linkable review pages for `draft: true` entries in every
-// collection. Draft URLs are namespaced by collection (/drafts/blog/<id>)
-// so identically-named files in different collections can't collide.
+// collection. Draft URLs mirror the published ones with a /drafts prefix:
+// /drafts/blog/<id>, /drafts/poetry/<id>, and /drafts/<id> for root-level
+// pages — so stripping "/drafts" always yields the future published URL.
 // These pages are excluded from listings, RSS feeds, tag pages, and the
 // sitemap (see the sitemap filter in astro.config.mjs), and carry a
 // noindex meta tag.
 export async function getStaticPaths() {
-  const { getDraftEntries } = await import("../../utils/collections");
-  // collection name → URL segment (mirrors the published routes)
-  const segments = {
-    blog: "blog",
-    poetry: "poetry",
-    weeknotes: "weeknotes",
-    digitalGarden: "digital-garden",
-    pages: "pages",
-  } as const;
-
   const paths = [];
-  for (const [collection, segment] of Object.entries(segments)) {
-    const drafts = await getDraftEntries(collection as keyof typeof segments);
+  for (const collection of Object.keys(
+    COLLECTION_SEGMENTS,
+  ) as CollectionName[]) {
+    const segment = COLLECTION_SEGMENTS[collection];
+    const drafts = await getDraftEntries(collection);
     for (const entry of drafts) {
       paths.push({
-        params: { slug: `${segment}/${entry.id}` },
+        params: { slug: segment ? `${segment}/${entry.id}` : entry.id },
         props: { entry, collection },
       });
     }
@@ -35,28 +31,6 @@ export async function getStaticPaths() {
 }
 
 const { entry, collection } = Astro.props;
-const { Content } = await render(entry);
-
-// Mirror how each published route renders its entries.
-const category = ["blog", "poetry", "weeknotes"].includes(collection)
-  ? collection
-  : undefined;
-const readingTimeMinutes =
-  collection === "blog" || collection === "weeknotes"
-    ? getReadingTimeMinutes(entry.body)
-    : undefined;
-const audio = "audio" in entry.data ? entry.data.audio : undefined;
-const audioTitle =
-  "audioTitle" in entry.data ? entry.data.audioTitle : undefined;
 ---
 
-<ProseLayout
-  frontmatter={entry.data}
-  category={category}
-  readingTimeMinutes={readingTimeMinutes}
-  hidePublishedOn={collection === "weeknotes"}
-  noindex
->
-  <Content />
-  {audio && <AudioPlayer src={audio} title={audioTitle ?? "Listen to this"} />}
-</ProseLayout>
+<EntryPage entry={entry} collection={collection} noindex />

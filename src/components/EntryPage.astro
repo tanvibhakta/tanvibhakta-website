@@ -1,0 +1,62 @@
+---
+import { render } from "astro:content";
+import ProseLayout from "../layouts/ProseLayout.astro";
+import AudioPlayer from "./AudioPlayer.astro";
+import { getReadingTimeMinutes } from "../utils/reading-time";
+import type { CollectionName } from "../utils/collections";
+
+// The single source of truth for how each collection's entries render.
+// Used by every published route and the /drafts/ preview route, so drafts
+// are faithful mirrors of what publishing will look like by construction.
+const PRESENTATION: Record<
+  CollectionName,
+  {
+    category?: string;
+    readingTime?: boolean;
+    hidePublishedOn?: boolean;
+    audioFallbackTitle?: string;
+  }
+> = {
+  blog: {
+    category: "blog",
+    readingTime: true,
+    audioFallbackTitle: "Listen to this blog",
+  },
+  poetry: { category: "poetry", audioFallbackTitle: "Listen to this poem" },
+  weeknotes: {
+    category: "weeknotes",
+    readingTime: true,
+    hidePublishedOn: true,
+  },
+  digitalGarden: {},
+  pages: {},
+};
+
+const { entry, collection, noindex } = Astro.props;
+const presentation = PRESENTATION[collection as CollectionName];
+const { Content } = await render(entry);
+const readingTimeMinutes = presentation.readingTime
+  ? getReadingTimeMinutes(entry.body)
+  : undefined;
+const audio = "audio" in entry.data ? entry.data.audio : undefined;
+const audioTitle =
+  "audioTitle" in entry.data ? entry.data.audioTitle : undefined;
+---
+
+<ProseLayout
+  frontmatter={entry.data}
+  category={presentation.category}
+  readingTimeMinutes={readingTimeMinutes}
+  hidePublishedOn={presentation.hidePublishedOn}
+  noindex={noindex}
+>
+  <Content />
+  {
+    audio && (
+      <AudioPlayer
+        src={audio}
+        title={audioTitle ?? presentation.audioFallbackTitle}
+      />
+    )
+  }
+</ProseLayout>

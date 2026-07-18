@@ -37,15 +37,13 @@ function getCurrentSection(
   return { label: titleCase(firstSegment), href: `/${firstSegment}` };
 }
 
-// Draft previews live at /drafts/<section>/<slug> with no /drafts index;
+// Draft previews live at /drafts/<published-path> with no /drafts index;
 // resolve the underlying section so the nav matches the published version.
 // Skip the synthesized fallback for drafts — it would link to pages that
 // don't exist while the entry is unpublished.
-const isDraftPreview = /^\/drafts(\/|$)/.test(Astro.url.pathname);
-const current = getCurrentSection(
-  Astro.url.pathname.replace(/^\/drafts(?=\/|$)/, ""),
-  !isDraftPreview,
-);
+const strippedPath = Astro.url.pathname.replace(/^\/drafts(?=\/|$)/, "");
+const isDraftPreview = strippedPath !== Astro.url.pathname;
+const current = getCurrentSection(strippedPath, !isDraftPreview);
 const inMainNav =
   current && NAV_ITEMS.some((item) => item.href === current.href);
 const items: Section[] =
