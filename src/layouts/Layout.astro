@@ -1,6 +1,7 @@
 ---
 import "/src/styles/global.css";
 import { SITE_TAB_TITLE, SITE_DESCRIPTION } from "../utils/site";
+import { getPageName } from "../utils/sections";
 const {
   class: className,
   title,
@@ -9,7 +10,10 @@ const {
   noindex,
 } = Astro.props;
 
-const fullTitle = title ? `${title} | ${SITE_TAB_TITLE}` : SITE_TAB_TITLE;
+// An explicit title (e.g. "Post · Blog" from ProseLayout) wins; otherwise
+// derive the page name from the route. Homepage gets just the site name.
+const pageName = title || getPageName(Astro.url.pathname);
+const fullTitle = pageName ? `${pageName} | ${SITE_TAB_TITLE}` : SITE_TAB_TITLE;
 ---
 
 <html lang="en">
@@ -24,7 +28,7 @@ const fullTitle = title ? `${title} | ${SITE_TAB_TITLE}` : SITE_TAB_TITLE;
     <meta name="description" content={description} />
 
     <!-- Open Graph / share cards -->
-    <meta property="og:title" content={title || SITE_TAB_TITLE} />
+    <meta property="og:title" content={pageName || SITE_TAB_TITLE} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={type} />
     <meta property="og:url" content={Astro.url.href} />
