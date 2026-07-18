@@ -1,12 +1,11 @@
 ---
-title: "Repetition"
+title: "What my hands are learning"
 publishedOn: 2026-07-18
-draft: true
 ---
 
 There is a certain magic to repetition.
 
-Long ago, in response to a story where someone was forced to change their password every three months, I read the advice to make that password something that they wanted to focus on. Yes, we have touch ID, but I still type in my password 7 to 12 times a day. So this advice made sense to me. It comes from the same genre as, on the low-effort, low-effect part of the scale, “write out what you want and put it above your bed so it's the first thing you see when you wake up”, and high-effort, high-effectiveness being “Re-design your whole office so that walking through the corridors prepares your mind for the thing you need to spend the next 8 hours focusing on”[^1]
+Long ago, in response to a story where someone was forced to change their password every three months, I read advice to make that password something that they wanted to focus on. Yes, we have touch ID, but I still type in my password 7 to 12 times a day. So this advice made sense to me. It comes from the same genre as, on the low-effort, low-effect part of the scale, “write out what you want and put it above your bed so it's the first thing you see when you wake up”, and high-effort, high-effectiveness being “Re-design your whole office so that walking through the corridors prepares your mind for the thing you need to spend the next 8 hours focusing on”[^1]
 
 What you pay attention to, grows.
 
@@ -20,6 +19,6 @@ In the time since this change, I am one year through working the hardest job I h
 
 It's time for a new laptop password. While I figure it out, I'm trying to remind myself - there is a certain magic to repetition.
 
-[^1]: Cal Newport: Deep Work. See also: obvious.in office redesign principles (link currently lost to the void)
+[^1]: Cal Newport: Deep Work. See also: obvious.in office redesign principles (link to exact blog post currently lost to the void)
 
 [^2]: At the end of May 2025, a few friends caught up with [Pooja Saxena](https://anexasajoop.in/) who was in town for coffee. We were shooting the shit and the conversation turned to how the work just needs to be done. Pooja talked about how her and [Prateek](https://prtksxna.com/) kept each other work accountable via gentle ribbing, and also how when [her dad](https://github.com/sanjayaksaxena) (who is now in his sixties!) complains that the work he has to do to get a [passion project](https://github.com/winkjs/wink-nlp) done is hard, she doesn’t have patience for it because he just has to sit down and do it - and she tells him so. This conversation left a deep impression on me. She is right.
