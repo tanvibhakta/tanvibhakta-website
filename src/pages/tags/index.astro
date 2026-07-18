@@ -1,17 +1,13 @@
 ---
-import { getPublishedEntries } from "../../utils/collections";
+import { getAllTaggedPosts, collectTags } from "../../utils/collections";
 import ProseLayout from "../../layouts/ProseLayout.astro";
-import { TAGS, STANDALONE_PAGES } from "../../content.config";
+import { STANDALONE_PAGES } from "../../content.config";
 
-const allPosts = [
-  ...(await getPublishedEntries("blog")),
-  ...(await getPublishedEntries("weeknotes")),
-  ...(await getPublishedEntries("poetry")),
-  ...(await getPublishedEntries("digitalGarden")),
-];
+const allPosts = await getAllTaggedPosts();
+const tags = collectTags(allPosts);
 
 const tagCounts = Object.fromEntries(
-  TAGS.map((tag) => [
+  tags.map((tag) => [
     tag,
     allPosts.filter((p) => p.data.tags?.includes(tag)).length,
   ]),
@@ -24,7 +20,7 @@ const frontmatter = STANDALONE_PAGES.tags;
   <ul>
     <p>
       {
-        TAGS.map((tag) => (
+        tags.map((tag) => (
           <li>
             <a href={`/tags/${tag}`}>{tag}</a>
             <span class="count">{tagCounts[tag]} posts</span>
