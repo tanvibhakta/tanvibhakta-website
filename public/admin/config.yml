@@ -35,16 +35,13 @@ collections:
         public_folder: /media/audio
       - { label: Audio Title, name: audioTitle, widget: string, required: false }
       # Single definition of the tags field, aliased into every other
-      # collection below. Options come from the Tags collection (posts/tags/),
-      # so a tag created there is instantly selectable everywhere.
+      # collection below. A plain list: type a new kebab-case tag on any post
+      # and it joins the site-wide tag list (derived from posts at build time).
+      # The content schema rejects non-kebab-case tags at build.
       - &tagsField
         label: Tags
         name: tags
-        widget: relation
-        collection: tags
-        value_field: "{{slug}}"
-        display_fields: [title]
-        multiple: true
+        widget: list
         required: false
       - { label: Body, name: body, widget: markdown }
 
@@ -122,16 +119,6 @@ collections:
       - { label: Draft, name: draft, widget: boolean, default: true, required: false }
       - *tagsField
       - { label: Body, name: body, widget: markdown }
-
-  # Source of truth for tags: one file per tag. src/tags.ts derives the
-  # content-schema enum from these same files.
-  - name: tags
-    label: Tags
-    folder: posts/tags
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - { label: Title, name: title, widget: string }
 
   - name: pages
     label: Pages

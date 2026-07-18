@@ -3,25 +3,24 @@ import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs";
 import { parse } from "yaml";
-import { TAGS } from "../src/tags";
 
-// Tags are data, not config: one file per tag in posts/tags/. The CMS reads
-// them through a relation widget (so a tag created in Sveltia is instantly
-// selectable on every post) and src/tags.ts derives the TAGS enum from the
-// same files at build time. These tests pin that wiring so tag options can
-// never drift again (see the "health" incident).
+// Tags are free-form: typing a new tag on a post in the CMS is all it takes
+// to create it, and the site derives the tag list from the posts themselves
+// (see getAllTags in src/utils/collections.ts). With no fixed enum, the
+// failure mode shifts from "tag not in enum" to typos and near-duplicates,
+// so these tests enforce tag hygiene instead: kebab-case slugs and no
+// case-insensitive collisions.
 
 interface CmsField {
   name: string;
   widget?: string;
-  collection?: string;
-  multiple?: boolean;
+  options?: unknown;
+  field?: unknown;
+  fields?: unknown;
 }
 
 interface CmsCollection {
   name: string;
-  folder: string;
-  create?: boolean;
   fields: CmsField[];
 }
 
@@ -35,40 +34,66 @@ const collectionsWithTags = collections.filter((c) =>
   c.fields.some((f) => f.name === "tags"),
 );
 
-describe("CMS tags collection", () => {
-  const tagsCollection = collections.find((c) => c.name === "tags");
-
-  test("exists, points at posts/tags, and allows creating new tags", () => {
-    expect(tagsCollection).toBeDefined();
-    expect(tagsCollection!.folder).toBe("posts/tags");
-    expect(tagsCollection!.create).toBe(true);
-  });
-});
-
-describe("post tag fields", () => {
+describe("CMS tags field", () => {
   test("at least one collection exposes a tags field", () => {
     expect(collectionsWithTags.length).toBeGreaterThan(0);
   });
 
   test.each(collectionsWithTags.map((c) => [c.name, c] as const))(
-    "%s sources tag options from the tags collection",
+    "%s allows free-form tag entry via a simple list widget",
     (_name, collection) => {
       const tagsField = collection.fields.find((f) => f.name === "tags")!;
-      expect(tagsField.widget).toBe("relation");
-      expect(tagsField.collection).toBe("tags");
-      expect(tagsField.multiple).toBe(true);
+      expect(tagsField.widget).toBe("list");
+      // No subfields and no options: a plain string list, so new tags can
+      // be typed directly on the post.
+      expect(tagsField.options).toBeUndefined();
+      expect(tagsField.field).toBeUndefined();
+      expect(tagsField.fields).toBeUndefined();
     },
   );
 });
 
-describe("TAGS enum", () => {
-  test("is derived from the tag files in posts/tags", () => {
-    const slugs = fs
-      .readdirSync(path.join(root, "posts/tags"))
-      .filter((f) => f.endsWith(".md"))
-      .map((f) => f.replace(/\.md$/, ""))
-      .sort();
-    expect(slugs.length).toBeGreaterThan(0);
-    expect([...TAGS].sort()).toEqual(slugs);
+describe("tag hygiene", () => {
+  const contentDirs = ["blog", "poetry", "weeknotes", "digital-garden"];
+  const usedTags = new Map<string, string[]>(); // tag -> files using it
+
+  for (const dir of contentDirs) {
+    const folder = path.join(root, "posts", dir);
+    for (const file of fs.readdirSync(folder)) {
+      if (!file.endsWith(".md")) continue;
+      const raw = fs.readFileSync(path.join(folder, file), "utf8");
+      const frontmatter = raw.match(/^---\n([\s\S]*?)\n---/)?.[1];
+      if (!frontmatter) continue;
+      const tags: unknown = parse(frontmatter)?.tags;
+      if (!Array.isArray(tags)) continue;
+      for (const tag of tags) {
+        const files = usedTags.get(String(tag)) ?? [];
+        files.push(`posts/${dir}/${file}`);
+        usedTags.set(String(tag), files);
+      }
+    }
+  }
+
+  test("some tags are in use", () => {
+    expect(usedTags.size).toBeGreaterThan(0);
+  });
+
+  test("every tag is a kebab-case slug", () => {
+    const invalid = [...usedTags.entries()].filter(
+      ([tag]) => !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(tag),
+    );
+    expect(invalid, `malformed tags: ${JSON.stringify(invalid)}`).toEqual([]);
+  });
+
+  test("no two tags collide case-insensitively", () => {
+    const byLower = new Map<string, string[]>();
+    for (const tag of usedTags.keys()) {
+      const lower = tag.toLowerCase();
+      byLower.set(lower, [...(byLower.get(lower) ?? []), tag]);
+    }
+    const collisions = [...byLower.values()].filter((v) => v.length > 1);
+    expect(collisions, `colliding tags: ${JSON.stringify(collisions)}`).toEqual(
+      [],
+    );
   });
 });

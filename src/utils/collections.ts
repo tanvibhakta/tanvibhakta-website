@@ -19,7 +19,9 @@ export const isPublished = ({ data }: { data: { draft?: boolean } }) =>
 /**
  * Get all published (non-draft) entries from a collection.
  */
-export async function getPublishedEntries(collectionName: CollectionName) {
+export async function getPublishedEntries<C extends CollectionName>(
+  collectionName: C,
+) {
   return getCollection(collectionName, isPublished);
 }
 
@@ -30,4 +32,19 @@ export async function getPublishedEntries(collectionName: CollectionName) {
  */
 export async function getDraftEntries(collectionName: CollectionName) {
   return getCollection(collectionName, (entry) => !isPublished(entry));
+}
+
+/**
+ * All tags in use across published posts, sorted. Tags are free-form (typed
+ * directly on posts in the CMS), so the posts themselves are the source of
+ * truth for which tags exist.
+ */
+export async function getAllTags(): Promise<string[]> {
+  const posts = [
+    ...(await getPublishedEntries("blog")),
+    ...(await getPublishedEntries("weeknotes")),
+    ...(await getPublishedEntries("poetry")),
+    ...(await getPublishedEntries("digitalGarden")),
+  ];
+  return [...new Set(posts.flatMap((p) => p.data.tags ?? []))].sort();
 }
