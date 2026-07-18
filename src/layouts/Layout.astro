@@ -1,6 +1,6 @@
 ---
 import "/src/styles/global.css";
-const { class: className, title } = Astro.props;
+const { class: className, title, noindex } = Astro.props;
 ---
 
 <html lang="en">
@@ -10,6 +10,7 @@ const { class: className, title } = Astro.props;
     <link rel="stylesheet" type="text/css" href="/src/styles/global.css" />
     <meta name="generator" content={Astro.generator} />
     <meta name="author" content="Tanvi Bhakta" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <!--For IndieAuth https://indieweb.org/IndieAuth-->
     <link href="https://github.com/tanvibhakta" rel="me" />

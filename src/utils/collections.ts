@@ -16,3 +16,11 @@ export const isPublished = ({ data }: { data: { draft?: boolean } }) =>
 export async function getPublishedEntries(collectionName: CollectionName) {
   return getCollection(collectionName, isPublished);
 }
+
+/**
+ * Get all draft entries from a collection. Used by the /drafts/ routes,
+ * which build hidden-but-linkable review pages.
+ */
+export async function getDraftEntries(collectionName: CollectionName) {
+  return getCollection(collectionName, ({ data }) => Boolean(data.draft));
+}

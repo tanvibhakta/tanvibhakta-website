@@ -3,7 +3,7 @@ import Layout from "./Layout.astro";
 import Nav from "../components/Nav.astro";
 import { shortenWeeknoteTitles } from "../utils/date-helpers";
 
-const { frontmatter, category, readingTimeMinutes, hidePublishedOn } =
+const { frontmatter, category, readingTimeMinutes, hidePublishedOn, noindex } =
   Astro.props;
 
 let pageTitle = "";
@@ -38,6 +38,7 @@ const publishedOnIso = showPublishedOn ? publishedOn.toISOString() : undefined;
 
 <Layout
   title={pageTitle}
+  noindex={noindex}
   class="min-w-screen min-h-screen flex flex-col items-center text-stone-800 bg-stone-100"
 >
   <Nav />
