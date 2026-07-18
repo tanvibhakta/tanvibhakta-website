@@ -30,6 +30,18 @@ export function formatNoteTimestamp(date: Date): string {
   return `${time} · ${get("weekday")}, ${get("month")} ${get("day")} ${get("year")}`;
 }
 
+// Notes are authored in IST; the offset is fixed year-round (no DST).
+const SITE_UTC_OFFSET_MINUTES = 330;
+
+/**
+ * Notes store a naive IST wall-clock timestamp, which parses as if it were
+ * UTC. For consumers that need a real point in time (e.g. RSS pubDate),
+ * subtract the IST offset to recover the true instant.
+ */
+export function noteWallClockToInstant(wallClock: Date): Date {
+  return new Date(wallClock.getTime() - SITE_UTC_OFFSET_MINUTES * 60_000);
+}
+
 export function getOrdinalSuffix(n: number): string {
   const s = ["th", "st", "nd", "rd"];
   const v = n % 100;

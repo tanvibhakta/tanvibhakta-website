@@ -4,7 +4,7 @@ import MarkdownIt from "markdown-it";
 import sanitizeHtml from "sanitize-html";
 import { collections } from "../content.config";
 import { getEntryPath, isPublished } from "./collections";
-import { formatLongDate } from "./date-helpers";
+import { formatLongDate, noteWallClockToInstant } from "./date-helpers";
 import { getNoteNumbers } from "./notes";
 import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION } from "./site";
 
@@ -71,6 +71,17 @@ function feedItemTitle(entry: AnyCollectionEntry): string {
   return data.title ?? formatLongDate(data.publishedOn);
 }
 
+/**
+ * The pubDate for a feed item. Notes store naive IST wall-clock timestamps
+ * (see formatNoteTimestamp), but RSS pubDate claims UTC — convert to the
+ * true instant so feed readers show the actual publish time.
+ */
+function feedPubDate(entry: AnyCollectionEntry): Date {
+  return entry.collection === "notes"
+    ? noteWallClockToInstant(entry.data.publishedOn)
+    : entry.data.publishedOn;
+}
+
 export async function getAllCollectionEntries(): Promise<AnyCollectionEntry[]> {
   const allEntries: AnyCollectionEntry[] = [];
 
@@ -106,7 +117,7 @@ export async function generateMainFeed() {
     site: SITE_URL,
     items: sortedEntries.map((entry) => ({
       title: `[${capitalizeFirst(entry.collection)}] ${feedItemTitle(entry)}`,
-      pubDate: entry.data.publishedOn,
+      pubDate: feedPubDate(entry),
       link: `${getEntryPath(entry.collection, entry.id)}/`,
       content: markdownToHtml(entry.body),
     })),
@@ -135,7 +146,7 @@ export async function generateCollectionFeed(collectionName: CollectionName) {
     site: SITE_URL,
     items: sortedEntries.map((entry) => ({
       title: feedItemTitle(entry),
-      pubDate: entry.data.publishedOn,
+      pubDate: feedPubDate(entry),
       link: noteNumbers
         ? `/notes/${noteNumbers.get(entry.id)}/`
         : `${getEntryPath(entry.collection, entry.id)}/`,

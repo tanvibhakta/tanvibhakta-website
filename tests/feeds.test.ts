@@ -382,6 +382,8 @@ describe("Feed Content Generation", () => {
     const callArgs = mockRss.mock.calls[0][0];
     expect(callArgs.items).toHaveLength(1);
     expect(callArgs.items[0].title).toBe("Published Poem");
+    // Titled collections store real dates; pubDate passes through unchanged.
+    expect(callArgs.items[0].pubDate).toEqual(new Date("2025-01-01"));
   });
 
   it("should use the publish date as the feed title for title-less notes", async () => {
@@ -414,5 +416,9 @@ describe("Feed Content Generation", () => {
     // Title-less notes fall back to their formatted date, never the body.
     expect(callArgs.items[0].title).toMatch(/^[A-Z][a-z]+ \d{1,2}, 2026$/);
     expect(callArgs.items[0].title).not.toContain("shipped");
+    // Notes store naive IST wall clocks; pubDate must be the true instant.
+    expect(callArgs.items[0].pubDate.toISOString()).toBe(
+      "2026-06-21T06:30:00.000Z",
+    );
   });
 });
