@@ -1,5 +1,9 @@
 import { getCollection } from "astro:content";
-import { COLLECTION_SEGMENTS, type collections } from "../content.config";
+import {
+  COLLECTION_SEGMENTS,
+  SECTIONS,
+  type collections,
+} from "../content.config";
 import { TAGGED_COLLECTIONS } from "./tagged-collections";
 
 export type CollectionName = keyof typeof collections;
@@ -41,11 +45,11 @@ export async function getDraftEntries(collectionName: CollectionName) {
  */
 export async function getAllTaggedPosts() {
   const perCollection = await Promise.all(
-    TAGGED_COLLECTIONS.map(async (c) =>
-      (await getPublishedEntries(c.name)).map((p) => ({
+    TAGGED_COLLECTIONS.map(async (name) =>
+      (await getPublishedEntries(name)).map((p) => ({
         ...p,
-        label: c.label,
-        href: `/${c.path}/${p.id}`,
+        label: SECTIONS[name].title,
+        href: getEntryPath(name, p.id),
       })),
     ),
   );

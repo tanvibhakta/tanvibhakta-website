@@ -1,6 +1,7 @@
 ---
 import { getAllTaggedPosts, getAllTags } from "../../utils/collections";
 import { TAGGED_COLLECTIONS } from "../../utils/tagged-collections";
+import { SECTIONS } from "../../content.config";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 
 export async function getStaticPaths() {
@@ -15,8 +16,8 @@ const newestFirst = (
   b: (typeof allPosts)[number],
 ) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime();
 
-const sections = TAGGED_COLLECTIONS.map(({ name, label }) => ({
-  label,
+const sections = TAGGED_COLLECTIONS.map((name) => ({
+  label: SECTIONS[name].title,
   posts: allPosts
     .filter((p) => p.collection === name && p.data.tags?.includes(tag))
     .sort(newestFirst),

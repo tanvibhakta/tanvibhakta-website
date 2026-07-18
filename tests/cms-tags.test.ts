@@ -23,6 +23,7 @@ interface CmsField {
 
 interface CmsCollection {
   name: string;
+  folder: string;
   fields: CmsField[];
 }
 
@@ -76,7 +77,7 @@ describe("CMS tags field", () => {
     // collection gaining or losing a tags field in the CMS must be
     // registered there too — otherwise its tags silently never surface.
     expect(collectionsWithTags.map((c) => c.name).sort()).toEqual(
-      TAGGED_COLLECTIONS.map((c) => c.name).sort(),
+      [...TAGGED_COLLECTIONS].sort(),
     );
   });
 
@@ -97,18 +98,20 @@ describe("CMS tags field", () => {
 describe("tag hygiene", () => {
   const usedTags = new Map<string, string[]>(); // tag -> files using it
 
-  for (const { path: dir } of TAGGED_COLLECTIONS) {
-    const folder = path.join(root, "posts", dir);
-    for (const file of fs.readdirSync(folder)) {
+  // Scan the folders the CMS config itself declares for tagged collections,
+  // so this needs no separate list of content directories.
+  for (const { folder } of collectionsWithTags) {
+    const dir = path.join(root, folder);
+    for (const file of fs.readdirSync(dir)) {
       if (!file.endsWith(".md")) continue;
-      const raw = fs.readFileSync(path.join(folder, file), "utf8");
+      const raw = fs.readFileSync(path.join(dir, file), "utf8");
       const frontmatter = raw.match(/^---\n([\s\S]*?)\n---/)?.[1];
       if (!frontmatter) continue;
       const tags: unknown = parse(frontmatter)?.tags;
       if (!Array.isArray(tags)) continue;
       for (const tag of tags) {
         const files = usedTags.get(String(tag)) ?? [];
-        files.push(`posts/${dir}/${file}`);
+        files.push(`${folder}/${file}`);
         usedTags.set(String(tag), files);
       }
     }
