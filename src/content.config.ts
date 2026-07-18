@@ -136,7 +136,7 @@ const notes = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/notes/" }),
   schema: z.object({
     publishedOn: z.date(),
-    tags: z.array(z.enum(TAGS)).optional().default([]),
+    tags: z.array(tagSchema).optional().default([]),
   }),
 });
 
