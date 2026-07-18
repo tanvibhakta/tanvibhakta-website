@@ -1,14 +1,9 @@
 import { z, defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
+import { TAGS } from "./tags";
 
-export const TAGS = [
-  "ai-usage",
-  "health",
-  "konkani",
-  "philosophy",
-  "reviews",
-] as const;
-export type Tag = (typeof TAGS)[number];
+export { TAGS };
+export type { Tag } from "./tags";
 
 /**
  * Single source of truth for page/section blurbs.
