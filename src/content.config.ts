@@ -1,15 +1,13 @@
 import { z, defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
+import { TAG_SLUG_PATTERN } from "./utils/tag-slug";
 
 // Tags are free-form; the site-wide tag list is derived from posts (see
 // getAllTags in src/utils/collections.ts). Enforce a consistent slug shape
 // so typos like "AI Usage" or trailing spaces fail the build.
 const tagSchema = z
   .string()
-  .regex(
-    /^[a-z0-9]+(-[a-z0-9]+)*$/,
-    "tags must be kebab-case slugs, e.g. ai-usage",
-  );
+  .regex(TAG_SLUG_PATTERN, "tags must be kebab-case slugs, e.g. ai-usage");
 
 /**
  * Single source of truth for page/section blurbs.

@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs";
 import { parse } from "yaml";
 import { TAGGED_COLLECTIONS } from "../src/utils/tagged-collections";
+import { TAG_SLUG_PATTERN } from "../src/utils/tag-slug";
 
 // Tags are free-form: typing a new tag on a post in the CMS is all it takes
 // to create it, and the site derives the tag list from the posts themselves
@@ -23,6 +24,24 @@ interface CmsField {
 interface CmsCollection {
   name: string;
   fields: CmsField[];
+}
+
+/**
+ * Groups of tags that are spelling variants of the same tag: identical once
+ * lowercased and stripped of hyphens ("Health" / "health", "ai-usage" /
+ * "aiusage"). The hyphenation case is the one the kebab-case format check
+ * can't catch — both spellings are individually valid.
+ */
+function findSpellingCollisions(tags: string[]): string[][] {
+  const byNormalized = new Map<string, string[]>();
+  for (const tag of [...tags].sort()) {
+    const normalized = tag.toLowerCase().replace(/-/g, "");
+    byNormalized.set(normalized, [
+      ...(byNormalized.get(normalized) ?? []),
+      tag,
+    ]);
+  }
+  return [...byNormalized.values()].filter((group) => group.length > 1);
 }
 
 /**
@@ -101,21 +120,21 @@ describe("tag hygiene", () => {
 
   test("every tag is a kebab-case slug", () => {
     const invalid = [...usedTags.entries()].filter(
-      ([tag]) => !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(tag),
+      ([tag]) => !TAG_SLUG_PATTERN.test(tag),
     );
     expect(invalid, `malformed tags: ${JSON.stringify(invalid)}`).toEqual([]);
   });
 
-  test("no two tags collide case-insensitively", () => {
-    const byLower = new Map<string, string[]>();
-    for (const tag of usedTags.keys()) {
-      const lower = tag.toLowerCase();
-      byLower.set(lower, [...(byLower.get(lower) ?? []), tag]);
-    }
-    const collisions = [...byLower.values()].filter((v) => v.length > 1);
-    expect(collisions, `colliding tags: ${JSON.stringify(collisions)}`).toEqual(
-      [],
-    );
+  test("no two tags are spelling variants of each other", () => {
+    const collisions = findSpellingCollisions([...usedTags.keys()]);
+    const detail = collisions
+      .map((group) =>
+        group
+          .map((t) => `"${t}" (${usedTags.get(t)!.join(", ")})`)
+          .join(" vs "),
+      )
+      .join("; ");
+    expect(collisions, `same tag spelled differently: ${detail}`).toEqual([]);
   });
 
   test("no singular/plural near-duplicates", () => {
@@ -127,6 +146,32 @@ describe("tag hygiene", () => {
       )
       .join("; ");
     expect(pairs, `similar tags, pick one spelling: ${detail}`).toEqual([]);
+  });
+});
+
+describe("findSpellingCollisions", () => {
+  test("flags case variants", () => {
+    expect(findSpellingCollisions(["Health", "health"])).toEqual([
+      ["Health", "health"],
+    ]);
+  });
+
+  test("flags hyphenation variants", () => {
+    expect(findSpellingCollisions(["ai-usage", "aiusage"])).toEqual([
+      ["ai-usage", "aiusage"],
+    ]);
+  });
+
+  test("flags combined case and hyphenation variants", () => {
+    expect(findSpellingCollisions(["AI-Usage", "aiusage"])).toEqual([
+      ["AI-Usage", "aiusage"],
+    ]);
+  });
+
+  test("ignores genuinely distinct tags", () => {
+    expect(
+      findSpellingCollisions(["health", "philosophy", "ai-usage"]),
+    ).toEqual([]);
   });
 });
 
