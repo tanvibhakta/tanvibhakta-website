@@ -10,8 +10,8 @@ import { TAG_SLUG_PATTERN } from "../src/utils/tag-slug";
 // to create it, and the site derives the tag list from the posts themselves
 // (see getAllTags in src/utils/collections.ts). With no fixed enum, the
 // failure mode shifts from "tag not in enum" to typos and near-duplicates,
-// so these tests enforce tag hygiene instead: kebab-case slugs and no
-// case-insensitive collisions.
+// so these tests enforce tag hygiene instead: kebab-case slugs, no spelling
+// variants, no singular/plural pairs.
 
 interface CmsField {
   name: string;
