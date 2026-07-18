@@ -27,20 +27,39 @@ export type Tag = (typeof TAGS)[number];
  */
 export type SectionMeta = { href: string; title: string; description: string };
 
+/**
+ * Collection name → URL path segment. The single source of truth for where
+ * each collection's entries are served: published entries at
+ * /<segment>/<id>, drafts at /drafts/<segment>/<id>. `pages` entries are
+ * served at the site root, so their segment is empty. Section hrefs below
+ * derive from this map so the two can never drift.
+ */
+export const COLLECTION_SEGMENTS = {
+  blog: "blog",
+  poetry: "poetry",
+  weeknotes: "weeknotes",
+  digitalGarden: "digital-garden",
+  pages: "",
+} as const satisfies Record<keyof typeof collections, string>;
+
 export const SECTIONS = {
-  blog: { href: "/blog", title: "Blog", description: "coherent ideas" },
+  blog: {
+    href: `/${COLLECTION_SEGMENTS.blog}`,
+    title: "Blog",
+    description: "coherent ideas",
+  },
   poetry: {
-    href: "/poetry",
+    href: `/${COLLECTION_SEGMENTS.poetry}`,
     title: "Poetry",
     description: "Poems, some with audio readings.",
   },
   weeknotes: {
-    href: "/weeknotes",
+    href: `/${COLLECTION_SEGMENTS.weeknotes}`,
     title: "Weeknotes",
     description: "Short, (ir)regular notes on life and work.",
   },
   digitalGarden: {
-    href: "/digital-garden",
+    href: `/${COLLECTION_SEGMENTS.digitalGarden}`,
     title: "Digital Garden",
     description: "(abandoned) garden",
   },

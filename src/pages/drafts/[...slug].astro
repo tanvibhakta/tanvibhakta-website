@@ -1,10 +1,7 @@
 ---
 import EntryPage from "../../components/EntryPage.astro";
-import {
-  COLLECTION_SEGMENTS,
-  getDraftEntries,
-  type CollectionName,
-} from "../../utils/collections";
+import { COLLECTION_SEGMENTS } from "../../content.config";
+import { getDraftEntries, type CollectionName } from "../../utils/collections";
 
 // Hidden-but-linkable review pages for `draft: true` entries in every
 // collection. Draft URLs mirror the published ones with a /drafts prefix:

@@ -1,21 +1,7 @@
 import { getCollection } from "astro:content";
-import type { collections } from "../content.config";
+import { COLLECTION_SEGMENTS, type collections } from "../content.config";
 
 export type CollectionName = keyof typeof collections;
-
-/**
- * Collection name → URL path segment. The single source of truth for where
- * each collection's entries are served: published entries at
- * /<segment>/<id>, drafts at /drafts/<segment>/<id>. `pages` entries are
- * served at the site root, so their segment is empty.
- */
-export const COLLECTION_SEGMENTS = {
-  blog: "blog",
-  poetry: "poetry",
-  weeknotes: "weeknotes",
-  digitalGarden: "digital-garden",
-  pages: "",
-} as const satisfies Record<CollectionName, string>;
 
 /** Site-relative URL for a published entry. */
 export function getEntryPath(collectionName: CollectionName, id: string) {
