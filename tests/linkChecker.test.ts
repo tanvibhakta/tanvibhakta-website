@@ -66,6 +66,9 @@ async function findHtmlFiles(distDir: string): Promise<string[]> {
       const fullPath = path.join(dir, entry.name);
 
       if (entry.isDirectory()) {
+        // Draft previews (/drafts/) are work-in-progress by definition —
+        // dead links inside them must not block commits or deploys.
+        if (dir === distDir && entry.name === "drafts") continue;
         await scanDir(fullPath);
       } else if (entry.name.endsWith(".html")) {
         htmlFiles.push(fullPath);
