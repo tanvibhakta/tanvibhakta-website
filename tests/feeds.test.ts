@@ -77,6 +77,13 @@ vi.mock("../src/content.config", () => ({
     poetry: {},
     digitalGarden: {},
   },
+  COLLECTION_SEGMENTS: {
+    blog: "blog",
+    weeknotes: "weeknotes",
+    poetry: "poetry",
+    digitalGarden: "digital-garden",
+    pages: "",
+  },
 }));
 
 describe("Feed Configuration", () => {

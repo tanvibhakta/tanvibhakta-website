@@ -3,6 +3,7 @@ import { render } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 import AudioPlayer from "../../components/AudioPlayer.astro";
 import { getPublishedEntries } from "../../utils/collections";
+import { SECTIONS } from "../../content.config";
 
 const allPoetry = await getPublishedEntries("poetry");
 
@@ -30,9 +31,7 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
 });
 
-const frontmatter = {
-  title: "Poetry",
-};
+const frontmatter = SECTIONS.poetry;
 ---
 
 <ProseLayout frontmatter={frontmatter}>

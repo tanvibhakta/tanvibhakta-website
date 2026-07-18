@@ -1,67 +1,81 @@
 ---
 import ProseLayout from "../layouts/ProseLayout.astro";
+import { getPublishedEntries } from "../utils/collections";
+import { SECTIONS, STANDALONE_PAGES } from "../content.config";
 
-// A curated, top-level table of contents — one entry per section, with a
-// short explanation. Individual posts live on their section index pages,
-// not here. The exhaustive machine-readable list is at /sitemap-index.xml.
-const sections = [
-  { href: "/", blurb: "home" },
-  {
-    href: "/blog",
-    blurb: "coherent ideas",
-  },
-  {
-    href: "/care",
-    blurb: "guide to taking care of me",
-  },
-  {
-    href: "/digital-garden",
-    blurb: "(abandoned) garden",
-  },
-  {
-    href: "/now",
-    blurb: "what im doing now",
-  },
-  {
-    href: "/poetry",
-    blurb: "Poems, some with audio readings.",
-  },
-  {
-    href: "/subscribe",
-    blurb: "RSS feeds for every section",
-  },
-  {
-    href: "/tags",
-    blurb: "lists all tags used across the site. cross-category",
-  },
-  {
-    href: "/weeknotes",
-    blurb: "Short, (ir)regular notes on life and work.",
-  },
-  {
-    href: "/work",
-    blurb: "resume ++ ",
-  },
-];
+// Blurbs live with the content: sections in content.config.ts (next to their
+// collection definitions), pages in their own frontmatter. This page just
+// pulls it all together — adding a markdown page or a new section surfaces
+// here automatically.
 
-const frontmatter = { title: "Sitemap" };
+// Sections are collection-backed, so we can show a count of their children.
+const sections = (
+  await Promise.all(
+    (Object.keys(SECTIONS) as (keyof typeof SECTIONS)[]).map(
+      async (collection) => ({
+        ...SECTIONS[collection],
+        count: (await getPublishedEntries(collection)).length,
+      }),
+    ),
+  )
+).sort((a, b) => a.href.localeCompare(b.href));
+
+// Pages: hand-built standalone routes + auto-discovered markdown pages
+// (excluding underscore-prefixed fixtures), sorted together by path.
+const collectionPages = (await getPublishedEntries("pages"))
+  .filter((page) => !page.id.startsWith("_"))
+  .map((page) => ({
+    href: `/${page.id}`,
+    description: page.data.description ?? "",
+  }));
+
+const pages = [...Object.values(STANDALONE_PAGES), ...collectionPages].sort(
+  (a, b) => a.href.localeCompare(b.href),
+);
+
+const frontmatter = {
+  title: "Sitemap",
+  description:
+    "A map of every page and section on the site, with short descriptions.",
+};
 ---
 
 <ProseLayout frontmatter={frontmatter}>
   <p>
-    This website has a lot of pages not linked from anywhere else except here! welcome to the inquisitive discerning reader's browsing experience :)
+    This website has a lot of pages not linked from anywhere else except here!
+    welcome to the inquisitive discerning reader's browsing experience :)
   </p>
 
-  <ul>
-    {
-      sections.map((section) => (
-        <li>
-          <a href={section.href}>{section.href}</a>
-          <span class="blurb">{section.blurb}</span>
-        </li>
-      ))
-    }
-  </ul>
+  <section>
+    <h2>Sections</h2>
+    <ul>
+      {
+        sections.map((section) => (
+          <li>
+            <a href={section.href}>{section.href}</a>
+            <span class="blurb">
+              {section.description}
+              <span class="count"> · {section.count}</span>
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section>
+    <h2>Pages</h2>
+    <ul>
+      {
+        pages.map((page) => (
+          <li>
+            <a href={page.href}>{page.href}</a>
+            <span class="blurb">{page.description}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
 </ProseLayout>
 
 <style>
@@ -83,6 +97,11 @@ const frontmatter = { title: "Sitemap" };
 
   .blurb {
     font-size: 0.9rem;
+    opacity: 0.7;
+  }
+
+  .count {
+    font-variant: small-caps;
     opacity: 0.7;
   }
 </style>

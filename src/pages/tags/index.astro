@@ -1,7 +1,7 @@
 ---
 import { getPublishedEntries } from "../../utils/collections";
 import ProseLayout from "../../layouts/ProseLayout.astro";
-import { TAGS } from "../../content.config";
+import { TAGS, STANDALONE_PAGES } from "../../content.config";
 
 const allPosts = [
   ...(await getPublishedEntries("blog")),
@@ -17,7 +17,7 @@ const tagCounts = Object.fromEntries(
   ]),
 );
 
-const frontmatter = { title: "Tags" };
+const frontmatter = STANDALONE_PAGES.tags;
 ---
 
 <ProseLayout frontmatter={frontmatter}>

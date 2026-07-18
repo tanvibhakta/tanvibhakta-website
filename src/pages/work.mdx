@@ -1,8 +1,7 @@
----
-layout: ../layouts/ProseLayout.astro
----
+import ProseLayout from "../layouts/ProseLayout.astro";
+import { STANDALONE_PAGES } from "../content.config";
 
-    # Work
+<ProseLayout frontmatter={STANDALONE_PAGES.work}>
 
 <div class="text-sm">
   If you're on this page, you might be interested in my
@@ -70,3 +69,5 @@ As part of the web team, we worked with the New Readers Team at Wikipedia to hel
 - I wrote a script to scrape about thirty articles from Wikipedia across three different languages.
 - We built a mobile-first application with several unique UI components - eg: stories, interactive quizzes.
 - We ensured a seamless localised experience for Punjabi and Hindi users.
+
+</ProseLayout>

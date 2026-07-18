@@ -1,5 +1,6 @@
 ---
 title: Now
+description: what im doing now
 ---
 
 I'm 28 years old. I live with my 3 cats and a large number of good friends within a 30 minute auto ride distance.

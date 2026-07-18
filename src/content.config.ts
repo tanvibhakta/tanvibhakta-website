@@ -10,6 +10,76 @@ export const TAGS = [
 ] as const;
 export type Tag = (typeof TAGS)[number];
 
+/**
+ * Single source of truth for page/section blurbs.
+ *
+ * SECTIONS are listing pages backed by a content collection — they show a
+ * count of their children. Keyed by collection name so we can look up the
+ * blurb from the section's own index page and count its entries.
+ *
+ * STANDALONE_PAGES are hand-built routes with no child collection. Markdown
+ * pages (the `pages` collection, e.g. /care, /now) are NOT listed here — they
+ * carry their own `description` in frontmatter and are discovered
+ * automatically, so adding one needs no edit here.
+ *
+ * Consumed by /sitemap, by the nav (labels come from `title`), and by each
+ * page itself (title + share-card description).
+ */
+export type SectionMeta = { href: string; title: string; description: string };
+
+/**
+ * Collection name → URL path segment. The single source of truth for where
+ * each collection's entries are served: published entries at
+ * /<segment>/<id>, drafts at /drafts/<segment>/<id>. `pages` entries are
+ * served at the site root, so their segment is empty. Section hrefs below
+ * derive from this map so the two can never drift.
+ */
+export const COLLECTION_SEGMENTS = {
+  blog: "blog",
+  poetry: "poetry",
+  weeknotes: "weeknotes",
+  digitalGarden: "digital-garden",
+  pages: "",
+} as const satisfies Record<keyof typeof collections, string>;
+
+export const SECTIONS = {
+  blog: {
+    href: `/${COLLECTION_SEGMENTS.blog}`,
+    title: "Blog",
+    description: "coherent ideas",
+  },
+  poetry: {
+    href: `/${COLLECTION_SEGMENTS.poetry}`,
+    title: "Poetry",
+    description: "Poems, some with audio readings.",
+  },
+  weeknotes: {
+    href: `/${COLLECTION_SEGMENTS.weeknotes}`,
+    title: "Weeknotes",
+    description: "Short, (ir)regular notes on life and work.",
+  },
+  digitalGarden: {
+    href: `/${COLLECTION_SEGMENTS.digitalGarden}`,
+    title: "Digital Garden",
+    description: "(abandoned) garden",
+  },
+} as const satisfies Record<string, SectionMeta>;
+
+export const STANDALONE_PAGES = {
+  home: { href: "/", title: "Home", description: "home" },
+  work: { href: "/work", title: "Work", description: "resume ++" },
+  subscribe: {
+    href: "/subscribe",
+    title: "Subscribe",
+    description: "RSS feeds for every section",
+  },
+  tags: {
+    href: "/tags",
+    title: "Tags",
+    description: "lists all tags used across the site. cross-category",
+  },
+} as const satisfies Record<string, SectionMeta>;
+
 // Common schema for all collections.
 // `anchors` toggles the rehype-anchors plugin per entry — set false to skip
 // generating per-paragraph / per-list-item `#` links. Collection-wide
@@ -20,6 +90,8 @@ const collectionSchema = z.object({
   draft: z.boolean().optional(),
   tags: z.array(z.enum(TAGS)).optional().default([]),
   anchors: z.boolean().optional(),
+  // Share-card / meta description; surfaces via ProseLayout → Layout.
+  description: z.string().optional(),
 });
 
 // Manually define collections for now
@@ -47,7 +119,6 @@ const poetry = defineCollection({
 const digitalGarden = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/digital-garden/" }),
   schema: collectionSchema.extend({
-    description: z.string().optional(),
     lastUpdatedOn: z.date(),
   }),
 });
@@ -57,6 +128,8 @@ const pages = defineCollection({
   schema: z.object({
     title: z.string(),
     draft: z.boolean().optional(),
+    // Blurb shown on /sitemap and used for the page's share-card description.
+    description: z.string().optional(),
   }),
 });
 

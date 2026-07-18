@@ -1,19 +1,22 @@
 ---
+import { SECTIONS, STANDALONE_PAGES } from "../content.config";
+
 type Section = { label: string; href: string };
 
-const NAV_ITEMS: readonly Section[] = [
-  { label: "Work", href: "/work" },
-  { label: "Blog", href: "/blog" },
-  { label: "Weeknotes", href: "/weeknotes" },
-] as const;
-
+// Labels and membership come from the registry in content.config.ts; only
+// ordering and which items sit in the main nav are decided here. Home ("/")
+// is excluded — the site title link covers it.
 const KNOWN_SECTIONS: readonly Section[] = [
-  ...NAV_ITEMS,
-  { label: "Poetry", href: "/poetry" },
-  { label: "Digital Garden", href: "/digital-garden" },
-  { label: "Tags", href: "/tags" },
-  { label: "Subscribe", href: "/subscribe" },
-] as const;
+  ...Object.values(SECTIONS),
+  ...Object.values(STANDALONE_PAGES),
+]
+  .filter(({ href }) => href !== "/")
+  .map(({ href, title }) => ({ href, label: title }));
+
+const NAV_HREFS = ["/work", "/blog", "/weeknotes"];
+const NAV_ITEMS: readonly Section[] = NAV_HREFS.flatMap(
+  (href) => KNOWN_SECTIONS.find((s) => s.href === href) ?? [],
+);
 
 function titleCase(slug: string): string {
   return slug

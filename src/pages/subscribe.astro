@@ -2,6 +2,7 @@
 import { Icon } from "astro-icon/components";
 import FeedbackMessage from "../components/FeedbackMessage.astro";
 import ProseLayout from "../layouts/ProseLayout.astro";
+import { STANDALONE_PAGES } from "../content.config";
 
 const feeds = [
   { name: "All posts", url: "https://tanvibhakta.in/feed.xml" },
@@ -34,7 +35,7 @@ const lists = [
 ];
 ---
 
-<ProseLayout frontmatter={{ title: "Keep up with me" }}>
+<ProseLayout frontmatter={STANDALONE_PAGES.subscribe}>
   <h2>RSS</h2>
   <p>
     RSS lets you keep up with the updates on this blog without giving out your
