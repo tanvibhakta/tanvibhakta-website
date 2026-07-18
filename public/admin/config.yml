@@ -35,20 +35,17 @@ collections:
         public_folder: /media/audio
       - { label: Audio Title, name: audioTitle, widget: string, required: false }
       # Single definition of the tags field, aliased into every other
-      # collection below. Keep the options in sync with TAGS in src/tags.ts —
-      # tests/cms-tags.test.ts fails when they drift.
+      # collection below. Options come from the Tags collection (posts/tags/),
+      # so a tag created there is instantly selectable everywhere.
       - &tagsField
         label: Tags
         name: tags
-        widget: select
+        widget: relation
+        collection: tags
+        value_field: "{{slug}}"
+        display_fields: [title]
         multiple: true
         required: false
-        options:
-          - { label: "AI Usage", value: "ai-usage" }
-          - { label: "Health", value: "health" }
-          - { label: "Konkani", value: "konkani" }
-          - { label: "Philosophy", value: "philosophy" }
-          - { label: "Reviews", value: "reviews" }
       - { label: Body, name: body, widget: markdown }
 
   - name: poetry
@@ -125,6 +122,16 @@ collections:
       - { label: Draft, name: draft, widget: boolean, default: true, required: false }
       - *tagsField
       - { label: Body, name: body, widget: markdown }
+
+  # Source of truth for tags: one file per tag. src/tags.ts derives the
+  # content-schema enum from these same files.
+  - name: tags
+    label: Tags
+    folder: posts/tags
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Title, name: title, widget: string }
 
   - name: pages
     label: Pages

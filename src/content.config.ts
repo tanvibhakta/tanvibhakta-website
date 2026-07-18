@@ -83,7 +83,10 @@ const collectionSchema = z.object({
   title: z.string(),
   publishedOn: z.date(),
   draft: z.boolean().optional(),
-  tags: z.array(z.enum(TAGS)).optional().default([]),
+  tags: z
+    .array(z.enum(TAGS as [string, ...string[]]))
+    .optional()
+    .default([]),
   anchors: z.boolean().optional(),
   // Share-card / meta description; surfaces via ProseLayout → Layout.
   description: z.string().optional(),
