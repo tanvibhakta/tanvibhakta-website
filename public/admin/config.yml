@@ -34,7 +34,11 @@ collections:
         media_folder: /public/media/audio
         public_folder: /media/audio
       - { label: Audio Title, name: audioTitle, widget: string, required: false }
-      - label: Tags
+      # Single definition of the tags field, aliased into every other
+      # collection below. Keep the options in sync with TAGS in src/tags.ts —
+      # tests/cms-tags.test.ts fails when they drift.
+      - &tagsField
+        label: Tags
         name: tags
         widget: select
         multiple: true
@@ -72,17 +76,7 @@ collections:
         media_folder: /public/media/audio
         public_folder: /media/audio
       - { label: Audio Title, name: audioTitle, widget: string, required: false }
-      - label: Tags
-        name: tags
-        widget: select
-        multiple: true
-        required: false
-        options:
-          - { label: "AI Usage", value: "ai-usage" }
-          - { label: "Health", value: "health" }
-          - { label: "Konkani", value: "konkani" }
-          - { label: "Philosophy", value: "philosophy" }
-          - { label: "Reviews", value: "reviews" }
+      - *tagsField
       - { label: Body, name: body, widget: markdown }
 
   - name: weeknotes
@@ -103,17 +97,7 @@ collections:
       - { label: Title, name: title, widget: string }
       - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD }
       - { label: Draft, name: draft, widget: boolean, default: true, required: false }
-      - label: Tags
-        name: tags
-        widget: select
-        multiple: true
-        required: false
-        options:
-          - { label: "AI Usage", value: "ai-usage" }
-          - { label: "Health", value: "health" }
-          - { label: "Konkani", value: "konkani" }
-          - { label: "Philosophy", value: "philosophy" }
-          - { label: "Reviews", value: "reviews" }
+      - *tagsField
       - label: Body
         name: body
         widget: markdown
@@ -139,17 +123,7 @@ collections:
       - { label: Last Updated, name: lastUpdatedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: false, format: YYYY-MM-DD, default: "{{now}}" }
       - { label: Description, name: description, widget: string, required: false }
       - { label: Draft, name: draft, widget: boolean, default: true, required: false }
-      - label: Tags
-        name: tags
-        widget: select
-        multiple: true
-        required: false
-        options:
-          - { label: "AI Usage", value: "ai-usage" }
-          - { label: "Health", value: "health" }
-          - { label: "Konkani", value: "konkani" }
-          - { label: "Philosophy", value: "philosophy" }
-          - { label: "Reviews", value: "reviews" }
+      - *tagsField
       - { label: Body, name: body, widget: markdown }
 
   - name: pages
