@@ -4,6 +4,8 @@ import MarkdownIt from "markdown-it";
 import sanitizeHtml from "sanitize-html";
 import { collections } from "../content.config";
 import { getEntryPath, isPublished } from "./collections";
+import { formatLongDate, noteWallClockToInstant } from "./date-helpers";
+import { getNoteNumbers } from "./notes";
 import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION } from "./site";
 
 const FEED_LIMIT = 25;
@@ -26,7 +28,7 @@ export const FEED_CONFIG = {
   // Collections to exclude from feed generation entirely
   excludedCollections: ["pages"] as string[],
   // Collections to exclude from the main unified feed (but still get individual feeds)
-  excludeFromMainFeed: [] as string[],
+  excludeFromMainFeed: ["notes"] as string[],
 };
 
 type CollectionName = keyof typeof collections;
@@ -57,6 +59,27 @@ export function getMainFeedEligibleCollections(): CollectionName[] {
 
 function capitalizeFirst(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/**
+ * The title for a feed item. Titled collections use their `title`; the
+ * title-less `notes` collection falls back to its formatted publish date —
+ * the same string shown as the note's heading on the site.
+ */
+function feedItemTitle(entry: AnyCollectionEntry): string {
+  const data = entry.data as { title?: string; publishedOn: Date };
+  return data.title ?? formatLongDate(data.publishedOn);
+}
+
+/**
+ * The pubDate for a feed item. Notes store naive IST wall-clock timestamps
+ * (see formatNoteTimestamp), but RSS pubDate claims UTC — convert to the
+ * true instant so feed readers show the actual publish time.
+ */
+function feedPubDate(entry: AnyCollectionEntry): Date {
+  return entry.collection === "notes"
+    ? noteWallClockToInstant(entry.data.publishedOn)
+    : entry.data.publishedOn;
 }
 
 export async function getAllCollectionEntries(): Promise<AnyCollectionEntry[]> {
@@ -93,8 +116,8 @@ export async function generateMainFeed() {
     description: SITE_DESCRIPTION,
     site: SITE_URL,
     items: sortedEntries.map((entry) => ({
-      title: `[${capitalizeFirst(entry.collection)}] ${entry.data.title}`,
-      pubDate: entry.data.publishedOn,
+      title: `[${capitalizeFirst(entry.collection)}] ${feedItemTitle(entry)}`,
+      pubDate: feedPubDate(entry),
       link: `${getEntryPath(entry.collection, entry.id)}/`,
       content: markdownToHtml(entry.body),
     })),
@@ -103,6 +126,10 @@ export async function generateMainFeed() {
 
 export async function generateCollectionFeed(collectionName: CollectionName) {
   const entries = await getCollectionEntries(collectionName);
+
+  // Notes are permalinked by number, not by filename id.
+  const noteNumbers =
+    collectionName === "notes" ? await getNoteNumbers() : null;
 
   // Sort by date and limit
   const sortedEntries = entries
@@ -118,9 +145,11 @@ export async function generateCollectionFeed(collectionName: CollectionName) {
     description: `${capitalizeFirst(collectionName)} posts from ${SITE_TITLE}`,
     site: SITE_URL,
     items: sortedEntries.map((entry) => ({
-      title: entry.data.title,
-      pubDate: entry.data.publishedOn,
-      link: `${getEntryPath(entry.collection, entry.id)}/`,
+      title: feedItemTitle(entry),
+      pubDate: feedPubDate(entry),
+      link: noteNumbers
+        ? `/notes/${noteNumbers.get(entry.id)}/`
+        : `${getEntryPath(entry.collection, entry.id)}/`,
       content: markdownToHtml(entry.body),
     })),
   });

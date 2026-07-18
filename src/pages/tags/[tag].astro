@@ -3,6 +3,7 @@ import { getAllTaggedPosts, getAllTags } from "../../utils/collections";
 import { TAGGED_COLLECTIONS } from "../../utils/tagged-collections";
 import { SECTIONS } from "../../content.config";
 import ProseLayout from "../../layouts/ProseLayout.astro";
+import { formatLongDate, formatNoteTimestamp } from "../../utils/date-helpers";
 
 export async function getStaticPaths() {
   return (await getAllTags()).map((tag) => ({ params: { tag } }));
@@ -34,18 +35,26 @@ const frontmatter = { title: tag };
         <h2>{label}</h2>
         <ul>
           <p>
-            {posts.map((post) => (
-              <li>
-                <a href={post.href}>{post.data.title}</a>
-                <span class="date">
-                  {post.data.publishedOn.toLocaleDateString("en-US", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </span>
-              </li>
-            ))}
+            {posts.map((post) => {
+              const title = (post.data as { title?: string }).title;
+              // Titled posts link by title; title-less notes have no title
+              // to fake, so they link by their timestamp (a semantic <time>).
+              return title ? (
+                <li>
+                  <a href={post.href}>{title}</a>
+                  <span class="date">{formatLongDate(post.data.publishedOn)}</span>
+                </li>
+              ) : (
+                <li>
+                  <time datetime={post.data.publishedOn.toISOString()}>
+                    {formatNoteTimestamp(post.data.publishedOn)}
+                  </time>
+                  <a href={post.href} class="date">
+                    permalink
+                  </a>
+                </li>
+              );
+            })}
           </p>
         </ul>
       </section>

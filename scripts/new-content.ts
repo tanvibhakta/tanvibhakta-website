@@ -12,14 +12,12 @@ const frontmatterSchema = z.object({
 const COLLECTIONS = {
   weeknotes: {
     dir: "posts/weeknotes",
-    generateFilename: (input: string) => {
-      const year = new Date().getFullYear();
+    generateFilename: (input: string, now: Date) => {
       const slug = input.toLowerCase().replace(/\s+/g, "-");
-      return `week-of-${slug}-${year}.md`;
+      return `week-of-${slug}-${now.getFullYear()}.md`;
     },
-    generateTitle: (input: string) => {
-      const year = new Date().getFullYear();
-      return `Week of ${input}, ${year}`;
+    generateTitle: (input: string, now: Date) => {
+      return `Week of ${input}, ${now.getFullYear()}`;
     },
   },
   blog: {
@@ -48,12 +46,33 @@ const COLLECTIONS = {
       return input.charAt(0).toUpperCase() + input.slice(1);
     },
   },
+  // Title-less short posts. No input needed; the filename is a timestamp.
+  notes: {
+    dir: "posts/notes",
+    titleless: true,
+    generateFilename: (_input: string, now: Date) => {
+      // Reshape "YYYY-MM-DDTHH:mm:ss" into "YYYY-MM-DD-HHmm.md" so the
+      // filename always agrees with the publishedOn frontmatter.
+      const timestamp = formatLocalTimestamp(now);
+      return `${timestamp.slice(0, 10)}-${timestamp.slice(11, 16).replace(":", "")}.md`;
+    },
+  },
 } as const;
 
 type CollectionName = keyof typeof COLLECTIONS;
 
 function formatDate(date: Date): string {
   return date.toISOString().split("T")[0];
+}
+
+// A naive local wall-clock timestamp ("YYYY-MM-DDTHH:mm:ss", no offset) stamped
+// at creation time. Notes display this exact wall clock (see formatNoteTimestamp).
+function formatLocalTimestamp(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return (
+    `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` +
+    `T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
+  );
 }
 
 function generateFrontmatter(title: string, publishedOn: Date): string {
@@ -68,34 +87,55 @@ publishedOn: ${formatDate(validated.publishedOn)}
 `;
 }
 
+function generateTitlelessFrontmatter(publishedOn: Date): string {
+  return `---
+publishedOn: ${formatLocalTimestamp(publishedOn)}
+---
+
+`;
+}
+
 function main() {
   const [collectionName, ...inputParts] = process.argv.slice(2);
   const input = inputParts.join(" ");
 
-  if (!collectionName || !input) {
+  if (!collectionName || !(collectionName in COLLECTIONS)) {
     console.error(`Usage: pnpm <collection>:new "<title>"`);
     console.error(`  pnpm weeknotes:new "Jan 26th"`);
     console.error(`  pnpm blog:new "my blog post title"`);
-    process.exit(1);
-  }
-
-  if (!(collectionName in COLLECTIONS)) {
-    console.error(`Unknown collection: ${collectionName}`);
-    console.error(`Available: ${Object.keys(COLLECTIONS).join(", ")}`);
+    console.error(`  pnpm notes:new            (title-less, no input needed)`);
+    if (collectionName && !(collectionName in COLLECTIONS)) {
+      console.error(`\nUnknown collection: ${collectionName}`);
+      console.error(`Available: ${Object.keys(COLLECTIONS).join(", ")}`);
+    }
     process.exit(1);
   }
 
   const collection = COLLECTIONS[collectionName as CollectionName];
-  const filename = collection.generateFilename(input);
-  const title = collection.generateTitle(input);
+  const titleless = "titleless" in collection && collection.titleless;
+
+  if (!titleless && !input) {
+    console.error(`A title is required: pnpm ${collectionName}:new "<title>"`);
+    process.exit(1);
+  }
+
+  // A single timestamp for both filename and frontmatter, so a minute tick
+  // between the two can't make them disagree.
   const publishedOn = new Date();
+  const filename = collection.generateFilename(input, publishedOn);
 
   const filePath = join(process.cwd(), collection.dir, filename);
 
   if (existsSync(filePath)) {
     console.log(`File already exists, opening: ${collection.dir}/${filename}`);
   } else {
-    const content = generateFrontmatter(title, publishedOn);
+    const content =
+      "generateTitle" in collection
+        ? generateFrontmatter(
+            collection.generateTitle(input, publishedOn),
+            publishedOn,
+          )
+        : generateTitlelessFrontmatter(publishedOn);
     writeFileSync(filePath, content);
     console.log(`Created: ${collection.dir}/${filename}`);
   }

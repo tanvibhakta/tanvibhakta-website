@@ -38,6 +38,7 @@ export const COLLECTION_SEGMENTS = {
   poetry: "poetry",
   weeknotes: "weeknotes",
   digitalGarden: "digital-garden",
+  notes: "notes",
   pages: "",
 } as const satisfies Record<keyof typeof collections, string>;
 
@@ -61,6 +62,11 @@ export const SECTIONS = {
     href: `/${COLLECTION_SEGMENTS.digitalGarden}`,
     title: "Digital Garden",
     description: "(abandoned) garden",
+  },
+  notes: {
+    href: `/${COLLECTION_SEGMENTS.notes}`,
+    title: "Notes",
+    description: "short, title-less posts",
   },
 } as const satisfies Record<string, SectionMeta>;
 
@@ -122,6 +128,18 @@ const digitalGarden = defineCollection({
   }),
 });
 
+// Short-form, title-less posts (microblog / IndieWeb "notes"). The markdown
+// body is the content; frontmatter is just a full-precision timestamp and
+// optional tags — no `title`, no `draft` (notes publish immediately), and no
+// `anchors` (the rehype-anchors plugin is skipped for notes in astro.config).
+const notes = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./posts/notes/" }),
+  schema: z.object({
+    publishedOn: z.date(),
+    tags: z.array(tagSchema).optional().default([]),
+  }),
+});
+
 const pages = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/pages/" }),
   schema: z.object({
@@ -137,5 +155,6 @@ export const collections = {
   weeknotes,
   poetry,
   digitalGarden,
+  notes,
   pages,
 };

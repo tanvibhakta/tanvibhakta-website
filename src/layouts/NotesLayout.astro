@@ -1,0 +1,21 @@
+---
+// Layout for the notes feed and individual notes. Unlike ProseLayout, it has
+// no title block — notes have no title. Each note is rendered social-feed
+// style (content, then a small timestamp) via the Note component.
+import Layout from "./Layout.astro";
+import Nav from "../components/Nav.astro";
+
+const { title } = Astro.props;
+---
+
+<Layout
+  title={title}
+  class="min-w-screen min-h-screen flex flex-col items-center text-stone-800 bg-stone-100"
+>
+  <Nav />
+  <main
+    class="mx-8 md:w-1/2 leading-6 pb-8 mt-6 md:mt-8 prose md:prose-lg prose-stone prose-headings:font-literata prose-headings:font-bold"
+  >
+    <slot />
+  </main>
+</Layout>

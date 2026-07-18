@@ -120,6 +120,22 @@ collections:
       - *tagsField
       - { label: Body, name: body, widget: markdown }
 
+  - name: notes
+    label: Notes
+    folder: posts/notes
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{hour}}{{minute}}"
+    summary: "{{body}}"
+    sortable_fields:
+      fields: [publishedOn]
+      default:
+        field: publishedOn
+        direction: descending
+    fields:
+      - { label: Published, name: publishedOn, widget: datetime, format: "YYYY-MM-DDTHH:mm:ss", default: "{{now}}" }
+      - *tagsField
+      - { label: Body, name: body, widget: markdown }
+
   - name: pages
     label: Pages
     folder: posts/pages

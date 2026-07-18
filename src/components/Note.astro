@@ -1,0 +1,46 @@
+---
+// A single note rendered social-feed style: the content, then a small
+// timestamp (and any tags) beneath it. The timestamp is a semantic <time>,
+// not a stand-in title — notes have no title.
+import { formatNoteTimestamp } from "../utils/date-helpers";
+
+interface Props {
+  publishedOn: Date;
+  href?: string;
+  tags?: string[];
+}
+
+const { publishedOn, href, tags = [] } = Astro.props;
+const timestamp = formatNoteTimestamp(publishedOn);
+const machineTime = publishedOn.toISOString();
+---
+
+<article class="my-8 first:mt-0">
+  <slot />
+  <footer
+    class="not-prose mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm tracking-wide opacity-75 [font-variant:small-caps]"
+  >
+    <time datetime={machineTime}>{timestamp}</time>
+    {
+      href && (
+        <a href={href} class="text-inherit no-underline hover:underline">
+          permalink
+        </a>
+      )
+    }
+    {
+      tags.length > 0 && (
+        <span class="flex flex-wrap gap-2 opacity-80">
+          {tags.map((tag) => (
+            <a
+              href={`/tags/${tag}`}
+              class="text-inherit no-underline hover:underline"
+            >
+              {tag}
+            </a>
+          ))}
+        </span>
+      )
+    }
+  </footer>
+</article>

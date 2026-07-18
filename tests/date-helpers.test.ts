@@ -1,5 +1,25 @@
 import { describe, test, expect } from "vitest";
-import { shortenWeeknoteTitles } from "../src/utils/date-helpers";
+import {
+  noteWallClockToInstant,
+  shortenWeeknoteTitles,
+} from "../src/utils/date-helpers";
+
+describe("noteWallClockToInstant", () => {
+  test("converts a naive IST wall clock (parsed as UTC) to the true instant", () => {
+    // Authored at 6:40pm IST; stored naive, so it parses as 18:40 UTC.
+    const wallClock = new Date("2026-06-26T18:40:00Z");
+    expect(noteWallClockToInstant(wallClock).toISOString()).toBe(
+      "2026-06-26T13:10:00.000Z",
+    );
+  });
+
+  test("crosses a date boundary when the wall clock is before 5:30am", () => {
+    const wallClock = new Date("2026-01-01T00:15:00Z");
+    expect(noteWallClockToInstant(wallClock).toISOString()).toBe(
+      "2025-12-31T18:45:00.000Z",
+    );
+  });
+});
 
 describe("shortenWeeknoteTitles", () => {
   test("shortens full month name with ordinal suffix", () => {
