@@ -1,5 +1,5 @@
 ---
-title: "What my hands are learning"
+title: "What my hands learn every time I log in"
 publishedOn: 2026-07-18
 ---
 
