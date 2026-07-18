@@ -1,8 +1,15 @@
 ---
 import "/src/styles/global.css";
-const { class: className, title, description, noindex } = Astro.props;
+import { SITE_TAB_TITLE, SITE_DESCRIPTION } from "../utils/site";
+const {
+  class: className,
+  title,
+  description = SITE_DESCRIPTION,
+  type = "website",
+  noindex,
+} = Astro.props;
 
-const fullTitle = `${title ? `${title} | ` : ""}Tanvi's Web Home`;
+const fullTitle = title ? `${title} | ${SITE_TAB_TITLE}` : SITE_TAB_TITLE;
 ---
 
 <html lang="en">
@@ -14,12 +21,12 @@ const fullTitle = `${title ? `${title} | ` : ""}Tanvi's Web Home`;
     <meta name="author" content="Tanvi Bhakta" />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-    {description && <meta name="description" content={description} />}
+    <meta name="description" content={description} />
 
     <!-- Open Graph / share cards -->
-    <meta property="og:title" content={title || "Tanvi Bhakta"} />
-    {description && <meta property="og:description" content={description} />}
-    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title || SITE_TAB_TITLE} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={type} />
     <meta property="og:url" content={Astro.url.href} />
 
     <!--For IndieAuth https://indieweb.org/IndieAuth-->

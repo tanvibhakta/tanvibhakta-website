@@ -5,6 +5,7 @@ import path from "path";
 import fs from "fs";
 import { exec } from "child_process";
 import { promisify } from "util";
+import { SITE_TAB_TITLE } from "../src/utils/site";
 
 const execAsync = promisify(exec);
 
@@ -29,7 +30,7 @@ describe("Page Titles", () => {
       path.join(distDir, "index.html"),
       "utf8",
     );
-    expect(extractTitle(html)).toBe("Tanvi's Web Home");
+    expect(extractTitle(html)).toBe(SITE_TAB_TITLE);
   });
 
   test("Blog index has correct title", async () => {
@@ -37,7 +38,7 @@ describe("Page Titles", () => {
       path.join(distDir, "blog/index.html"),
       "utf8",
     );
-    expect(extractTitle(html)).toBe("Blog | Tanvi's Web Home");
+    expect(extractTitle(html)).toBe(`Blog | ${SITE_TAB_TITLE}`);
   });
 
   test("Poetry index has correct title", async () => {
@@ -45,7 +46,7 @@ describe("Page Titles", () => {
       path.join(distDir, "poetry/index.html"),
       "utf8",
     );
-    expect(extractTitle(html)).toBe("Poetry | Tanvi's Web Home");
+    expect(extractTitle(html)).toBe(`Poetry | ${SITE_TAB_TITLE}`);
   });
 
   test("Weeknotes index has correct title", async () => {
@@ -53,7 +54,7 @@ describe("Page Titles", () => {
       path.join(distDir, "weeknotes/index.html"),
       "utf8",
     );
-    expect(extractTitle(html)).toBe("Weeknotes | Tanvi's Web Home");
+    expect(extractTitle(html)).toBe(`Weeknotes | ${SITE_TAB_TITLE}`);
   });
 
   test("Digital Garden index has correct title", async () => {
@@ -61,7 +62,7 @@ describe("Page Titles", () => {
       path.join(distDir, "digital-garden/index.html"),
       "utf8",
     );
-    expect(extractTitle(html)).toBe("Digital Garden | Tanvi's Web Home");
+    expect(extractTitle(html)).toBe(`Digital Garden | ${SITE_TAB_TITLE}`);
   });
 
   test("Blog post has title with Blog suffix", async () => {
@@ -76,7 +77,9 @@ describe("Page Titles", () => {
       path.join(blogDir, posts[0], "index.html"),
       "utf8",
     );
-    expect(extractTitle(html)).toMatch(/^.+ \| Blog \| Tanvi's Web Home$/);
+    expect(extractTitle(html)).toMatch(
+      new RegExp(`^.+ \\| Blog \\| ${SITE_TAB_TITLE}$`),
+    );
   });
 
   test("Weeknote has shortened title with Weeknote suffix", async () => {
@@ -92,7 +95,9 @@ describe("Page Titles", () => {
       path.join(weeknotesDir, posts[0], "index.html"),
       "utf8",
     );
-    expect(extractTitle(html)).toMatch(/^.+ \| Weeknote \| Tanvi's Web Home$/);
+    expect(extractTitle(html)).toMatch(
+      new RegExp(`^.+ \\| Weeknote \\| ${SITE_TAB_TITLE}$`),
+    );
   });
 
   test("Poetry post has title with Poetry suffix", async () => {
@@ -107,6 +112,8 @@ describe("Page Titles", () => {
       path.join(poetryDir, posts[0], "index.html"),
       "utf8",
     );
-    expect(extractTitle(html)).toMatch(/^.+ \| Poetry \| Tanvi's Web Home$/);
+    expect(extractTitle(html)).toMatch(
+      new RegExp(`^.+ \\| Poetry \\| ${SITE_TAB_TITLE}$`),
+    );
   });
 });

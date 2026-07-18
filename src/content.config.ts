@@ -22,8 +22,8 @@ export type Tag = (typeof TAGS)[number];
  * carry their own `description` in frontmatter and are discovered
  * automatically, so adding one needs no edit here.
  *
- * Consumed by /sitemap, by each section's index page (title + share-card
- * description), and available anywhere else a blurb is useful.
+ * Consumed by /sitemap, by the nav (labels come from `title`), and by each
+ * page itself (title + share-card description).
  */
 export type SectionMeta = { href: string; title: string; description: string };
 
@@ -46,25 +46,20 @@ export const SECTIONS = {
   },
 } as const satisfies Record<string, SectionMeta>;
 
-export const STANDALONE_PAGES = [
-  { href: "/", title: "Home", description: "home" },
-  { href: "/work", title: "Work", description: "resume ++" },
-  {
+export const STANDALONE_PAGES = {
+  home: { href: "/", title: "Home", description: "home" },
+  work: { href: "/work", title: "Work", description: "resume ++" },
+  subscribe: {
     href: "/subscribe",
     title: "Subscribe",
     description: "RSS feeds for every section",
   },
-  {
+  tags: {
     href: "/tags",
     title: "Tags",
     description: "lists all tags used across the site. cross-category",
   },
-] as const satisfies readonly SectionMeta[];
-
-// Lookup by href so a standalone page can pull its own title/description.
-export const PAGE_META: Record<string, SectionMeta> = Object.fromEntries(
-  STANDALONE_PAGES.map((page) => [page.href, page]),
-);
+} as const satisfies Record<string, SectionMeta>;
 
 // Common schema for all collections.
 // `anchors` toggles the rehype-anchors plugin per entry — set false to skip
@@ -76,6 +71,8 @@ const collectionSchema = z.object({
   draft: z.boolean().optional(),
   tags: z.array(z.enum(TAGS)).optional().default([]),
   anchors: z.boolean().optional(),
+  // Share-card / meta description; surfaces via ProseLayout → Layout.
+  description: z.string().optional(),
 });
 
 // Manually define collections for now
@@ -103,7 +100,6 @@ const poetry = defineCollection({
 const digitalGarden = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/digital-garden/" }),
   schema: collectionSchema.extend({
-    description: z.string().optional(),
     lastUpdatedOn: z.date(),
   }),
 });

@@ -9,17 +9,16 @@ import { SECTIONS, STANDALONE_PAGES } from "../content.config";
 // here automatically.
 
 // Sections are collection-backed, so we can show a count of their children.
-const sections = await Promise.all(
-  (
-    Object.entries(SECTIONS) as [
-      keyof typeof SECTIONS,
-      (typeof SECTIONS)[keyof typeof SECTIONS],
-    ][]
-  ).map(async ([collection, meta]) => ({
-    ...meta,
-    count: (await getPublishedEntries(collection)).length,
-  })),
-);
+const sections = (
+  await Promise.all(
+    (Object.keys(SECTIONS) as (keyof typeof SECTIONS)[]).map(
+      async (collection) => ({
+        ...SECTIONS[collection],
+        count: (await getPublishedEntries(collection)).length,
+      }),
+    ),
+  )
+).sort((a, b) => a.href.localeCompare(b.href));
 
 // Pages: hand-built standalone routes + auto-discovered markdown pages
 // (excluding underscore-prefixed fixtures), sorted together by path.
@@ -30,8 +29,8 @@ const collectionPages = (await getPublishedEntries("pages"))
     description: page.data.description ?? "",
   }));
 
-const pages = [...STANDALONE_PAGES, ...collectionPages].sort((a, b) =>
-  a.href.localeCompare(b.href),
+const pages = [...Object.values(STANDALONE_PAGES), ...collectionPages].sort(
+  (a, b) => a.href.localeCompare(b.href),
 );
 
 const frontmatter = {

@@ -40,6 +40,7 @@ const publishedOnIso = showPublishedOn ? publishedOn.toISOString() : undefined;
   title={pageTitle}
   noindex={noindex}
   description={frontmatter?.description}
+  type={frontmatter?.publishedOn ? "article" : "website"}
   class="min-w-screen min-h-screen flex flex-col items-center text-stone-800 bg-stone-100"
 >
   <Nav />
