@@ -1,0 +1,36 @@
+---
+import EntryPage from "../../components/EntryPage.astro";
+import {
+  COLLECTION_SEGMENTS,
+  getDraftEntries,
+  type CollectionName,
+} from "../../utils/collections";
+
+// Hidden-but-linkable review pages for `draft: true` entries in every
+// collection. Draft URLs mirror the published ones with a /drafts prefix:
+// /drafts/blog/<id>, /drafts/poetry/<id>, and /drafts/<id> for root-level
+// pages — so stripping "/drafts" always yields the future published URL.
+// These pages are excluded from listings, RSS feeds, tag pages, and the
+// sitemap (see the sitemap filter in astro.config.mjs), and carry a
+// noindex meta tag.
+export async function getStaticPaths() {
+  const paths = [];
+  for (const collection of Object.keys(
+    COLLECTION_SEGMENTS,
+  ) as CollectionName[]) {
+    const segment = COLLECTION_SEGMENTS[collection];
+    const drafts = await getDraftEntries(collection);
+    for (const entry of drafts) {
+      paths.push({
+        params: { slug: segment ? `${segment}/${entry.id}` : entry.id },
+        props: { entry, collection },
+      });
+    }
+  }
+  return paths;
+}
+
+const { entry, collection } = Astro.props;
+---
+
+<EntryPage entry={entry} collection={collection} noindex />

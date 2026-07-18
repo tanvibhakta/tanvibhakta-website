@@ -3,17 +3,17 @@ import { defineConfig } from "astro/config";
 
 import tailwindcss from "@tailwindcss/vite";
 
-import mdx from '@astrojs/mdx';
-import sitemap from '@astrojs/sitemap';
-import icon from 'astro-icon';
-import remarkBreaks from 'remark-breaks';
-import rehypeSlug from 'rehype-slug';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import { rehypeAnchors } from './src/plugins/rehype-anchors.mjs';
+import mdx from "@astrojs/mdx";
+import sitemap from "@astrojs/sitemap";
+import icon from "astro-icon";
+import remarkBreaks from "remark-breaks";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import { rehypeAnchors } from "./src/plugins/rehype-anchors.mjs";
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://tanvibhakta.in',
+  site: "https://tanvibhakta.in",
 
   vite: {
     plugins: [tailwindcss()],
@@ -23,16 +23,22 @@ export default defineConfig({
     remarkPlugins: [remarkBreaks],
     rehypePlugins: [
       rehypeSlug,
-      [rehypeAutolinkHeadings, {
-        behavior: 'append',
-        properties: {
-          className: ['anchor-link'],
-          ariaLabel: 'Link to this section',
+      [
+        rehypeAutolinkHeadings,
+        {
+          behavior: "append",
+          properties: {
+            className: ["anchor-link"],
+            ariaLabel: "Link to this section",
+          },
+          content: { type: "text", value: " #" },
+          test: (node) => node.tagName !== "h1",
         },
-        content: { type: 'text', value: ' #' },
-        test: (node) => node.tagName !== 'h1',
-      }],
-      [rehypeAnchors, { skip: (file) => /[\\/]posts[\\/]poetry[\\/]/.test(file?.path ?? "") }],
+      ],
+      [
+        rehypeAnchors,
+        { skip: (file) => /[\\/]posts[\\/]poetry[\\/]/.test(file?.path ?? "") },
+      ],
     ],
   },
 
@@ -41,26 +47,28 @@ export default defineConfig({
     //   status: 302,
     //   destination: 'https://tanvibhakta.mataroa.blog'
     // },
-    '/resume': {
+    "/resume": {
       status: 301,
-      destination: '/resume.pdf'
+      destination: "/resume.pdf",
     },
-    '/code': {
+    "/code": {
       status: 301,
-      destination: 'https://github.com/tanvibhakta'
-    }
+      destination: "https://github.com/tanvibhakta",
+    },
   },
 
   integrations: [
     mdx(),
     icon(),
     sitemap({
-      // Keep admin tooling, machine-readable feeds, and underscore-prefixed
-      // fixture pages (e.g. /_anchor-fixture) out of the sitemap.
+      // Keep admin tooling, machine-readable feeds, draft review pages, and
+      // underscore-prefixed fixture pages (e.g. /_anchor-fixture) out of the
+      // sitemap.
       filter: (page) =>
-        !page.includes('/admin') &&
-        !page.endsWith('/feed.xml') &&
+        !page.includes("/admin") &&
+        !page.endsWith("/feed.xml") &&
+        !new URL(page).pathname.startsWith("/drafts/") &&
         !/\/_/.test(new URL(page).pathname),
     }),
-  ]
+  ],
 });

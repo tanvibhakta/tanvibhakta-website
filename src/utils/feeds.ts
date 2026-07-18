@@ -3,7 +3,7 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import MarkdownIt from "markdown-it";
 import sanitizeHtml from "sanitize-html";
 import { collections } from "../content.config";
-import { isPublished } from "./collections";
+import { getEntryPath, isPublished } from "./collections";
 
 const SITE_URL = "https://tanvibhakta.in";
 const SITE_TITLE = "Tanvi Bhakta";
@@ -98,7 +98,7 @@ export async function generateMainFeed() {
     items: sortedEntries.map((entry) => ({
       title: `[${capitalizeFirst(entry.collection)}] ${entry.data.title}`,
       pubDate: entry.data.publishedOn,
-      link: `/${entry.collection}/${entry.id}/`,
+      link: `${getEntryPath(entry.collection, entry.id)}/`,
       content: markdownToHtml(entry.body),
     })),
   });
@@ -123,7 +123,7 @@ export async function generateCollectionFeed(collectionName: CollectionName) {
     items: sortedEntries.map((entry) => ({
       title: entry.data.title,
       pubDate: entry.data.publishedOn,
-      link: `/${entry.collection}/${entry.id}/`,
+      link: `${getEntryPath(entry.collection, entry.id)}/`,
       content: markdownToHtml(entry.body),
     })),
   });

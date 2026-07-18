@@ -22,18 +22,28 @@ function titleCase(slug: string): string {
     .join(" ");
 }
 
-function getCurrentSection(path: string): Section | undefined {
+function getCurrentSection(
+  path: string,
+  allowFallback = true,
+): Section | undefined {
   const known = [...KNOWN_SECTIONS]
     .sort((a, b) => b.href.length - a.href.length)
     .find((s) => path === s.href || path.startsWith(`${s.href}/`));
   if (known) return known;
+  if (!allowFallback) return undefined;
 
   const firstSegment = path.split("/").filter(Boolean)[0];
   if (!firstSegment || firstSegment === "404") return undefined;
   return { label: titleCase(firstSegment), href: `/${firstSegment}` };
 }
 
-const current = getCurrentSection(Astro.url.pathname);
+// Draft previews live at /drafts/<published-path> with no /drafts index;
+// resolve the underlying section so the nav matches the published version.
+// Skip the synthesized fallback for drafts — it would link to pages that
+// don't exist while the entry is unpublished.
+const strippedPath = Astro.url.pathname.replace(/^\/drafts(?=\/|$)/, "");
+const isDraftPreview = strippedPath !== Astro.url.pathname;
+const current = getCurrentSection(strippedPath, !isDraftPreview);
 const inMainNav =
   current && NAV_ITEMS.some((item) => item.href === current.href);
 const items: Section[] =
