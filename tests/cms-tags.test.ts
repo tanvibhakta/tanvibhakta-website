@@ -24,6 +24,22 @@ interface CmsCollection {
   fields: CmsField[];
 }
 
+/**
+ * Pairs of tags where one looks like the plural of the other ("review" /
+ * "reviews", "box" / "boxes"), which almost always means the same tag was
+ * spelled two ways. Returns [singular, plural] pairs.
+ */
+function findPluralPairs(tags: string[]): [string, string][] {
+  const pairs: [string, string][] = [];
+  const sorted = [...tags].sort();
+  for (const a of sorted) {
+    for (const b of sorted) {
+      if (b === `${a}s` || b === `${a}es`) pairs.push([a, b]);
+    }
+  }
+  return pairs;
+}
+
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const config = parse(
   fs.readFileSync(path.join(root, "public/admin/config.yml"), "utf8"),
@@ -95,5 +111,38 @@ describe("tag hygiene", () => {
     expect(collisions, `colliding tags: ${JSON.stringify(collisions)}`).toEqual(
       [],
     );
+  });
+
+  test("no singular/plural near-duplicates", () => {
+    const pairs = findPluralPairs([...usedTags.keys()]);
+    const detail = pairs
+      .map(
+        ([a, b]) =>
+          `"${a}" (${usedTags.get(a)!.join(", ")}) vs "${b}" (${usedTags.get(b)!.join(", ")})`,
+      )
+      .join("; ");
+    expect(pairs, `similar tags, pick one spelling: ${detail}`).toEqual([]);
+  });
+});
+
+describe("findPluralPairs", () => {
+  test("flags simple s-plurals", () => {
+    expect(findPluralPairs(["review", "reviews"])).toEqual([
+      ["review", "reviews"],
+    ]);
+  });
+
+  test("flags es-plurals", () => {
+    expect(findPluralPairs(["box", "boxes"])).toEqual([["box", "boxes"]]);
+  });
+
+  test("flags plurals in multi-word slugs", () => {
+    expect(findPluralPairs(["book-review", "book-reviews"])).toEqual([
+      ["book-review", "book-reviews"],
+    ]);
+  });
+
+  test("ignores unrelated tags", () => {
+    expect(findPluralPairs(["health", "philosophy", "reviews"])).toEqual([]);
   });
 });
