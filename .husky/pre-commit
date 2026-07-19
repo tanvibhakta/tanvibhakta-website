@@ -1,2 +1,11 @@
 npx lint-staged
-npm run test
+
+# Whole-project typecheck, but only when code files are staged — content-only
+# commits (markdown posts) skip it. Runs after lint-staged so tsc never races
+# prettier's rewrites. Note the check covers the whole project, not just the
+# staged files: tsc has no meaningful per-file mode against a tsconfig.
+if git diff --cached --name-only | grep -qE '\.(m?[jt]s|tsx)$|^tsconfig'; then
+  pnpm typecheck
+fi
+
+pnpm vitest run

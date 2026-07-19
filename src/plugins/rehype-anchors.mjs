@@ -12,6 +12,12 @@ import { visit } from "unist-util-visit";
  *
  * Frontmatter `anchors: false` always wins; `skip` is a default applied per
  * file path. The plugin runs once per file at content-sync time.
+ *
+ * @typedef {Object} RehypeAnchorsFile
+ * @property {string} [path]
+ * @property {{ astro?: { frontmatter?: Record<string, unknown> } }} [data]
+ *
+ * @param {{ skip?: (file: RehypeAnchorsFile | undefined) => boolean | undefined }} [options]
  */
 export function rehypeAnchors(options = {}) {
   const { skip } = options;

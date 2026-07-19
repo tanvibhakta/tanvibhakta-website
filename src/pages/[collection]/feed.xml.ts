@@ -2,10 +2,8 @@ import type { APIRoute, GetStaticPaths } from "astro";
 import {
   generateCollectionFeed,
   getEligibleCollections,
+  type FeedCollectionName,
 } from "../../utils/feeds";
-import { collections } from "../../content.config";
-
-type CollectionName = keyof typeof collections;
 
 export const getStaticPaths: GetStaticPaths = () => {
   const collectionNames = getEligibleCollections();
@@ -18,9 +16,15 @@ export const getStaticPaths: GetStaticPaths = () => {
 export const GET: APIRoute = async ({ params }) => {
   const { collection } = params;
 
-  if (!collection || !(collection in collections)) {
+  // Guard with feed eligibility (not mere collection existence) so the
+  // FeedCollectionName cast below holds even if this route ever runs
+  // outside the statically generated paths.
+  if (
+    !collection ||
+    !(getEligibleCollections() as string[]).includes(collection)
+  ) {
     return new Response("Collection not found", { status: 404 });
   }
 
-  return await generateCollectionFeed(collection as CollectionName);
+  return await generateCollectionFeed(collection as FeedCollectionName);
 };
