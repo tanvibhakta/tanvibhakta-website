@@ -1,0 +1,13 @@
+---
+// Arrow-prefixed navigation link, e.g. "← all tags" or "next weeknote →".
+// "back" points the arrow left before the label; "forward" points it right after.
+interface Props {
+  href: string;
+  label: string;
+  direction?: "back" | "forward";
+}
+
+const { href, label, direction = "back" } = Astro.props;
+---
+
+<a href={href}>{direction === "back" ? `← ${label}` : `${label} →`}</a>
