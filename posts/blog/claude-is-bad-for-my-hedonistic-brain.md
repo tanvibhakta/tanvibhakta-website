@@ -1,8 +1,8 @@
 ---
 title: Claude is bad for my hedonist brain
-publishedOn: 2026-04-05
+publishedOn: 2026-04-05T19:44:32+05:30
 draft: false
-audioTitle: ''
+audioTitle: ""
 tags:
   - ai-usage
 ---

@@ -1,6 +1,6 @@
 ---
 title: "Day 2"
-publishedOn: 2025-04-03
+publishedOn: 2025-04-03T09:02:00+05:30
 ---
 
 Talk to me, eternal love  
