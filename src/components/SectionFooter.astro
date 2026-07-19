@@ -21,7 +21,8 @@ const { noun, prev, next } = Astro.props;
         {prev && (
           <ArrowLink
             href={prev.href}
-            label={`previous ${noun}: ${prev.title}`}
+            label={`previous ${noun}`}
+            title={prev.title}
           />
         )}
       </span>
@@ -29,7 +30,8 @@ const { noun, prev, next } = Astro.props;
         {next && (
           <ArrowLink
             href={next.href}
-            label={`next ${noun}: ${next.title}`}
+            label={`next ${noun}`}
+            title={next.title}
             direction="forward"
           />
         )}
@@ -48,16 +50,5 @@ const { noun, prev, next } = Astro.props;
 
   .section-footer > span:last-child {
     text-align: right;
-  }
-
-  /* Navigation chrome, not an inline prose link: the prose wrapper's
-     always-on underline reads wrong here. Like the site nav and tags,
-     rely on the link color and underline only on hover. */
-  .section-footer :global(a) {
-    text-decoration: none;
-  }
-
-  .section-footer :global(a:hover) {
-    text-decoration: underline;
   }
 </style>
