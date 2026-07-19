@@ -1,6 +1,7 @@
 ---
 import Layout from "./Layout.astro";
 import Nav from "../components/Nav.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 import { shortenWeeknoteTitles, formatLongDate } from "../utils/date-helpers";
 
 const { frontmatter, category, readingTimeMinutes, hidePublishedOn, noindex } =
@@ -74,6 +75,7 @@ if (frontmatter?.title) {
       )
     }
   </article>
+  <SiteFooter />
 </Layout>
 
 <style>
