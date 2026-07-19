@@ -63,6 +63,9 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md,astro}": [
       "prettier --write"
+    ],
+    "*.{js,mjs,ts,tsx}": [
+      "bash -c 'pnpm typecheck'"
     ]
   }
 }
