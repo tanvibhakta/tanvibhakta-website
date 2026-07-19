@@ -10,5 +10,5 @@ Instructions for coding agents working in this repository.
 
 ## Project guidance
 
-See [CLAUDE.md](./CLAUDE.md) for architecture and development notes, and
-README.md for commands (dev server, build, test).
+See [CLAUDE.md](./CLAUDE.md), which imports this file and holds
+architecture notes and pointers to development commands.
