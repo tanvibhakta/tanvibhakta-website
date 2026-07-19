@@ -1,6 +1,6 @@
 ---
 title: "Day 4"
-publishedOn: 2025-04-06
+publishedOn: 2025-04-06T09:00:00+05:30
 ---
 
 My ajjol didn't live with paintings  

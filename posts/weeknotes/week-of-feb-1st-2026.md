@@ -1,6 +1,6 @@
 ---
 title: "Week of Feb 1st, 2026"
-publishedOn: 2026-02-08
+publishedOn: 2026-02-08T22:10:03+05:30
 tags:
   - ai-usage
   - konkani

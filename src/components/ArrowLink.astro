@@ -1,0 +1,33 @@
+---
+// The site's directional navigation link: "← all tags", or with a
+// destination title, "next poem: Day 2 →". Owns everything that makes such
+// a link: the arrow (decorative, hidden from screen readers and glued to
+// its word so it never wraps alone), the "label: title" format, and the
+// nav-chrome styling — color only at rest, underline on hover — as opposed
+// to inline prose links, which stay persistently underlined.
+interface Props {
+  href: string;
+  label: string;
+  title?: string;
+  direction?: "back" | "forward";
+}
+
+const { href, label, title, direction = "back" } = Astro.props;
+const text = title ? `${label}: ${title}` : label;
+---
+
+<a href={href} class="arrow-link"
+  >{direction === "back" && <span aria-hidden="true">←&nbsp;</span>}{text}{
+    direction === "forward" && <span aria-hidden="true">&nbsp;→</span>
+  }</a
+>
+
+<style>
+  .arrow-link {
+    text-decoration: none;
+  }
+
+  .arrow-link:hover {
+    text-decoration: underline;
+  }
+</style>

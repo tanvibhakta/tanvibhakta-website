@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+Cross-tool agent rules (worktree workflow) live in AGENTS.md, imported here:
+
+@AGENTS.md
+
 ## Development Commands
 
 See README.md for the full list of commands including dev server, build, and test.
