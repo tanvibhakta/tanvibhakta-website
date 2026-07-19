@@ -41,9 +41,23 @@ export default async (req: Request): Promise<Response> => {
     return skip("no text");
   }
 
-  const path = await commitNote(note, message.message_id);
-  await reply(message, `Published ${path} — the site is rebuilding.`);
-  return Response.json({ ok: true, path });
+  // Failures ack with 200 + an error reply instead of a 500: a 500 makes
+  // Telegram re-deliver for up to 24h, spamming an error reply per retry
+  // and risking a surprise late publish after the sender has already
+  // resent. Telling the sender and letting them resend keeps one message
+  // ↔ one note.
+  try {
+    const path = await commitNote(note, message.message_id);
+    await reply(message, `Published ${path} — the site is rebuilding.`);
+    return Response.json({ ok: true, path });
+  } catch (error) {
+    console.error("telegram-webhook publish failed:", error);
+    await reply(
+      message,
+      `❌ Not published — ${error instanceof Error ? error.message : "unknown error"}. Nothing was saved; resend the message to retry.`,
+    );
+    return Response.json({ ok: false, error: "publish failed" });
+  }
 };
 
 const skip = (reason: string) => Response.json({ ok: true, skipped: reason });
