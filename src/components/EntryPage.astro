@@ -8,6 +8,7 @@ import {
   getPublishedEntriesSorted,
   type CollectionName,
   type DatedCollectionName,
+  type Neighbour,
 } from "../utils/collections";
 
 // The single source of truth for how each collection's entries render.
@@ -59,7 +60,6 @@ const audioTitle =
 // Chronological neighbours within the section. Drafts aren't in the
 // published list, so their previews render without a footer — they have
 // no position in the sequence until published.
-type Neighbour = { href: string; title: string };
 let prev: Neighbour | null = null;
 let next: Neighbour | null = null;
 if (presentation.navNoun) {
@@ -68,16 +68,18 @@ if (presentation.navNoun) {
     "oldestFirst",
   );
   const index = siblings.findIndex((sibling) => sibling.id === entry.id);
-  const neighbourAt = (i: number): Neighbour | null =>
-    i >= 0 && siblings[i]
+  const toNeighbour = (
+    sibling?: (typeof siblings)[number],
+  ): Neighbour | null =>
+    sibling
       ? {
-          href: getEntryPath(collection as CollectionName, siblings[i].id),
-          title: siblings[i].data.title,
+          href: getEntryPath(collection as CollectionName, sibling.id),
+          title: sibling.data.title,
         }
       : null;
   if (index !== -1) {
-    prev = neighbourAt(index - 1);
-    next = neighbourAt(index + 1);
+    prev = toNeighbour(siblings[index - 1]);
+    next = toNeighbour(siblings[index + 1]);
   }
 }
 ---

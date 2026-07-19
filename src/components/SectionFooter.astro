@@ -2,8 +2,7 @@
 // Chronological prev/next navigation shown at the bottom of every post in a
 // section, e.g. "← previous weeknote: Week of Dec 11th, 2024".
 import ArrowLink from "./ArrowLink.astro";
-
-type Neighbour = { href: string; title: string };
+import type { Neighbour } from "../utils/collections";
 
 interface Props {
   noun: string;

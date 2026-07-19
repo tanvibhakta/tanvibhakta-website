@@ -35,6 +35,18 @@ export async function getPublishedEntries<C extends CollectionName>(
 /** Collections whose entries carry a publishedOn date (all but `pages`). */
 export type DatedCollectionName = Exclude<CollectionName, "pages">;
 
+/**
+ * The prev/next contract for section navigation: produced by EntryPage
+ * (hrefs via getEntryPath), passed through ProseLayout, rendered by
+ * SectionFooter.
+ */
+export type Neighbour = { href: string; title: string };
+export type SectionNav = {
+  noun: string;
+  prev: Neighbour | null;
+  next: Neighbour | null;
+};
+
 type DatedEntry = { id: string; data: { publishedOn: Date } };
 
 /**
