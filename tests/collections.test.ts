@@ -1,13 +1,31 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import {
-  byPublishedOn,
-  newestFirst,
-  getPublishedEntriesSorted,
-} from "../src/utils/collections";
+
+// The real getCollection is overloaded against Astro's generated collection
+// types; the tests drive it with plain fixture entries, so the mock uses this
+// looser signature instead (same pattern as feeds.test.ts).
+type TestEntry = {
+  id: string;
+  data: { publishedOn: Date; draft?: boolean };
+};
+
+const mocks = vi.hoisted(() => ({
+  getCollection: vi.fn(
+    async (
+      _name: string,
+      filter?: (entry: {
+        id: string;
+        data: { publishedOn: Date; draft?: boolean };
+      }) => boolean,
+    ) => {
+      const entries: TestEntry[] = [];
+      return filter ? entries.filter(filter) : entries;
+    },
+  ),
+}));
 
 // Mock the astro:content module
 vi.mock("astro:content", () => ({
-  getCollection: vi.fn(),
+  getCollection: mocks.getCollection,
 }));
 
 // Mock the content config to avoid import issues
@@ -17,6 +35,7 @@ vi.mock("../src/content.config", () => ({
     weeknotes: {},
     poetry: {},
     digitalGarden: {},
+    notes: {},
     pages: {},
   },
   COLLECTION_SEGMENTS: {
@@ -24,6 +43,7 @@ vi.mock("../src/content.config", () => ({
     weeknotes: "weeknotes",
     poetry: "poetry",
     digitalGarden: "digital-garden",
+    notes: "notes",
     pages: "",
   },
   SECTIONS: {
@@ -38,9 +58,13 @@ vi.mock("../src/content.config", () => ({
   },
 }));
 
-import { getCollection } from "astro:content";
+import {
+  byPublishedOn,
+  newestFirst,
+  getPublishedEntriesSorted,
+} from "../src/utils/collections";
 
-const entry = (id: string, publishedOn: string, draft = false) => ({
+const entry = (id: string, publishedOn: string, draft = false): TestEntry => ({
   id,
   data: { publishedOn: new Date(publishedOn), draft },
 });
@@ -90,16 +114,14 @@ describe("newestFirst", () => {
 
 describe("getPublishedEntriesSorted", () => {
   beforeEach(() => {
-    vi.mocked(getCollection).mockImplementation(
-      (_name: string, filter?: (entry: unknown) => boolean) => {
-        const entries = [
-          entry("draft-post", "2026-05-01", true),
-          entry("old-post", "2025-04-03"),
-          entry("new-post", "2026-02-08"),
-        ];
-        return Promise.resolve(filter ? entries.filter(filter) : entries);
-      },
-    );
+    mocks.getCollection.mockImplementation(async (_name, filter) => {
+      const entries = [
+        entry("draft-post", "2026-05-01", true),
+        entry("old-post", "2025-04-03"),
+        entry("new-post", "2026-02-08"),
+      ];
+      return filter ? entries.filter(filter) : entries;
+    });
   });
 
   it("defaults to newest first and excludes drafts", async () => {
