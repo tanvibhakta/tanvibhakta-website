@@ -1,0 +1,44 @@
+---
+// Site-wide sign-off: one quiet line on every page except the homepage,
+// which keeps its own Footer. Third layer of the footer system, alongside
+// the homepage Footer and the per-post SectionFooter (PR #112).
+import { STANDALONE_PAGES } from "../content.config";
+
+// Build-time year; the site rebuilds on every publish so it never goes stale.
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer not-prose">
+  <span>© 2016–{year} Tanvi Bhakta</span>
+  <span aria-hidden="true">·</span>
+  <a href="/sitemap">sitemap</a>
+  <span aria-hidden="true">·</span>
+  <a href={STANDALONE_PAGES.subscribe.href}>subscribe</a>
+  <span aria-hidden="true">·</span>
+  <a href="mailto:Tanvi Bhakta <me@tanvibhakta.in>">me@tanvibhakta.in</a>
+</footer>
+
+<style>
+  /* Same quiet-metadata register as .post-meta and .tag in ProseLayout. */
+  .site-footer {
+    margin-top: auto;
+    padding: 3rem 1rem 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-variant: small-caps;
+    letter-spacing: 0.03em;
+    opacity: 0.6;
+  }
+
+  .site-footer a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .site-footer a:hover {
+    text-decoration: underline;
+  }
+</style>
