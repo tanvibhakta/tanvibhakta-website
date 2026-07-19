@@ -6,6 +6,7 @@ import { collections } from "../content.config";
 import {
   getEntryPath,
   isPublished,
+  newestFirst,
   type CollectionName,
 } from "./collections";
 import { formatLongDate, noteWallClockToInstant } from "./date-helpers";
@@ -118,13 +119,7 @@ export async function generateMainFeed() {
   const allEntries = await getAllCollectionEntries();
 
   // Sort by date and limit
-  const sortedEntries = allEntries
-    .sort(
-      (a, b) =>
-        new Date(b.data.publishedOn).getTime() -
-        new Date(a.data.publishedOn).getTime(),
-    )
-    .slice(0, FEED_LIMIT);
+  const sortedEntries = allEntries.sort(newestFirst).slice(0, FEED_LIMIT);
 
   return rss({
     title: SITE_TITLE,
@@ -149,13 +144,7 @@ export async function generateCollectionFeed(
     collectionName === "notes" ? await getNoteNumbers() : null;
 
   // Sort by date and limit
-  const sortedEntries = entries
-    .sort(
-      (a, b) =>
-        new Date(b.data.publishedOn).getTime() -
-        new Date(a.data.publishedOn).getTime(),
-    )
-    .slice(0, FEED_LIMIT);
+  const sortedEntries = entries.sort(newestFirst).slice(0, FEED_LIMIT);
 
   return rss({
     title: `${SITE_TITLE} - ${capitalizeFirst(collectionName)}`,
