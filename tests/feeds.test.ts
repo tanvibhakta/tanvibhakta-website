@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import type { RSSFeedItem, RSSOptions } from "@astrojs/rss";
 import {
   FEED_CONFIG,
   isCollectionExcluded,
@@ -9,13 +10,38 @@ import {
   generateCollectionFeed,
 } from "../src/utils/feeds";
 
+// The real getCollection is overloaded against Astro's generated collection
+// types; the tests drive it with plain fixture entries, so the mock uses this
+// looser signature instead. `title` is optional because the notes collection
+// is title-less.
+type TestEntry = {
+  id: string;
+  collection: string;
+  data: { title?: string; publishedOn: Date; draft?: boolean };
+  body: string;
+};
+
+// vi.hoisted gives the vi.mock factories and the tests one shared, properly
+// typed mock instance — no casts or dynamic imports at the call sites.
+// mockReset() in beforeEach restores these default implementations.
+const mocks = vi.hoisted(() => ({
+  getCollection: vi.fn(
+    async (_name: string, filter?: (entry: TestEntry) => boolean) => {
+      const entries: TestEntry[] = [];
+      return filter ? entries.filter(filter) : entries;
+    },
+  ),
+  rss: vi.fn(
+    async (_options: RSSOptions) =>
+      new Response('<?xml version="1.0"?><rss></rss>', {
+        headers: { "Content-Type": "application/rss+xml" },
+      }),
+  ),
+}));
+
 // Mock the astro:content module
 vi.mock("astro:content", () => ({
-  getCollection: vi.fn((_name: string, filter?: (entry: any) => boolean) =>
-    Promise.resolve([]).then((entries) =>
-      filter ? entries.filter(filter) : entries,
-    ),
-  ),
+  getCollection: mocks.getCollection,
   defineCollection: vi.fn(),
   render: vi.fn(() =>
     Promise.resolve({ Content: () => "<p>Mock content</p>" }),
@@ -34,18 +60,13 @@ vi.mock("astro/loaders", () => ({
 
 // Mock @astrojs/rss
 vi.mock("@astrojs/rss", () => ({
-  default: vi.fn(
-    () =>
-      new Response('<?xml version="1.0"?><rss></rss>', {
-        headers: { "Content-Type": "application/rss+xml" },
-      }),
-  ),
+  default: mocks.rss,
 }));
 
 // Mock markdown-it and sanitize-html
 vi.mock("markdown-it", () => {
   return {
-    default: vi.fn(function () {
+    default: vi.fn(function (this: { render: (md: string) => string }) {
       this.render = vi.fn((md: string) => {
         // Simple markdown to HTML conversion for testing
         let html = md;
@@ -60,10 +81,10 @@ vi.mock("markdown-it", () => {
 });
 
 vi.mock("sanitize-html", () => {
-  const sanitizeDefault = vi.fn((html: string) => html);
-  sanitizeDefault.defaults = {
-    allowedTags: ["b", "i", "em", "strong", "p", "br"],
-  };
+  const sanitizeDefault = Object.assign(
+    vi.fn((html: string) => html),
+    { defaults: { allowedTags: ["b", "i", "em", "strong", "p", "br"] } },
+  );
   return {
     default: sanitizeDefault,
   };
@@ -83,9 +104,16 @@ vi.mock("../src/content.config", () => ({
     weeknotes: "weeknotes",
     poetry: "poetry",
     digitalGarden: "digital-garden",
+    notes: "notes",
     pages: "",
   },
 }));
+
+/** The RSSOptions the mocked rss() received on its first call. */
+function rssCallOptions(): RSSOptions {
+  expect(mocks.rss).toHaveBeenCalled();
+  return mocks.rss.mock.calls[0][0];
+}
 
 describe("Feed Configuration", () => {
   beforeEach(() => {
@@ -230,22 +258,16 @@ describe("Feed Configuration", () => {
 });
 
 describe("Feed Content Generation", () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     FEED_CONFIG.excludedCollections = [];
     FEED_CONFIG.excludeFromMainFeed = [];
 
-    // Reset mocks before each test
-    const { getCollection: mockGetCollection } = await import("astro:content");
-    const rssModule = await import("@astrojs/rss");
-    vi.mocked(mockGetCollection).mockReset();
-    vi.mocked(rssModule.default).mockReset();
+    // Restores the default implementations from vi.hoisted above
+    mocks.getCollection.mockReset();
+    mocks.rss.mockReset();
   });
 
   it("should render markdown content to HTML in feed items", async () => {
-    const { getCollection: mockGetCollection } = await import("astro:content");
-    const rssModule = await import("@astrojs/rss");
-    const mockRss = vi.mocked(rssModule.default);
-
     // Mock content with markdown
     const mockBlogEntry = {
       id: "test-post",
@@ -257,19 +279,15 @@ describe("Feed Content Generation", () => {
       body: "# Hello World\n\nThis is a **test** post with markdown.",
     };
 
-    vi.mocked(mockGetCollection).mockImplementation(
-      (_name: string, filter?: (entry: any) => boolean) => {
-        const entries = _name === "blog" ? [mockBlogEntry] : [];
-        return Promise.resolve(filter ? entries.filter(filter) : entries);
-      },
-    );
+    mocks.getCollection.mockImplementation(async (_name, filter) => {
+      const entries = _name === "blog" ? [mockBlogEntry] : [];
+      return filter ? entries.filter(filter) : entries;
+    });
 
     await generateMainFeed();
 
     // Check what was passed to the rss function
-    expect(mockRss).toHaveBeenCalled();
-    const callArgs = mockRss.mock.calls[0][0];
-    const feedItems = callArgs.items;
+    const feedItems = rssCallOptions().items as RSSFeedItem[];
 
     // Verify the content is HTML, not markdown
     expect(feedItems[0].content).toContain("<h1>");
@@ -279,10 +297,6 @@ describe("Feed Content Generation", () => {
   });
 
   it("should exclude draft posts from the main feed", async () => {
-    const { getCollection: mockGetCollection } = await import("astro:content");
-    const rssModule = await import("@astrojs/rss");
-    const mockRss = vi.mocked(rssModule.default);
-
     const mockPublishedPost = {
       id: "published-post",
       collection: "blog",
@@ -316,37 +330,24 @@ describe("Feed Content Generation", () => {
     };
 
     const allEntries = [mockPublishedPost, mockDraftPost, mockNoDraftField];
-    vi.mocked(mockGetCollection).mockImplementation(
-      (_name: string, filter?: (entry: any) => boolean) => {
-        const entries = _name === "blog" ? allEntries : [];
-        return Promise.resolve(filter ? entries.filter(filter) : entries);
-      },
-    );
-
-    mockRss.mockReturnValue(
-      new Response('<?xml version="1.0"?><rss></rss>', {
-        headers: { "Content-Type": "application/rss+xml" },
-      }),
-    );
+    mocks.getCollection.mockImplementation(async (_name, filter) => {
+      const entries = _name === "blog" ? allEntries : [];
+      return filter ? entries.filter(filter) : entries;
+    });
 
     await generateMainFeed();
 
-    expect(mockRss).toHaveBeenCalled();
-    const callArgs = mockRss.mock.calls[0][0];
-    const feedItems = callArgs.items;
+    const feedItems = rssCallOptions().items as RSSFeedItem[];
 
     // Should include published and no-draft-field, exclude draft
     expect(feedItems).toHaveLength(2);
-    expect(feedItems.map((item) => item.title)).not.toContain(
-      expect.stringContaining("Draft Post"),
+    const titles = feedItems.map((item) => item.title);
+    expect(titles.filter((title) => title?.includes("Draft Post"))).toEqual(
+      [],
     );
   });
 
   it("should exclude draft posts from collection feeds", async () => {
-    const { getCollection: mockGetCollection } = await import("astro:content");
-    const rssModule = await import("@astrojs/rss");
-    const mockRss = vi.mocked(rssModule.default);
-
     const poetryEntries = [
       {
         id: "pub",
@@ -365,32 +366,20 @@ describe("Feed Content Generation", () => {
         body: "draft poem",
       },
     ];
-    vi.mocked(mockGetCollection).mockImplementation(
-      (_name: string, filter?: (entry: any) => boolean) =>
-        Promise.resolve(filter ? poetryEntries.filter(filter) : poetryEntries),
-    );
-
-    mockRss.mockReturnValue(
-      new Response('<?xml version="1.0"?><rss></rss>', {
-        headers: { "Content-Type": "application/rss+xml" },
-      }),
+    mocks.getCollection.mockImplementation(async (_name, filter) =>
+      filter ? poetryEntries.filter(filter) : poetryEntries,
     );
 
     await generateCollectionFeed("poetry");
 
-    expect(mockRss).toHaveBeenCalled();
-    const callArgs = mockRss.mock.calls[0][0];
-    expect(callArgs.items).toHaveLength(1);
-    expect(callArgs.items[0].title).toBe("Published Poem");
+    const feedItems = rssCallOptions().items as RSSFeedItem[];
+    expect(feedItems).toHaveLength(1);
+    expect(feedItems[0].title).toBe("Published Poem");
     // Titled collections store real dates; pubDate passes through unchanged.
-    expect(callArgs.items[0].pubDate).toEqual(new Date("2025-01-01"));
+    expect(feedItems[0].pubDate).toEqual(new Date("2025-01-01"));
   });
 
   it("should use the publish date as the feed title for title-less notes", async () => {
-    const { getCollection: mockGetCollection } = await import("astro:content");
-    const rssModule = await import("@astrojs/rss");
-    const mockRss = vi.mocked(rssModule.default);
-
     const noteEntries = [
       {
         id: "2026-06-21-1200",
@@ -399,25 +388,18 @@ describe("Feed Content Generation", () => {
         body: "Just shipped a tiny new content type for short posts.",
       },
     ];
-    vi.mocked(mockGetCollection).mockImplementation(
-      (_name: string, filter?: (entry: any) => boolean) =>
-        Promise.resolve(filter ? noteEntries.filter(filter) : noteEntries),
-    );
-
-    mockRss.mockReturnValue(
-      new Response('<?xml version="1.0"?><rss></rss>', {
-        headers: { "Content-Type": "application/rss+xml" },
-      }),
+    mocks.getCollection.mockImplementation(async (_name, filter) =>
+      filter ? noteEntries.filter(filter) : noteEntries,
     );
 
     await generateCollectionFeed("notes");
 
-    const callArgs = mockRss.mock.calls[0][0];
+    const feedItems = rssCallOptions().items as RSSFeedItem[];
     // Title-less notes fall back to their formatted date, never the body.
-    expect(callArgs.items[0].title).toMatch(/^[A-Z][a-z]+ \d{1,2}, 2026$/);
-    expect(callArgs.items[0].title).not.toContain("shipped");
+    expect(feedItems[0].title).toMatch(/^[A-Z][a-z]+ \d{1,2}, 2026$/);
+    expect(feedItems[0].title).not.toContain("shipped");
     // Notes store naive IST wall clocks; pubDate must be the true instant.
-    expect(callArgs.items[0].pubDate.toISOString()).toBe(
+    expect(feedItems[0].pubDate?.toISOString()).toBe(
       "2026-06-21T06:30:00.000Z",
     );
   });

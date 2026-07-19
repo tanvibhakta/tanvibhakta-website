@@ -16,7 +16,13 @@ export default defineConfig({
   site: "https://tanvibhakta.in",
 
   vite: {
-    plugins: [tailwindcss()],
+    // Cast needed: @tailwindcss/vite types against vite 7 while astro bundles
+    // vite 6, so the two Plugin types are structurally close but not identical.
+    plugins: [
+      /** @type {import("astro").ViteUserConfig["plugins"]} */ (
+        /** @type {unknown} */ (tailwindcss())
+      ),
+    ],
   },
 
   markdown: {
@@ -32,13 +38,14 @@ export default defineConfig({
             ariaLabel: "Link to this section",
           },
           content: { type: "text", value: " #" },
-          test: (node) => node.tagName !== "h1",
+          test: (/** @type {{ tagName?: string }} */ node) =>
+            node.tagName !== "h1",
         },
       ],
       [
         rehypeAnchors,
         {
-          skip: (file) =>
+          skip: (/** @type {{ path?: string } | undefined} */ file) =>
             /[\\/]posts[\\/](poetry|notes)[\\/]/.test(file?.path ?? ""),
         },
       ],

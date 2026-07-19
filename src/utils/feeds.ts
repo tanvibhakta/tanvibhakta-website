@@ -3,7 +3,11 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import MarkdownIt from "markdown-it";
 import sanitizeHtml from "sanitize-html";
 import { collections } from "../content.config";
-import { getEntryPath, isPublished } from "./collections";
+import {
+  getEntryPath,
+  isPublished,
+  type CollectionName,
+} from "./collections";
 import { formatLongDate, noteWallClockToInstant } from "./date-helpers";
 import { getNoteNumbers } from "./notes";
 import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION } from "./site";
@@ -14,25 +18,35 @@ const markdownParser = new MarkdownIt();
 /**
  * Convert markdown to sanitized HTML for RSS feed content
  */
-function markdownToHtml(markdown: string): string {
-  const html = markdownParser.render(markdown);
+function markdownToHtml(markdown: string | undefined): string {
+  const html = markdownParser.render(markdown ?? "");
   return sanitizeHtml(html, {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
   });
 }
+
+// Single source of truth for which collections never get feeds. The
+// FeedCollectionName type is derived from this list, so adding a collection
+// here automatically removes it from the type as well.
+const EXCLUDED_COLLECTIONS = ["pages"] as const satisfies readonly CollectionName[];
 
 /**
  * Configuration for RSS/Atom feed generation
  */
 export const FEED_CONFIG = {
   // Collections to exclude from feed generation entirely
-  excludedCollections: ["pages"] as string[],
+  excludedCollections: [...EXCLUDED_COLLECTIONS] as string[],
   // Collections to exclude from the main unified feed (but still get individual feeds)
   excludeFromMainFeed: ["notes"] as string[],
 };
 
-type CollectionName = keyof typeof collections;
-type AnyCollectionEntry = CollectionEntry<CollectionName>;
+// Collections that can appear in feeds — everything except EXCLUDED_COLLECTIONS,
+// so entry.data is known to carry publishedOn.
+export type FeedCollectionName = Exclude<
+  CollectionName,
+  (typeof EXCLUDED_COLLECTIONS)[number]
+>;
+type FeedEntry = CollectionEntry<FeedCollectionName>;
 
 export function isCollectionExcluded(collectionName: string): boolean {
   return FEED_CONFIG.excludedCollections.includes(collectionName);
@@ -44,15 +58,15 @@ export function isCollectionExcludedFromMainFeed(
   return FEED_CONFIG.excludeFromMainFeed.includes(collectionName);
 }
 
-export function getEligibleCollections(): CollectionName[] {
+export function getEligibleCollections(): FeedCollectionName[] {
   return (Object.keys(collections) as CollectionName[]).filter(
-    (name) => !isCollectionExcluded(name),
+    (name): name is FeedCollectionName => !isCollectionExcluded(name),
   );
 }
 
-export function getMainFeedEligibleCollections(): CollectionName[] {
+export function getMainFeedEligibleCollections(): FeedCollectionName[] {
   return (Object.keys(collections) as CollectionName[]).filter(
-    (name) =>
+    (name): name is FeedCollectionName =>
       !isCollectionExcluded(name) && !isCollectionExcludedFromMainFeed(name),
   );
 }
@@ -66,9 +80,10 @@ function capitalizeFirst(str: string): string {
  * title-less `notes` collection falls back to its formatted publish date —
  * the same string shown as the note's heading on the site.
  */
-function feedItemTitle(entry: AnyCollectionEntry): string {
-  const data = entry.data as { title?: string; publishedOn: Date };
-  return data.title ?? formatLongDate(data.publishedOn);
+function feedItemTitle(entry: FeedEntry): string {
+  return "title" in entry.data
+    ? entry.data.title
+    : formatLongDate(entry.data.publishedOn);
 }
 
 /**
@@ -76,14 +91,14 @@ function feedItemTitle(entry: AnyCollectionEntry): string {
  * (see formatNoteTimestamp), but RSS pubDate claims UTC — convert to the
  * true instant so feed readers show the actual publish time.
  */
-function feedPubDate(entry: AnyCollectionEntry): Date {
+function feedPubDate(entry: FeedEntry): Date {
   return entry.collection === "notes"
     ? noteWallClockToInstant(entry.data.publishedOn)
     : entry.data.publishedOn;
 }
 
-export async function getAllCollectionEntries(): Promise<AnyCollectionEntry[]> {
-  const allEntries: AnyCollectionEntry[] = [];
+export async function getAllCollectionEntries(): Promise<FeedEntry[]> {
+  const allEntries: FeedEntry[] = [];
 
   for (const collectionName of getMainFeedEligibleCollections()) {
     const entries = await getCollection(collectionName, isPublished);
@@ -94,8 +109,8 @@ export async function getAllCollectionEntries(): Promise<AnyCollectionEntry[]> {
 }
 
 export async function getCollectionEntries(
-  collectionName: CollectionName,
-): Promise<CollectionEntry<CollectionName>[]> {
+  collectionName: FeedCollectionName,
+): Promise<FeedEntry[]> {
   return getCollection(collectionName, isPublished);
 }
 
@@ -124,7 +139,9 @@ export async function generateMainFeed() {
   });
 }
 
-export async function generateCollectionFeed(collectionName: CollectionName) {
+export async function generateCollectionFeed(
+  collectionName: FeedCollectionName,
+) {
   const entries = await getCollectionEntries(collectionName);
 
   // Notes are permalinked by number, not by filename id.

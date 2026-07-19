@@ -52,7 +52,9 @@ describe("anchor invariants across all built pages", () => {
 
       $(ANCHORABLE.join(",")).each((_, el) => {
         const $el = $(el);
-        const tag = (el as cheerio.TagElement).tagName;
+        // The runtime-built selector string types this Cheerio as AnyNode,
+        // but the selector only matches tag elements; narrow via `in`.
+        const tag = "tagName" in el ? el.tagName : "";
         const id = $el.attr("id");
         const directAnchors = $el.children("a.anchor-link");
 
@@ -103,7 +105,7 @@ describe("kitchen-sink fixture snapshot", () => {
     const lines: string[] = [];
     root.find(ANCHORABLE.join(",")).each((_, el) => {
       const $el = $(el);
-      const tag = (el as cheerio.TagElement).tagName;
+      const tag = el.tagName;
       const id = $el.attr("id") ?? "(no-id)";
       const anchor = $el.children("a.anchor-link");
       const href = anchor.length > 0 ? anchor.attr("href") : "(no-anchor)";

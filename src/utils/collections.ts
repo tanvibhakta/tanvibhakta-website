@@ -16,11 +16,12 @@ export function getEntryPath(collectionName: CollectionName, id: string) {
 }
 
 /**
- * Filter predicate that excludes draft entries.
+ * Filter predicate that excludes draft entries. Collections without a
+ * `draft` field (e.g. notes) are always published.
  * Use with getCollection's built-in filter: getCollection("blog", isPublished)
  */
-export const isPublished = ({ data }: { data: { draft?: boolean } }) =>
-  !data.draft;
+export const isPublished = ({ data }: { data: object }) =>
+  !("draft" in data && data.draft);
 
 /**
  * Get all published (non-draft) entries from a collection.

@@ -1,5 +1,4 @@
 import { describe, expect, test } from "vitest";
-// @ts-expect-error - .mjs plugin without types
 import { rehypeAnchors } from "../src/plugins/rehype-anchors.mjs";
 
 type HastElement = {
@@ -29,7 +28,6 @@ function run(
     file?: object;
   } = {},
 ) {
-  // @ts-expect-error - hast tree shape
   rehypeAnchors(pluginArgs.options)(tree, pluginArgs.file);
   return tree;
 }
