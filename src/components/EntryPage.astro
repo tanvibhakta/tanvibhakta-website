@@ -59,20 +59,24 @@ const audioTitle =
 // Chronological neighbours within the section. Drafts aren't in the
 // published list, so their previews render without a footer — they have
 // no position in the sequence until published.
-let prevHref: string | null = null;
-let nextHref: string | null = null;
+type Neighbour = { href: string; title: string };
+let prev: Neighbour | null = null;
+let next: Neighbour | null = null;
 if (presentation.navNoun) {
   const siblings = (
     await getPublishedEntries(collection as "blog" | "poetry" | "weeknotes")
   ).sort((a, b) => a.data.publishedOn.getTime() - b.data.publishedOn.getTime());
   const index = siblings.findIndex((sibling) => sibling.id === entry.id);
-  const hrefAt = (i: number) =>
+  const neighbourAt = (i: number): Neighbour | null =>
     i >= 0 && siblings[i]
-      ? getEntryPath(collection as CollectionName, siblings[i].id)
+      ? {
+          href: getEntryPath(collection as CollectionName, siblings[i].id),
+          title: siblings[i].data.title,
+        }
       : null;
   if (index !== -1) {
-    prevHref = hrefAt(index - 1);
-    nextHref = hrefAt(index + 1);
+    prev = neighbourAt(index - 1);
+    next = neighbourAt(index + 1);
   }
 }
 ---
@@ -95,11 +99,7 @@ if (presentation.navNoun) {
   }
   {
     presentation.navNoun && (
-      <SectionFooter
-        noun={presentation.navNoun}
-        prevHref={prevHref}
-        nextHref={nextHref}
-      />
+      <SectionFooter noun={presentation.navNoun} prev={prev} next={next} />
     )
   }
 </ProseLayout>

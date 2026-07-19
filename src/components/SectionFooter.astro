@@ -1,28 +1,35 @@
 ---
 // Chronological prev/next navigation shown at the bottom of every post in a
-// section, e.g. "← previous weeknote" / "next weeknote →".
+// section, e.g. "← previous weeknote: Week of Dec 11th, 2024".
 import ArrowLink from "./ArrowLink.astro";
+
+type Neighbour = { href: string; title: string };
 
 interface Props {
   noun: string;
-  prevHref?: string | null;
-  nextHref?: string | null;
+  prev?: Neighbour | null;
+  next?: Neighbour | null;
 }
 
-const { noun, prevHref, nextHref } = Astro.props;
+const { noun, prev, next } = Astro.props;
 ---
 
 {
-  (prevHref || nextHref) && (
+  (prev || next) && (
     <nav class="section-footer" aria-label={`${noun} navigation`}>
       <span>
-        {prevHref && <ArrowLink href={prevHref} label={`previous ${noun}`} />}
+        {prev && (
+          <ArrowLink
+            href={prev.href}
+            label={`previous ${noun}: ${prev.title}`}
+          />
+        )}
       </span>
       <span>
-        {nextHref && (
+        {next && (
           <ArrowLink
-            href={nextHref}
-            label={`next ${noun}`}
+            href={next.href}
+            label={`next ${noun}: ${next.title}`}
             direction="forward"
           />
         )}
@@ -37,5 +44,9 @@ const { noun, prevHref, nextHref } = Astro.props;
     justify-content: space-between;
     gap: 1rem;
     margin-top: 2rem;
+  }
+
+  .section-footer > span:last-child {
+    text-align: right;
   }
 </style>
