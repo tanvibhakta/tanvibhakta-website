@@ -1,10 +1,17 @@
 ---
 import Layout from "./Layout.astro";
 import Nav from "../components/Nav.astro";
+import SectionFooter from "../components/SectionFooter.astro";
 import { shortenWeeknoteTitles, formatLongDate } from "../utils/date-helpers";
 
-const { frontmatter, category, readingTimeMinutes, hidePublishedOn, noindex } =
-  Astro.props;
+const {
+  frontmatter,
+  category,
+  readingTimeMinutes,
+  hidePublishedOn,
+  noindex,
+  sectionNav,
+} = Astro.props;
 
 const publishedOn: Date | undefined = frontmatter?.publishedOn;
 const showPublishedOn = !hidePublishedOn && publishedOn instanceof Date;
@@ -63,17 +70,33 @@ if (frontmatter?.title) {
     }
     <slot />
     {
+      // A <footer> nested in the <article> is scoped to the post itself,
+      // so post metadata like tags belongs here — distinct from the
+      // page-level <footer> below.
       frontmatter?.tags && frontmatter.tags.length > 0 && (
-        <div class="tags">
+        <footer class="tags">
           {frontmatter.tags.map((tag: string) => (
             <a href={`/tags/${tag}`} class="tag">
               {tag}
             </a>
           ))}
-        </div>
+        </footer>
       )
     }
   </article>
+  {
+    // Outside the <article>, this <footer> is scoped to the page. mt-auto
+    // pins it to the viewport bottom even when the post is short.
+    sectionNav && (sectionNav.prev || sectionNav.next) && (
+      <footer class="mt-auto self-stretch mx-8 md:self-center md:w-1/2 pb-8 prose md:prose-lg prose-stone">
+        <SectionFooter
+          noun={sectionNav.noun}
+          prev={sectionNav.prev}
+          next={sectionNav.next}
+        />
+      </footer>
+    )
+  }
 </Layout>
 
 <style>
