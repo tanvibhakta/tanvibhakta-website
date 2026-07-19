@@ -1,11 +1,9 @@
 ---
-import { getPublishedEntries } from "../../utils/collections";
+import { getPublishedEntriesSorted } from "../../utils/collections";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 import { SECTIONS } from "../../content.config";
 
-const sortedBlogPosts = (await getPublishedEntries("blog")).sort(
-  (a, b) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime(),
-);
+const sortedBlogPosts = await getPublishedEntriesSorted("blog");
 
 const frontmatter = SECTIONS.blog;
 ---

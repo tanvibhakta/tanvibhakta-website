@@ -1,5 +1,9 @@
 ---
-import { getAllTaggedPosts, getAllTags } from "../../utils/collections";
+import {
+  getAllTaggedPosts,
+  getAllTags,
+  newestFirst,
+} from "../../utils/collections";
 import { TAGGED_COLLECTIONS } from "../../utils/tagged-collections";
 import { SECTIONS } from "../../content.config";
 import ProseLayout from "../../layouts/ProseLayout.astro";
@@ -13,10 +17,6 @@ export async function getStaticPaths() {
 const { tag } = Astro.params as { tag: string };
 
 const allPosts = await getAllTaggedPosts();
-const newestFirst = (
-  a: (typeof allPosts)[number],
-  b: (typeof allPosts)[number],
-) => b.data.publishedOn.getTime() - a.data.publishedOn.getTime();
 
 const sections = TAGGED_COLLECTIONS.map((name) => ({
   label: SECTIONS[name].title,

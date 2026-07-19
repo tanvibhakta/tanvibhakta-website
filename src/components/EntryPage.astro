@@ -5,8 +5,9 @@ import AudioPlayer from "./AudioPlayer.astro";
 import { getReadingTimeMinutes } from "../utils/reading-time";
 import {
   getEntryPath,
-  getPublishedEntries,
+  getPublishedEntriesSorted,
   type CollectionName,
+  type DatedCollectionName,
 } from "../utils/collections";
 
 // The single source of truth for how each collection's entries render.
@@ -62,9 +63,10 @@ type Neighbour = { href: string; title: string };
 let prev: Neighbour | null = null;
 let next: Neighbour | null = null;
 if (presentation.navNoun) {
-  const siblings = (
-    await getPublishedEntries(collection as "blog" | "poetry" | "weeknotes")
-  ).sort((a, b) => a.data.publishedOn.getTime() - b.data.publishedOn.getTime());
+  const siblings = await getPublishedEntriesSorted(
+    collection as DatedCollectionName,
+    "oldestFirst",
+  );
   const index = siblings.findIndex((sibling) => sibling.id === entry.id);
   const neighbourAt = (i: number): Neighbour | null =>
     i >= 0 && siblings[i]
