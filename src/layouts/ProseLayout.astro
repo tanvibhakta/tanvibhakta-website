@@ -3,15 +3,11 @@ import Layout from "./Layout.astro";
 import Nav from "../components/Nav.astro";
 import SectionFooter from "../components/SectionFooter.astro";
 import { shortenWeeknoteTitles, formatLongDate } from "../utils/date-helpers";
+import type { SectionNav } from "../utils/collections";
 
-const {
-  frontmatter,
-  category,
-  readingTimeMinutes,
-  hidePublishedOn,
-  noindex,
-  sectionNav,
-} = Astro.props;
+const { frontmatter, category, readingTimeMinutes, hidePublishedOn, noindex } =
+  Astro.props;
+const sectionNav: SectionNav | undefined = Astro.props.sectionNav || undefined;
 
 const publishedOn: Date | undefined = frontmatter?.publishedOn;
 const showPublishedOn = !hidePublishedOn && publishedOn instanceof Date;
