@@ -25,7 +25,9 @@ collections:
         direction: descending
     fields:
       - { label: Title, name: title, widget: string }
-      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: "HH:mm", format: "YYYY-MM-DDTHH:mm:ssZ" }
+      # "{{now}}" prefills when the entry is first created in the editor, not
+      # when Publish is hit — adjust before publishing if the draft sat a while.
+      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: "HH:mm", format: "YYYY-MM-DDTHH:mm:ssZ", default: "{{now}}" }
       - { label: Draft, name: draft, widget: boolean, default: true, required: false }
       - label: Audio
         name: audio
@@ -61,7 +63,9 @@ collections:
         direction: descending
     fields:
       - { label: Title, name: title, widget: string }
-      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: "HH:mm", format: "YYYY-MM-DDTHH:mm:ssZ" }
+      # "{{now}}" prefills when the entry is first created in the editor, not
+      # when Publish is hit — adjust before publishing if the draft sat a while.
+      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: "HH:mm", format: "YYYY-MM-DDTHH:mm:ssZ", default: "{{now}}" }
       - { label: Draft, name: draft, widget: boolean, default: true, required: false }
       - label: Audio
         name: audio
@@ -89,7 +93,9 @@ collections:
         direction: descending
     fields:
       - { label: Title, name: title, widget: string }
-      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: "HH:mm", format: "YYYY-MM-DDTHH:mm:ssZ" }
+      # "{{now}}" prefills when the entry is first created in the editor, not
+      # when Publish is hit — adjust before publishing if the draft sat a while.
+      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: "HH:mm", format: "YYYY-MM-DDTHH:mm:ssZ", default: "{{now}}" }
       - { label: Draft, name: draft, widget: boolean, default: true, required: false }
       - *tagsField
       - label: Body
@@ -113,7 +119,9 @@ collections:
         direction: descending
     fields:
       - { label: Title, name: title, widget: string }
-      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: "HH:mm", format: "YYYY-MM-DDTHH:mm:ssZ" }
+      # "{{now}}" prefills when the entry is first created in the editor, not
+      # when Publish is hit — adjust before publishing if the draft sat a while.
+      - { label: Publish Date, name: publishedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: "HH:mm", format: "YYYY-MM-DDTHH:mm:ssZ", default: "{{now}}" }
       - { label: Last Updated, name: lastUpdatedOn, widget: datetime, date_format: YYYY-MM-DD, time_format: "HH:mm", format: "YYYY-MM-DDTHH:mm:ssZ", default: "{{now}}" }
       - { label: Description, name: description, widget: string, required: false }
       - { label: Draft, name: draft, widget: boolean, default: true, required: false }
