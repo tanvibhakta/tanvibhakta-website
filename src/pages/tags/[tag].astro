@@ -4,6 +4,7 @@ import { TAGGED_COLLECTIONS } from "../../utils/tagged-collections";
 import { SECTIONS } from "../../content.config";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 import { formatLongDate, formatNoteTimestamp } from "../../utils/date-helpers";
+import ArrowLink from "../../components/ArrowLink.astro";
 
 export async function getStaticPaths() {
   return (await getAllTags()).map((tag) => ({ params: { tag } }));
@@ -28,7 +29,7 @@ const frontmatter = { title: tag };
 ---
 
 <ProseLayout frontmatter={frontmatter}>
-  <p><a href="/tags">← all tags</a></p>
+  <p><ArrowLink href="/tags" label="all tags" /></p>
   {
     sections.map(({ label, posts }) => (
       <section>

@@ -2,8 +2,13 @@
 import { render } from "astro:content";
 import ProseLayout from "../layouts/ProseLayout.astro";
 import AudioPlayer from "./AudioPlayer.astro";
+import SectionFooter from "./SectionFooter.astro";
 import { getReadingTimeMinutes } from "../utils/reading-time";
-import type { CollectionName } from "../utils/collections";
+import {
+  getEntryPath,
+  getPublishedEntries,
+  type CollectionName,
+} from "../utils/collections";
 
 // The single source of truth for how each collection's entries render.
 // Used by every published route and the /drafts/ preview route, so drafts
@@ -15,18 +20,27 @@ const PRESENTATION: Record<
     readingTime?: boolean;
     hidePublishedOn?: boolean;
     audioFallbackTitle?: string;
+    // Enables the prev/next section footer; the noun names the links,
+    // e.g. "weeknote" → "← previous weeknote" / "next weeknote →".
+    navNoun?: string;
   }
 > = {
   blog: {
     category: "blog",
     readingTime: true,
     audioFallbackTitle: "Listen to this blog",
+    navNoun: "post",
   },
-  poetry: { category: "poetry", audioFallbackTitle: "Listen to this poem" },
+  poetry: {
+    category: "poetry",
+    audioFallbackTitle: "Listen to this poem",
+    navNoun: "poem",
+  },
   weeknotes: {
     category: "weeknotes",
     readingTime: true,
     hidePublishedOn: true,
+    navNoun: "weeknote",
   },
   digitalGarden: {},
   pages: {},
@@ -41,6 +55,26 @@ const readingTimeMinutes = presentation.readingTime
 const audio = "audio" in entry.data ? entry.data.audio : undefined;
 const audioTitle =
   "audioTitle" in entry.data ? entry.data.audioTitle : undefined;
+
+// Chronological neighbours within the section. Drafts aren't in the
+// published list, so their previews render without a footer — they have
+// no position in the sequence until published.
+let prevHref: string | null = null;
+let nextHref: string | null = null;
+if (presentation.navNoun) {
+  const siblings = (
+    await getPublishedEntries(collection as "blog" | "poetry" | "weeknotes")
+  ).sort((a, b) => a.data.publishedOn.getTime() - b.data.publishedOn.getTime());
+  const index = siblings.findIndex((sibling) => sibling.id === entry.id);
+  const hrefAt = (i: number) =>
+    i >= 0 && siblings[i]
+      ? getEntryPath(collection as CollectionName, siblings[i].id)
+      : null;
+  if (index !== -1) {
+    prevHref = hrefAt(index - 1);
+    nextHref = hrefAt(index + 1);
+  }
+}
 ---
 
 <ProseLayout
@@ -56,6 +90,15 @@ const audioTitle =
       <AudioPlayer
         src={audio}
         title={audioTitle ?? presentation.audioFallbackTitle}
+      />
+    )
+  }
+  {
+    presentation.navNoun && (
+      <SectionFooter
+        noun={presentation.navNoun}
+        prevHref={prevHref}
+        nextHref={nextHref}
       />
     )
   }
