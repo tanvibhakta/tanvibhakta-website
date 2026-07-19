@@ -25,6 +25,15 @@ const frontmatter = SECTIONS.blog;
                   year: "numeric",
                 })}
               </span>
+              {blogPost.data.tags.length > 0 && (
+                <span class="tags">
+                  {blogPost.data.tags.map((tag) => (
+                    <a href={`/tags/${tag}`} class="tag">
+                      {tag}
+                    </a>
+                  ))}
+                </span>
+              )}
             </li>
           );
         })
@@ -42,5 +51,25 @@ const frontmatter = SECTIONS.blog;
     font-size: 0.9rem;
     font-variant: small-caps;
     margin-left: 0.5rem;
+  }
+
+  .tags {
+    margin-left: 0.5rem;
+    display: inline-flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 0.8rem;
+    font-variant: small-caps;
+    text-decoration: none;
+    color: inherit;
+    opacity: 0.6;
+  }
+
+  .tag:hover {
+    opacity: 1;
+    text-decoration: underline;
   }
 </style>
