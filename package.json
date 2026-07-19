@@ -8,7 +8,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "astro sync && tsc --noEmit",
     "prepare": "husky",
     "weeknotes:new": "node scripts/new-content.ts weeknotes",
     "blog:new": "node scripts/new-content.ts blog",
@@ -63,9 +63,6 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md,astro}": [
       "prettier --write"
-    ],
-    "*.{js,mjs,ts,tsx}": [
-      "bash -c 'pnpm typecheck'"
     ]
   }
 }

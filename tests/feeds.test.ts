@@ -31,8 +31,8 @@ const mocks = vi.hoisted(() => ({
       return filter ? entries.filter(filter) : entries;
     },
   ),
-  rss: vi.fn(
-    async (_options: RSSOptions) =>
+  rss: vi.fn<(options: RSSOptions) => Promise<Response>>(
+    async () =>
       new Response('<?xml version="1.0"?><rss></rss>', {
         headers: { "Content-Type": "application/rss+xml" },
       }),
@@ -342,9 +342,7 @@ describe("Feed Content Generation", () => {
     // Should include published and no-draft-field, exclude draft
     expect(feedItems).toHaveLength(2);
     const titles = feedItems.map((item) => item.title);
-    expect(titles.filter((title) => title?.includes("Draft Post"))).toEqual(
-      [],
-    );
+    expect(titles.filter((title) => title?.includes("Draft Post"))).toEqual([]);
   });
 
   it("should exclude draft posts from collection feeds", async () => {
