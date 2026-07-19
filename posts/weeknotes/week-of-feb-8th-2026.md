@@ -1,6 +1,6 @@
 ---
 title: "Week of Feb 8th, 2026"
-publishedOn: 2026-02-08
+publishedOn: 2026-02-08T23:00:00+05:30
 ---
 
 ## Work

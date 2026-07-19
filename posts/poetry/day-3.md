@@ -1,6 +1,6 @@
 ---
 title: "Day 3"
-publishedOn: 2025-04-03
+publishedOn: 2025-04-03T09:03:00+05:30
 ---
 
 I go up and down and have only one eye.  
