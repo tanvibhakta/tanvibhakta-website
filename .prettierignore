@@ -1,0 +1,13 @@
+# Generated output
+dist/
+.astro/
+
+# Dependencies & lockfiles (prettier mangles these; let the package manager own them)
+node_modules/
+pnpm-lock.yaml
+
+# Legacy content not actively maintained
+_posts/
+
+# Binary / non-text assets are ignored by prettier anyway, listed for clarity
+public/
