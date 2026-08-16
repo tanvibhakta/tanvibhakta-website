@@ -1,5 +1,9 @@
 import { describe, expect, test } from "vitest";
-import { buildNote, type TelegramMessage } from "../src/utils/telegram-note";
+import {
+  buildNote,
+  noteNumberFromListing,
+  type TelegramMessage,
+} from "../src/utils/telegram-note";
 
 // Telegram delivers message.date as Unix epoch seconds (UTC). Notes store a
 // naive local wall-clock timestamp, so all fixtures pin timeZone explicitly.
@@ -40,6 +44,19 @@ describe("buildNote", () => {
 
   test("returns null for whitespace-only text", () => {
     expect(buildNote(msg({ text: "  \n " }), TZ)).toBeNull();
+  });
+
+  test("note number is the count of markdown files in the listing", () => {
+    // Notes are numbered by publish order and only added forward in time
+    // (see src/utils/notes.ts), so the newest note's number is the total
+    // count of note files after it lands.
+    expect(
+      noteNumberFromListing([
+        "2026-06-21-1200.md",
+        "2026-08-16-2341.md",
+        ".DS_Store",
+      ]),
+    ).toBe(2);
   });
 
   test("midnight formats as 00, not 24", () => {
