@@ -89,8 +89,11 @@ describe("Page Titles", () => {
         e !== "feed.xml" && fs.statSync(path.join(notesDir, e)).isDirectory(),
     );
 
-    // Notes are permalinked by an xkcd-style sequential number.
+    // Notes are permalinked by an xkcd-style sequential number. An empty
+    // collection is a valid state (notes publish via Telegram, and the set
+    // can be cleared); the per-note assertions only apply when notes exist.
     expect(posts.every((p) => /^\d+$/.test(p))).toBe(true);
+    if (posts.length === 0) return;
     expect(posts).toContain("1");
 
     const html = await fs.promises.readFile(
