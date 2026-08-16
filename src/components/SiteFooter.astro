@@ -21,10 +21,14 @@ const links = [
 ---
 
 <footer
-  class="not-prose mt-auto flex flex-wrap justify-center gap-2 px-4 pt-12 pb-6 text-sm tracking-wide opacity-60 [font-variant:small-caps]"
+  class="not-prose mt-auto flex flex-wrap justify-center gap-2 px-4 pt-12 pb-6 text-sm md:text-base tracking-wide opacity-60 [font-variant:small-caps]"
 >
   <span>
-    © 2016–{year}
+    {
+      /* Digits aren't letters, so small-caps leaves them full-height; the
+        served Open Sans lacks oldstyle-nums, so scale them optically. */
+    }
+    © <span class="text-[0.82em]">2016–{year}</span>
     <a href="/" class={LINK_CLASS}>tanvi bhakta</a>
   </span>
   {
