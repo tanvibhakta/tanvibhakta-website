@@ -8,37 +8,31 @@ import { STANDALONE_PAGES } from "../content.config";
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer not-prose">
-  <span>© 2016–{year} Tanvi Bhakta</span>
+<footer
+  class="not-prose mt-auto flex flex-wrap justify-center gap-2 px-4 pt-12 pb-6 text-sm tracking-wide opacity-60 [font-variant:small-caps]"
+>
+  <span>
+    © 2016–{year}
+    <a href="/" class="text-inherit no-underline hover:underline">
+      tanvi bhakta
+    </a>
+  </span>
   <span aria-hidden="true">·</span>
-  <a href="/sitemap">sitemap</a>
+  <a href="/sitemap" class="text-inherit no-underline hover:underline">
+    sitemap
+  </a>
   <span aria-hidden="true">·</span>
-  <a href={STANDALONE_PAGES.subscribe.href}>subscribe</a>
+  <a
+    href={STANDALONE_PAGES.subscribe.href}
+    class="text-inherit no-underline hover:underline"
+  >
+    subscribe
+  </a>
   <span aria-hidden="true">·</span>
-  <a href="mailto:Tanvi Bhakta <me@tanvibhakta.in>">me@tanvibhakta.in</a>
+  <a
+    href="mailto:Tanvi Bhakta <me@tanvibhakta.in>"
+    class="text-inherit no-underline hover:underline"
+  >
+    me@tanvibhakta.in
+  </a>
 </footer>
-
-<style>
-  /* Same quiet-metadata register as .post-meta and .tag in ProseLayout. */
-  .site-footer {
-    margin-top: auto;
-    padding: 3rem 1rem 1.5rem;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    font-variant: small-caps;
-    letter-spacing: 0.03em;
-    opacity: 0.6;
-  }
-
-  .site-footer a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .site-footer a:hover {
-    text-decoration: underline;
-  }
-</style>
