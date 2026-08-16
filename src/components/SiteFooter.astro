@@ -6,6 +6,18 @@ import { STANDALONE_PAGES } from "../content.config";
 
 // Build-time year; the site rebuilds on every publish so it never goes stale.
 const year = new Date().getFullYear();
+
+// Astro has no in-file subcomponents, so the footer's single link type is
+// defined once here and rendered by the one <a> in the template.
+const LINK_CLASS = "text-inherit no-underline hover:underline";
+const links = [
+  { href: "/sitemap", label: "sitemap" },
+  { href: STANDALONE_PAGES.subscribe.href, label: "subscribe" },
+  {
+    href: "mailto:Tanvi Bhakta <me@tanvibhakta.in>",
+    label: "me@tanvibhakta.in",
+  },
+];
 ---
 
 <footer
@@ -13,26 +25,16 @@ const year = new Date().getFullYear();
 >
   <span>
     © 2016–{year}
-    <a href="/" class="text-inherit no-underline hover:underline">
-      tanvi bhakta
-    </a>
+    <a href="/" class={LINK_CLASS}>tanvi bhakta</a>
   </span>
-  <span aria-hidden="true">·</span>
-  <a href="/sitemap" class="text-inherit no-underline hover:underline">
-    sitemap
-  </a>
-  <span aria-hidden="true">·</span>
-  <a
-    href={STANDALONE_PAGES.subscribe.href}
-    class="text-inherit no-underline hover:underline"
-  >
-    subscribe
-  </a>
-  <span aria-hidden="true">·</span>
-  <a
-    href="mailto:Tanvi Bhakta <me@tanvibhakta.in>"
-    class="text-inherit no-underline hover:underline"
-  >
-    me@tanvibhakta.in
-  </a>
+  {
+    links.map((link) => (
+      <>
+        <span aria-hidden="true">·</span>
+        <a href={link.href} class={LINK_CLASS}>
+          {link.label}
+        </a>
+      </>
+    ))
+  }
 </footer>
