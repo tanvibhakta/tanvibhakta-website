@@ -36,3 +36,6 @@ _site
 
 # git worktrees
 .worktrees/
+
+# Local Netlify folder
+.netlify
