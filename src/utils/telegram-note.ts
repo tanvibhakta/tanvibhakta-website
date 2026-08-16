@@ -36,6 +36,16 @@ export function buildNote(
   };
 }
 
+/**
+ * The permalink number of the newest note, given the filenames in
+ * posts/notes/. Notes get xkcd-style sequential slugs ordered by publish
+ * time (src/utils/notes.ts) and are only added forward in time, so the note
+ * that just landed is number `count of note files`.
+ */
+export function noteNumberFromListing(filenames: string[]): number {
+  return filenames.filter((name) => name.endsWith(".md")).length;
+}
+
 // "YYYY-MM-DDTHH:mm:ss" as read off a clock in `timeZone`.
 function wallClockTimestamp(epochSeconds: number, timeZone: string): string {
   const parts = Object.fromEntries(

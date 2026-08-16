@@ -1,6 +1,7 @@
 import { Buffer } from "node:buffer";
 import {
   buildNote,
+  noteNumberFromListing,
   type NoteFile,
   type TelegramMessage,
 } from "../../src/utils/telegram-note";
@@ -48,7 +49,10 @@ export default async (req: Request): Promise<Response> => {
   // ↔ one note.
   try {
     const path = await commitNote(note, message.message_id);
-    await reply(message, `Published ${path} — the site is rebuilding.`);
+    await reply(
+      message,
+      `Published ${await noteLink(path)} — live once the rebuild finishes (~2 min).`,
+    );
     return Response.json({ ok: true, path });
   } catch (error) {
     console.error("telegram-webhook publish failed:", error);
@@ -61,6 +65,35 @@ export default async (req: Request): Promise<Response> => {
 };
 
 const skip = (reason: string) => Response.json({ ok: true, skipped: reason });
+
+/**
+ * The public URL of the note that was just committed. Notes get sequential
+ * numeric slugs by publish order, so the newest note's number is the count
+ * of files now in posts/notes/ — one directory listing away. Falls back to
+ * the repo path if the listing fails: the publish already succeeded, and a
+ * worse link must not turn it into an error reply.
+ */
+async function noteLink(path: string): Promise<string> {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${process.env.GITHUB_REPO}/contents/posts/notes?ref=main`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+          Accept: "application/vnd.github+json",
+          "User-Agent": "tanvibhakta-notes-webhook",
+        },
+      },
+    );
+    if (!res.ok) throw new Error(`listing failed: ${res.status}`);
+    const listing: { name: string }[] = await res.json();
+    const number = noteNumberFromListing(listing.map((f) => f.name));
+    return `${process.env.SITE_URL ?? "https://tanvibhakta.in"}/notes/${number}`;
+  } catch (error) {
+    console.error("telegram-webhook note numbering failed:", error);
+    return path;
+  }
+}
 
 async function commitNote(note: NoteFile, messageId: number): Promise<string> {
   const put = async (path: string) =>
