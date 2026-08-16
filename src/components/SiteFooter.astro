@@ -1,7 +1,7 @@
 ---
 // Site-wide sign-off: one quiet line on every page except the homepage,
 // which keeps its own Footer. Third layer of the footer system, alongside
-// the homepage Footer and the per-post SectionFooter (PR #112).
+// the homepage Footer and the per-post SectionFooter
 import { STANDALONE_PAGES } from "../content.config";
 
 // Build-time year; the site rebuilds on every publish so it never goes stale.
@@ -9,8 +9,11 @@ const year = new Date().getFullYear();
 
 // Astro has no in-file subcomponents, so the footer's single link type is
 // defined once here and rendered by the one <a> in the template.
-const LINK_CLASS = "text-inherit no-underline hover:underline";
+// text-inherit needs ! because the unlayered `a` color in global.css
+// outranks Tailwind's layered utilities (same trick as Nav.astro).
+const LINK_CLASS = "text-inherit! no-underline hover:underline";
 const links = [
+  { href: "/", label: "tanvi bhakta" },
   { href: "/sitemap", label: "sitemap" },
   { href: STANDALONE_PAGES.subscribe.href, label: "subscribe" },
   {
@@ -21,16 +24,9 @@ const links = [
 ---
 
 <footer
-  class="not-prose mt-auto flex flex-wrap justify-center gap-2 px-4 pt-12 pb-6 text-sm md:text-base tracking-wide opacity-60 [font-variant:small-caps]"
+  class="not-prose mt-auto flex flex-wrap justify-center gap-2 px-4 pt-12 pb-6 text-sm md:text-base font-semibold md:tracking-wide opacity-60 [font-variant:small-caps]"
 >
-  <span>
-    {
-      /* Digits aren't letters, so small-caps leaves them full-height; the
-        served Open Sans lacks oldstyle-nums, so scale them optically. */
-    }
-    © <span class="text-[0.82em]">2016–{year}</span>
-    <a href="/" class={LINK_CLASS}>tanvi bhakta</a>
-  </span>
+  <span>© <span class="text-[0.82em]">2016–{year}</span></span>
   {
     links.map((link) => (
       <>
