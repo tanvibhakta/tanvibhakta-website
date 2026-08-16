@@ -47,6 +47,26 @@ External redirects configured in `astro.config.mjs`:
 
 Uses Tailwind CSS 4.x with @tailwindcss/vite plugin and @tailwindcss/typography for content styling.
 
+**Reach for Tailwind utilities first.** New components should carry their
+styling in `class` attributes, not an Astro scoped `<style>` block. Scoped CSS
+is the exception, and each surviving block exists for a reason that a utility
+can't cover:
+
+- **Styling elements the component doesn't author.** `ul`/`li` coming out of a
+  slot or markdown have no `class` to hang a utility on — hence the bare
+  element selectors in `sitemap.astro` and `weeknotes/index.astro`, and the
+  `:global(h1)` override in `ProseLayout.astro`.
+- **Layouts with no utility equivalent**, e.g. `sitemap.astro`'s
+  `grid-template-columns: max-content 1fr` with `display: contents` rows.
+- **Winning a specificity fight cheaply.** Global CSS lives outside
+  `@layer`, so an unlayered rule beats every Tailwind utility. A scoped block
+  is also unlayered, which is why `.arrow-link`'s underline rules override
+  prose. In Tailwind, the same override needs `!` — see SiteFooter's
+  `text-inherit!`, which beats the global `a` color.
+
+Site-wide element defaults, `@theme`/`@plugin` config, and classes emitted by
+rehype plugins (`.anchor-link`) belong in `src/styles/global.css`.
+
 ### Code Quality
 
 - ESLint with TypeScript support configured in `eslint.config.js`

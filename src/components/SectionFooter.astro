@@ -15,7 +15,10 @@ const { noun, prev, next } = Astro.props;
 
 {
   (prev || next) && (
-    <nav class="section-footer" aria-label={`${noun} navigation`}>
+    <nav
+      class="mt-8 flex justify-between gap-4"
+      aria-label={`${noun} navigation`}
+    >
       <span>
         {prev && (
           <ArrowLink
@@ -25,7 +28,7 @@ const { noun, prev, next } = Astro.props;
           />
         )}
       </span>
-      <span>
+      <span class="text-right">
         {next && (
           <ArrowLink
             href={next.href}
@@ -38,16 +41,3 @@ const { noun, prev, next } = Astro.props;
     </nav>
   )
 }
-
-<style>
-  .section-footer {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-top: 2rem;
-  }
-
-  .section-footer > span:last-child {
-    text-align: right;
-  }
-</style>
