@@ -1,5 +1,5 @@
 ---
-title: "Week of Months of May, June, July , August 2026"
+title: "Week of Months of May, June, July, August 2026"
 publishedOn: 2026-08-02
 ---
 
@@ -7,9 +7,9 @@ publishedOn: 2026-08-02
 
 - it’s been three[^1] months and I haven’t figured out how to write worknotes yet. That doesn’t mean its not valuable, it means I haven’t sat down and figured out how to remove most friction from the process
   have unconsciously given me.
-- I noow realise I still need some form of public storytelling because over larger periods I lose the narrative that weeknotes have unconsciously given me. So when I wrote that [this process wasn't as useful anymore](), I was wrong.
+- I now realise I still need some form of public storytelling because over larger periods I lose the narrative that weeknotes have unconsciously given me. I thought I would stop writing weeknotes! Considered pivoting to worknotes, and considered giving them up entirely in favor of more blog posts. I _have_ written more blog posts in the last 4 months than I would have, but I don't think it needed to come at the cost of weeknotes. I have missed the process of writing these every. single. week.
 - I spent 7 days in Srinagar at the end of May (_sad beautiful tragic_ plays in the background). It brought up a lot of shit I didn’t realise I had in me around growing up in an authoritarian state. Ate excellent food. Braved the cold. Did not die. Did not see snow. Saw many birds. Saw large lakes. Saw no nice orchards. Did not touch snow. Needed a week to recover from the experience.
-- Went to [Akshata]’s place after a long time! Didn’t play board games, but it was nice to hang out with the Achievable Goals group after forever.
+- Went to [Akshata](https://libraryofscroll.wordpress.com/)’s place after a long time! Didn’t play board games, but it was nice to hang out with the Achievable Goals group after forever.
 - Took the parents out to [Burma Burma](https://burmaburma.in/) for their anniversary. They really enjoyed it. They’ve been coming home a lot more in the last few months, I’m not sure what changed. They’ve finally decided to do something about the large backlog of tasks that show up when one runs a household that I’d asked them for help with over two years ago, and I’m very grateful.
   - Figured out what inverter I should buy, then bought it and got it installed
   - got plug points installed in the bathrooms
