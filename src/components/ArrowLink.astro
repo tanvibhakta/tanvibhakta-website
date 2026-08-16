@@ -1,10 +1,14 @@
 ---
-// The site's directional navigation link: "← all tags", or with a
-// destination title, "next poem: Day 2 →". Owns everything that makes such
-// a link: the arrow (decorative, hidden from screen readers and glued to
-// its word so it never wraps alone), the "label: title" format, and the
-// nav-chrome styling — color only at rest, underline on hover — as opposed
-// to inline prose links, which stay persistently underlined.
+// The site's directional navigation link. Without a destination title it is
+// one line, "← all tags". With one, the arrow stays with the label, which
+// becomes a quiet caption stacked over the destination itself: "next →"
+// above "giving baby tanvi what she wants". Only the title is the anchor, so
+// the link to the actual post behaves exactly like every other link on the
+// site; the caption is chrome. Owns everything that makes such a link: the
+// arrow (decorative, hidden from screen readers and glued to its word so it
+// never wraps alone), the label/title pairing, and the nav-chrome styling —
+// color only at rest, underline on hover — as opposed to inline prose links,
+// which stay persistently underlined.
 interface Props {
   href: string;
   label: string;
@@ -13,21 +17,27 @@ interface Props {
 }
 
 const { href, label, title, direction = "back" } = Astro.props;
-const text = title ? `${label}: ${title}` : label;
+const back = direction === "back";
+const LINK_CLASS = "no-underline hover:underline";
 ---
 
-<a href={href} class="arrow-link"
-  >{direction === "back" && <span aria-hidden="true">←&nbsp;</span>}{text}{
-    direction === "forward" && <span aria-hidden="true">&nbsp;→</span>
-  }</a
->
-
-<style>
-  .arrow-link {
-    text-decoration: none;
-  }
-
-  .arrow-link:hover {
-    text-decoration: underline;
-  }
-</style>
+{
+  title ? (
+    <>
+      <span class="block text-sm text-stone-500">
+        {back && <span aria-hidden="true">←&nbsp;</span>}
+        {label}
+        {!back && <span aria-hidden="true">&nbsp;→</span>}
+      </span>
+      <a href={href} class={LINK_CLASS}>
+        {title}
+      </a>
+    </>
+  ) : (
+    <a href={href} class={LINK_CLASS}>
+      {back && <span aria-hidden="true">←&nbsp;</span>}
+      {label}
+      {!back && <span aria-hidden="true">&nbsp;→</span>}
+    </a>
+  )
+}

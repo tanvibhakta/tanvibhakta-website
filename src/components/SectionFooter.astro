@@ -1,6 +1,8 @@
 ---
 // Chronological prev/next navigation shown at the bottom of every post in a
-// section, e.g. "← previous weeknote: Week of Dec 11th, 2024".
+// section: a "previous"/"next" caption over the neighbouring post's title,
+// one at each edge. The captions stay bare because the nav's own label
+// carries the noun ("weeknote navigation") for screen readers.
 import ArrowLink from "./ArrowLink.astro";
 import type { Neighbour } from "../utils/collections";
 
@@ -21,18 +23,14 @@ const { noun, prev, next } = Astro.props;
     >
       <span>
         {prev && (
-          <ArrowLink
-            href={prev.href}
-            label={`previous ${noun}`}
-            title={prev.title}
-          />
+          <ArrowLink href={prev.href} label="previous" title={prev.title} />
         )}
       </span>
       <span class="text-right">
         {next && (
           <ArrowLink
             href={next.href}
-            label={`next ${noun}`}
+            label="next"
             title={next.title}
             direction="forward"
           />
