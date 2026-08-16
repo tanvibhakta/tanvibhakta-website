@@ -1,6 +1,6 @@
 ---
 title: "Day 6: Watermelon"
-publishedOn: 2025-04-06
+publishedOn: 2025-04-06T09:01:00+05:30
 ---
 
 Splash  

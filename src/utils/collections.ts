@@ -32,6 +32,53 @@ export async function getPublishedEntries<C extends CollectionName>(
   return getCollection(collectionName, isPublished);
 }
 
+/** Collections whose entries carry a publishedOn date (all but `pages`). */
+export type DatedCollectionName = Exclude<CollectionName, "pages">;
+
+/**
+ * The prev/next contract for section navigation: produced by EntryPage
+ * (hrefs via getEntryPath), passed through ProseLayout, rendered by
+ * SectionFooter.
+ */
+export type Neighbour = { href: string; title: string };
+export type SectionNav = {
+  noun: string;
+  prev: Neighbour | null;
+  next: Neighbour | null;
+};
+
+type DatedEntry = { id: string; data: { publishedOn: Date } };
+
+/**
+ * Ascending chronological comparator, the single home for publishedOn
+ * ordering. Ties (identical timestamps, e.g. legacy date-only frontmatter)
+ * break on entry id so ordering is deterministic rather than dependent on
+ * file discovery order.
+ */
+export function byPublishedOn(a: DatedEntry, b: DatedEntry): number {
+  return (
+    a.data.publishedOn.getTime() - b.data.publishedOn.getTime() ||
+    a.id.localeCompare(b.id)
+  );
+}
+
+/** Descending variant of byPublishedOn, for listings and feeds. */
+export function newestFirst(a: DatedEntry, b: DatedEntry): number {
+  return byPublishedOn(b, a);
+}
+
+/**
+ * Published entries in chronological order. "newestFirst" (the default)
+ * matches listing pages and feeds; "oldestFirst" is prev/next reading order.
+ */
+export async function getPublishedEntriesSorted<C extends DatedCollectionName>(
+  collectionName: C,
+  order: "newestFirst" | "oldestFirst" = "newestFirst",
+) {
+  const entries = await getPublishedEntries(collectionName);
+  return entries.sort(order === "newestFirst" ? newestFirst : byPublishedOn);
+}
+
 /**
  * Get all draft entries from a collection. Used by the /drafts/ routes,
  * which build hidden-but-linkable review pages. Defined as the negation of

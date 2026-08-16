@@ -1,0 +1,41 @@
+---
+// Chronological prev/next navigation shown at the bottom of every post in a
+// section: a "previous"/"next" caption over the neighbouring post's title,
+// one at each edge. The captions stay bare because the nav's own label
+// carries the noun ("weeknote navigation") for screen readers.
+import ArrowLink from "./ArrowLink.astro";
+import type { Neighbour } from "../utils/collections";
+
+interface Props {
+  noun: string;
+  prev?: Neighbour | null;
+  next?: Neighbour | null;
+}
+
+const { noun, prev, next } = Astro.props;
+---
+
+{
+  (prev || next) && (
+    <nav
+      class="mt-8 flex justify-between gap-4"
+      aria-label={`${noun} navigation`}
+    >
+      <span>
+        {prev && (
+          <ArrowLink href={prev.href} label="previous" title={prev.title} />
+        )}
+      </span>
+      <span class="text-right">
+        {next && (
+          <ArrowLink
+            href={next.href}
+            label="next"
+            title={next.title}
+            direction="forward"
+          />
+        )}
+      </span>
+    </nav>
+  )
+}

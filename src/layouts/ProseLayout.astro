@@ -2,10 +2,13 @@
 import Layout from "./Layout.astro";
 import Nav from "../components/Nav.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import SectionFooter from "../components/SectionFooter.astro";
 import { shortenWeeknoteTitles, formatLongDate } from "../utils/date-helpers";
+import type { SectionNav } from "../utils/collections";
 
 const { frontmatter, category, readingTimeMinutes, hidePublishedOn, noindex } =
   Astro.props;
+const sectionNav: SectionNav | undefined = Astro.props.sectionNav || undefined;
 
 const publishedOn: Date | undefined = frontmatter?.publishedOn;
 const showPublishedOn = !hidePublishedOn && publishedOn instanceof Date;
@@ -64,18 +67,43 @@ if (frontmatter?.title) {
     }
     <slot />
     {
+      // A <footer> nested in the <article> is scoped to the post itself,
+      // so post metadata like tags belongs here — distinct from the
+      // page-level <footer> below.
       frontmatter?.tags && frontmatter.tags.length > 0 && (
-        <div class="tags">
+        <footer class="tags">
           {frontmatter.tags.map((tag: string) => (
             <a href={`/tags/${tag}`} class="tag">
               {tag}
             </a>
           ))}
-        </div>
+        </footer>
       )
     }
   </article>
-  <SiteFooter />
+  {
+    // Both footers live in one bottom-pinned group: a lone mt-auto pins its
+    // element to the viewport bottom, but two of them split the free space
+    // between themselves instead. So the group carries the mt-auto, and
+    // SiteFooter's own is inert here because the group is only as tall as
+    // its contents.
+  }
+  <div class="mt-auto self-stretch flex flex-col items-center">
+    {
+      // Outside the <article>, this <footer> is scoped to the page rather
+      // than to the post.
+      sectionNav && (sectionNav.prev || sectionNav.next) && (
+        <footer class="self-stretch mx-8 md:self-center md:w-1/2 prose md:prose-lg prose-stone">
+          <SectionFooter
+            noun={sectionNav.noun}
+            prev={sectionNav.prev}
+            next={sectionNav.next}
+          />
+        </footer>
+      )
+    }
+    <SiteFooter />
+  </div>
 </Layout>
 
 <style>

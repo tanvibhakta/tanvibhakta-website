@@ -2,14 +2,10 @@
 import { render } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 import AudioPlayer from "../../components/AudioPlayer.astro";
-import { getPublishedEntries } from "../../utils/collections";
+import { getPublishedEntriesSorted } from "../../utils/collections";
 import { SECTIONS } from "../../content.config";
 
-const allPoetry = await getPublishedEntries("poetry");
-
-const sorted = allPoetry.sort(
-  (a, b) => a.data.publishedOn.getTime() - b.data.publishedOn.getTime(),
-);
+const sorted = await getPublishedEntriesSorted("poetry", "oldestFirst");
 
 const renderedPoetry = await Promise.all(
   sorted.map(async (poem) => ({

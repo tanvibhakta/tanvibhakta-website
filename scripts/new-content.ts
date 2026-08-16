@@ -61,8 +61,10 @@ const COLLECTIONS = {
 
 type CollectionName = keyof typeof COLLECTIONS;
 
+// Seconds-precision ISO timestamp so same-day posts have a defined order.
+// Matches the CMS, which stores publishedOn as YYYY-MM-DDTHH:mm:ssZ.
 function formatDate(date: Date): string {
-  return date.toISOString().split("T")[0];
+  return date.toISOString().replace(/\.\d{3}Z$/, "Z");
 }
 
 // A naive local wall-clock timestamp ("YYYY-MM-DDTHH:mm:ss", no offset) stamped
