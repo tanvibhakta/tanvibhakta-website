@@ -36,6 +36,8 @@ As part of ongoing efforts to keep in touch with friends not in my city, I did l
 
 Getting the Garmin and having its adaptive step goals has really been good for getting me to just get out and walk around. Because the goal is calculated on the basis of your current activity levels and your steps from the last few days, the goal feels achievable. I had severely underestimated how nice a little vibration and firecracker animation on a 1x1 inch e-ink screen will make me feel.
 
+Earlier this week, some newish friends and I spent a whole night talking to each other. We’ve all known of each other for a while, but a coworking session turned into cafe hopping turned into dinner turned into drinks turned into someone’s living room... and then a sunrise and breakfast later we went home. It is basically impossible to have conversation that is both entertaining and can hold nuance - especially in a group, but it happened. I felt fulfilled in a way that I haven’t for a long time. There is something about talking all night that soothes vulnerability and imprints familiarity like nothing else.
+
 ## Health
 
 I have slept for not more than 15 hours over the last three days. I am not sure if Delhi really does go this hard and this late, or if the people I’ve been hanging out with are special (affectionate).
