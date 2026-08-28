@@ -32,6 +32,21 @@ function markdownToHtml(markdown: string | undefined): string {
 const EXCLUDED_COLLECTIONS = ["pages"] as const satisfies readonly CollectionName[];
 
 /**
+ * Add XSL processing instruction to RSS feed for browser rendering
+ */
+function addXslProcessingInstruction(xmlString: string): string {
+  // Find the XML declaration and add the stylesheet reference after it
+  const xmlDeclarationMatch = xmlString.match(/^<\?xml[^?]*\?>/);
+  if (xmlDeclarationMatch) {
+    const xmlDeclaration = xmlDeclarationMatch[0];
+    const xslInstruction =
+      '\n<?xml-stylesheet type="text/xsl" href="/feed.xsl"?>';
+    return xmlString.replace(xmlDeclaration, xmlDeclaration + xslInstruction);
+  }
+  return xmlString;
+}
+
+/**
  * Configuration for RSS/Atom feed generation
  */
 export const FEED_CONFIG = {
@@ -121,7 +136,7 @@ export async function generateMainFeed() {
   // Sort by date and limit
   const sortedEntries = allEntries.sort(newestFirst).slice(0, FEED_LIMIT);
 
-  return rss({
+  const response = await rss({
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     site: SITE_URL,
@@ -131,6 +146,16 @@ export async function generateMainFeed() {
       link: `${getEntryPath(entry.collection, entry.id)}/`,
       content: markdownToHtml(entry.body),
     })),
+  });
+
+  // Get the response body and add XSL processing instruction
+  const body = await response.text();
+  const styledBody = addXslProcessingInstruction(body);
+
+  return new Response(styledBody, {
+    headers: {
+      "Content-Type": "application/rss+xml; charset=utf-8",
+    },
   });
 }
 
@@ -146,7 +171,7 @@ export async function generateCollectionFeed(
   // Sort by date and limit
   const sortedEntries = entries.sort(newestFirst).slice(0, FEED_LIMIT);
 
-  return rss({
+  const response = await rss({
     title: `${SITE_TITLE} - ${capitalizeFirst(collectionName)}`,
     description: `${capitalizeFirst(collectionName)} posts from ${SITE_TITLE}`,
     site: SITE_URL,
@@ -158,5 +183,15 @@ export async function generateCollectionFeed(
         : `${getEntryPath(entry.collection, entry.id)}/`,
       content: markdownToHtml(entry.body),
     })),
+  });
+
+  // Get the response body and add XSL processing instruction
+  const body = await response.text();
+  const styledBody = addXslProcessingInstruction(body);
+
+  return new Response(styledBody, {
+    headers: {
+      "Content-Type": "application/rss+xml; charset=utf-8",
+    },
   });
 }
