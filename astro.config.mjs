@@ -15,6 +15,16 @@ import { rehypeAnchors } from "./src/plugins/rehype-anchors.mjs";
 export default defineConfig({
   site: "https://tanvibhakta.in",
 
+  image: {
+    // Responsive markdown images: srcset + sizes + lazy loading for every
+    // relative ![]() image. Stabilized in Astro 5.10.
+    layout: "constrained",
+    // The prose column is md:w-1/2 (~50vw desktop); cap candidate widths so
+    // browsers don't over-fetch. 1280 is also the width feeds.ts requests,
+    // keeping the feed derivative shared with this set.
+    breakpoints: [640, 960, 1280, 1600, 2048],
+  },
+
   vite: {
     // Cast needed: @tailwindcss/vite types against vite 7 while astro bundles
     // vite 6, so the two Plugin types are structurally close but not identical.
