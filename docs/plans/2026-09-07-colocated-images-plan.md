@@ -965,6 +965,10 @@ Verify YAML with `gh workflow view` after push, or minimally by running the find
 
 - Create: `netlify/plugins/build-time-alert/manifest.yml`
 - Create: `netlify/plugins/build-time-alert/index.mjs`
+- Create: `netlify/plugins/build-time-alert/package.json` — **review
+  deviation**: `{"type": "module", "main": "index.mjs"}` so directory
+  resolution finds the `.mjs` entry regardless of the resolver; without it,
+  a bare-directory local plugin may fail to load on first deploy.
 - Modify: `netlify.toml`
 
 **manifest.yml:**
