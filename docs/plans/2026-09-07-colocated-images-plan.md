@@ -89,6 +89,18 @@ Output per group:
 - A single image still wraps (count 1) so CSS/lightbox treat all post images uniformly.
 - A paragraph with any non-whitespace text or non-img element is left alone.
 - Runs are broken by any intervening non-image node (prose, heading, hr).
+- **`sizes` rewrite (from Task 1 review):** the plugin sets a `sizes`
+  property on each grouped img reflecting actual render width — Astro's
+  default derives `sizes` from intrinsic width and over-fetches ~2x on the
+  `md:w-1/2` column. Values by group count (grid: 1 col; 2 cols for
+  count≥2; 3 cols at ≥768px for count≥3):
+  - count 1 → `(min-width: 768px) 50vw, 100vw`
+  - count 2 → `(min-width: 768px) 25vw, 50vw`
+  - count ≥3 → `(min-width: 768px) 17vw, 50vw`
+    Add a test asserting the property. **Empirical caveat:** Astro's own
+    image rewriting runs after this plugin and may override `sizes`; Task 3's
+    build check must confirm the emitted HTML honors it — if Astro wins,
+    remove the rewrite (and its test) and note that in the Task 3 commit.
 
 **Step 1: Write the failing tests**
 
