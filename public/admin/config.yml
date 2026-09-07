@@ -12,6 +12,8 @@ collections:
   - name: blog
     label: Blog
     folder: posts/blog
+    media_folder: images
+    public_folder: images
     create: true
     slug: "{{slug}}"
     view_filters:
@@ -50,6 +52,8 @@ collections:
   - name: poetry
     label: Poetry
     folder: posts/poetry
+    media_folder: images
+    public_folder: images
     create: true
     slug: "{{slug}}"
     view_filters:
@@ -80,6 +84,8 @@ collections:
   - name: weeknotes
     label: Weeknotes
     folder: posts/weeknotes
+    media_folder: images
+    public_folder: images
     create: true
     slug: "{{slug}}"
     view_filters:
@@ -106,6 +112,8 @@ collections:
   - name: digitalGarden
     label: Digital Garden
     folder: posts/digital-garden
+    media_folder: images
+    public_folder: images
     create: true
     slug: "{{slug}}"
     view_filters:
@@ -131,6 +139,8 @@ collections:
   - name: notes
     label: Notes
     folder: posts/notes
+    media_folder: images
+    public_folder: images
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{hour}}{{minute}}"
     summary: "{{body}}"
@@ -147,6 +157,8 @@ collections:
   - name: pages
     label: Pages
     folder: posts/pages
+    media_folder: images
+    public_folder: images
     create: true
     slug: "{{slug}}"
     view_filters:
@@ -166,5 +178,9 @@ media_libraries:
         raster_image:
           format: webp
           quality: 85
+          # Bounding box, not a crop: Sveltia scales to fit within 3000x3000,
+          # matching the check-image-metadata guard's MAX_EDGE.
+          width: 3000
+          height: 3000
         svg:
           optimize: true
