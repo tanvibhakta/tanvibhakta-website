@@ -24,3 +24,15 @@ More prose before the blank-line-separated triple.
 ![smoke six](images/plan-smoke-test.jpg "A test caption")
 
 ![smoke seven](images/plan-smoke-test.jpg)
+
+And finally a blank-line-separated group of five.
+
+![smoke eight](images/plan-smoke-test.jpg)
+
+![smoke nine](images/plan-smoke-test.jpg)
+
+![smoke ten](images/plan-smoke-test.jpg)
+
+![smoke eleven](images/plan-smoke-test.jpg)
+
+![smoke twelve](images/plan-smoke-test.jpg)

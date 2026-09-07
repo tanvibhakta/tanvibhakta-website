@@ -377,7 +377,7 @@ enumerated version.
 .prose figure.gallery img {
   margin: 0;
   width: 100%;
-  cursor: zoom-in;
+  cursor: pointer; /* user-requested: plain pointer, not zoom-in */
 }
 .prose figure.gallery[data-count]:not([data-count="1"]) img {
   aspect-ratio: 1;
@@ -389,8 +389,10 @@ enumerated version.
 ```
 
 **Step 2:** First extend the smoke-test post to cover all variants: it
-currently holds two count-2 groups — add a lone image (count 1) and a
-blank-line-separated triple (count 3), all referencing the same file. Then
+currently holds two count-2 groups — add a lone image (count 1), a
+blank-line-separated triple (count 3), and a blank-line-separated group of
+five (count 5, exercising the open-ended 3-column rule past the old
+enumerated counts), all referencing the same file. Then
 `pnpm dev`, open the smoke-test draft, eyeball 1/2/3-image variants (single
 image full-width and uncropped; multi-image rows tidy).
 
@@ -422,6 +424,15 @@ button, makes tapping a slide image close, promotes inline images to
 keyboard-operable buttons (`tabindex`/`role`/Enter/Space), overlays `title`
 captions on slides (tooltips are hover-only), and picks up `100dvh`,
 `overscroll-behavior: contain`, `loading="lazy"`, and `block: "nearest"`.
+
+**User-requested UX changes (post-review):** inline gallery images use
+`cursor: pointer` instead of `zoom-in` (Task 4 CSS); the dialog backdrop is
+translucent (`rgb(0 0 0 / 0.65)`) so the page stays visible beneath and the
+overlay reads as an overlay, not a navigation; and the lightbox integrates
+with history — opening pushes a `{ lightbox: true }` state so the browser
+back button/gesture closes it, and every other close path consumes that
+entry via `history.back()` (a `closingFromPopstate` flag prevents
+double-back).
 
 **Step 1: Create the component:**
 
@@ -482,7 +493,17 @@ captions on slides (tooltips are hover-only), and picks up `100dvh`,
     return slide;
   };
 
+  // History integration: opening pushes a state so the browser back
+  // button/gesture closes the lightbox instead of leaving the page —
+  // on mobile especially, "back" is the instinctive dismiss gesture.
+  // Set while a popstate is closing the dialog, so the close handler
+  // knows the history entry is already consumed and doesn't back() again.
+  let closingFromPopstate = false;
+
   const open = (index: number) => {
+    // Guard: never push twice for one open (currently unreachable — inline
+    // images sit under the modal while it's open — but cheap insurance).
+    if (!dialog.open) history.pushState({ lightbox: true }, "");
     strip.replaceChildren(...proseImages.map(buildSlide));
     dialog.showModal();
     strip.children[index]?.scrollIntoView({
@@ -509,6 +530,24 @@ captions on slides (tooltips are hover-only), and picks up `100dvh`,
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog || event.target === strip) dialog.close();
     });
+    // Back button/gesture while open: close instead of navigating away.
+    window.addEventListener("popstate", () => {
+      if (dialog.open) {
+        closingFromPopstate = true;
+        dialog.close();
+      }
+    });
+    // "close" fires for EVERY close path (✕, image tap, backdrop, Esc).
+    // Unless this close was itself triggered by popstate, the pushed
+    // lightbox entry is still on the stack — consume it so the next back
+    // press navigates normally instead of no-opping on a stale entry.
+    dialog.addEventListener("close", () => {
+      if (closingFromPopstate) {
+        closingFromPopstate = false;
+      } else if (history.state?.lightbox) {
+        history.back();
+      }
+    });
   }
 </script>
 
@@ -522,7 +561,11 @@ captions on slides (tooltips are hover-only), and picks up `100dvh`,
     max-height: 100dvh;
     border: none;
     padding: 0;
-    background: rgb(0 0 0 / 0.92);
+    /* Translucent, not near-opaque: the page staying visible underneath is
+       what tells the user this is an overlay, not a navigation. The close
+       button and caption bar carry their own dark backgrounds, so their
+       contrast doesn't depend on this value. */
+    background: rgb(0 0 0 / 0.65);
   }
   .lightbox-close {
     position: absolute;

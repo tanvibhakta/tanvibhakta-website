@@ -54,7 +54,17 @@
     return slide;
   };
 
+  // History integration: opening pushes a state so the browser back
+  // button/gesture closes the lightbox instead of leaving the page —
+  // on mobile especially, "back" is the instinctive dismiss gesture.
+  // Set while a popstate is closing the dialog, so the close handler
+  // knows the history entry is already consumed and doesn't back() again.
+  let closingFromPopstate = false;
+
   const open = (index: number) => {
+    // Guard: never push twice for one open (currently unreachable — inline
+    // images sit under the modal while it's open — but cheap insurance).
+    if (!dialog.open) history.pushState({ lightbox: true }, "");
     strip.replaceChildren(...proseImages.map(buildSlide));
     dialog.showModal();
     strip.children[index]?.scrollIntoView({
@@ -81,6 +91,24 @@
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog || event.target === strip) dialog.close();
     });
+    // Back button/gesture while open: close instead of navigating away.
+    window.addEventListener("popstate", () => {
+      if (dialog.open) {
+        closingFromPopstate = true;
+        dialog.close();
+      }
+    });
+    // "close" fires for EVERY close path (✕, image tap, backdrop, Esc).
+    // Unless this close was itself triggered by popstate, the pushed
+    // lightbox entry is still on the stack — consume it so the next back
+    // press navigates normally instead of no-opping on a stale entry.
+    dialog.addEventListener("close", () => {
+      if (closingFromPopstate) {
+        closingFromPopstate = false;
+      } else if (history.state?.lightbox) {
+        history.back();
+      }
+    });
   }
 </script>
 
@@ -94,7 +122,11 @@
     max-height: 100dvh;
     border: none;
     padding: 0;
-    background: rgb(0 0 0 / 0.92);
+    /* Translucent, not near-opaque: the page staying visible underneath is
+       what tells the user this is an overlay, not a navigation. The close
+       button and caption bar carry their own dark backgrounds, so their
+       contrast doesn't depend on this value. */
+    background: rgb(0 0 0 / 0.65);
   }
   .lightbox-close {
     position: absolute;
