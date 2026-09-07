@@ -390,7 +390,19 @@ Plugin-emitted classes belong in global.css (per CLAUDE.md styling rules — the
 }
 ```
 
-**Step 2:** `pnpm dev`, open the smoke-test draft, eyeball 1/2/3-image variants (single image full-width and uncropped; multi-image rows tidy).
+**Step 2:** First extend the smoke-test post to cover all variants: it
+currently holds two count-2 groups — add a lone image (count 1) and a
+blank-line-separated triple (count 3), all referencing the same file. Then
+`pnpm dev`, open the smoke-test draft, eyeball 1/2/3-image variants (single
+image full-width and uncropped; multi-image rows tidy).
+
+Also eyeball `/work`: **accepted deviation (Task 3 review)** — @astrojs/mdx
+extends the markdown config, so the gallery plugin also wraps `work.mdx`'s
+portfolio image (count-1, full-width, correct sizes). This is deliberate:
+uniform behavior, and the Task 5 lightbox will apply there too. If it ever
+needs opting out, mirror rehypeAnchors' `skip`-by-path option — do NOT use
+`extendMarkdownConfig: false` (it would drop remarkBreaks and the anchor
+plugins from MDX).
 
 **Step 3: Commit** (`feat: gallery grid styles`)
 
