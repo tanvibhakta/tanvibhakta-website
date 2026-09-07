@@ -24,8 +24,9 @@ that build-time already provides at this scale. External storage is also a
 second system of record: separate credentials, separate billing, links that
 rot independently of the repo. Revisit only via the repo-size threshold below.
 
-**Repo-size math** (the "feels wrong to commit images" numbers): the repo is
-34MB today. At ~1–1.5MB per display-grade image, 1GB — where clones start
+**Repo-size math** (the "feels wrong to commit images" numbers): full git
+history is 34MB today (measured via `git count-objects`/`du .git` in the main
+checkout — worktrees show less because their `.git` is a pointer file). At ~1–1.5MB per display-grade image, 1GB — where clones start
 feeling slow — is 600+ images away. Git never forgets (deleting an image
 doesn't shrink history), but photos are add-once content; they don't churn.
 
@@ -41,7 +42,12 @@ posts/blog/images/darjeeling-tea-garden.webp
 posts/weeknotes/images/…
 ```
 
-- A sibling `images/` folder per collection directory.
+- A sibling `images/` folder per collection directory (same shape for
+  poetry, digital-garden, notes, and pages). Note this folder is shared by
+  every entry in the collection — Sveltia's relative `media_folder` resolves
+  against the *collection* folder, not per-entry — so ambiguous filenames
+  (`sunset.webp`) should be prefixed with the post slug to avoid cross-post
+  collisions.
 - Markdown references are relative: `![alt](images/darjeeling-tea-garden.webp)`.
   This is the form Astro optimizes and the form Sveltia inserts.
 - Committed files are **display-grade**: longest edge ≤3000px, WebP q85
@@ -80,7 +86,9 @@ posts/weeknotes/images/…
    Every CMS upload lands as a ≤3000px WebP automatically. The canvas-based
    re-encode also strips EXIF/GPS structurally (edge case: an
    already-WebP file may pass through untransformed — the CI check below
-   catches it).
+   catches it). Smoke-test on first setup that `width` + `height` together
+   act as a bounding box (non-square image stays undistorted), not a crop —
+   Sveltia's docs describe each independently but not the combination.
 
 ## Astro rendering
 
@@ -88,12 +96,25 @@ posts/weeknotes/images/…
   relative markdown image site-wide gets responsive `srcset` widths, auto
   `sizes`, WebP output, explicit dimensions (no layout shift), and lazy
   loading. This one line is the "serve to each user as their bandwidth
-  allows" requirement. **Depends on Astro ≥5.10** — the version bump happens
-  first, in its own worktree/PR.
+  allows" requirement. **Depends on Astro ≥5.10** — the bump is part of
+  this implementation (a regular in-range `pnpm update astro`).
+  Set `image.breakpoints` explicitly (e.g. `[640, 960, 1280, 1600, 2048]`):
+  the article column is `md:w-1/2` (~50vw on desktop), and Astro's default
+  `sizes` is derived from intrinsic width, so without tuning, desktop
+  browsers over-fetch. Accepted slack, minimized by the breakpoint set.
 - **Albums via a grouping plugin — drag-and-drop IS album authoring.** A
-  remark/rehype plugin in the existing markdown pipeline (alongside
-  rehype-anchors) wraps any run of consecutive image-only paragraphs in a
-  gallery container (`<figure class="gallery" data-count="N">`). Layout by
+  rehype plugin in the existing markdown pipeline wraps any run of
+  consecutive image-only paragraphs in a gallery container
+  (`<figure class="gallery" data-count="N">`). Two ordering/shape
+  constraints discovered in review:
+  - It must be registered in `markdown.rehypePlugins` **before**
+    `rehypeAnchors`, which appends an anchor link to every `<p>` — grouping
+    first means image paragraphs stop matching; grouping after would bake
+    stray `#` links into galleries.
+  - `remark-breaks` is active, so images on adjacent lines arrive as ONE
+    `<p>` with `<br>` separators, while blank-line-separated images arrive
+    as consecutive `<p>`s. The plugin must normalize both shapes (and drop
+    the `<br>`s). Layout by
   count: 1 full-width, 2 side-by-side, 3+ a grid (`object-fit: cover`,
   shared `aspect-ratio`; classes styled in `global.css`, where
   plugin-emitted classes belong). Captions use markdown's title syntax:
@@ -120,10 +141,16 @@ posts/weeknotes/images/…
 
 `src/utils/feeds.ts` renders markdown itself, so relative image paths would
 404 in readers. Fix inside the build: collect each entry's colocated images
-via `import.meta.glob('/posts/**/images/*')`, call `getImage()` (cache hit —
-derivatives already exist), and rewrite feed-HTML `src` to
-`SITE_URL + result.src` at a single fixed width (~1600px). `srcset` isn't
-reliable in feed readers.
+via `import.meta.glob('/posts/**/images/*')`, call `getImage()`, and rewrite
+feed-HTML `src` to `SITE_URL + result.src` at a single fixed width taken
+from the `image.breakpoints` set (1280) so the transform is shared with the
+on-page derivatives rather than an extra sharp run. `srcset` isn't reliable
+in feed readers.
+
+Related listing fix: `extractFirstParagraph()` in
+`src/pages/digital-garden/index.astro` takes the first non-blank raw-body
+line as a fallback description and would show literal `![...](…)` syntax
+for an image-leading post — skip lines matching `/^!\[/`.
 
 ## Guard rails
 
@@ -139,8 +166,17 @@ reliable in feed readers.
 - **CI checks** (in the existing `content-validation.yml`, which already
   triggers on `posts/**`; no new secrets):
   - **EXIF/GPS backstop**: scan pushed images, fail on GPS metadata. This is
-    the only layer that covers Sveltia commits — the CMS writes via the
+    the only layer that sees Sveltia commits — the CMS writes via the
     GitHub API from the browser, so pre-commit hooks never run for it.
+    **Honest scope: this detects, it does not block.** Netlify deploys from
+    the push regardless of the Actions result, so a GPS-carrying image is
+    live (and in history) by the time the check fails. Notification path:
+    GitHub emails workflow failures to the pusher — Sveltia commits are
+    authored as Tanvi, so the failure email reaches her. Prevention lives
+    upstream (Sveltia's canvas re-encode, `pnpm img`'s metadata strip);
+    this is the alarm. Turning it into a real gate would mean routing
+    Sveltia through PRs + required checks — rejected as too much friction
+    for a personal site.
   - **Repo-size threshold**: `GET /repos/{repo}` (automatic `GITHUB_TOKEN`)
     reports full-history size; fail past **750MB**. Tripping it is the
     signal to design the R2 originals split (repo keeps display grade,
@@ -162,10 +198,15 @@ reliable in feed readers.
   machinery). The webhook keeps replying "only plain-text messages become
   notes." A future design can mine the 2026-08-24 brainstorming transcript.
 - **R2 originals archive** — parked behind the 750MB CI threshold.
-- **LLM alt-text generation** — tracked as a separate GitHub issue; images
-  ship with hand-written alt text (or empty) until then.
+- **LLM alt-text generation** — tracked as issue #118; images ship with
+  hand-written alt text (or empty) until then.
+- **`og:image` share cards** — `Layout.astro` emits no `og:image` today;
+  adding one (e.g. a post's first image) is a separate small feature, not
+  part of this design.
 
 ## Sequencing
 
-1. Astro update to ≥5.10 (separate worktree/PR, already planned).
-2. Everything above in one implementation.
+One implementation, starting with the in-range Astro update to ≥5.10 (first
+task of the plan — no longer a separate blocking worktree).
+
+Implementation plan: `docs/plans/2026-09-07-colocated-images-plan.md`.
