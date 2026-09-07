@@ -15,6 +15,7 @@
 ### Task 1: Astro ≥5.10 + responsive image config
 
 **Files:**
+
 - Modify: `package.json` / `pnpm-lock.yaml` (via CLI only)
 - Modify: `astro.config.mjs`
 
@@ -63,6 +64,7 @@ Run: `pnpm typecheck` and `pnpm vitest run` — both green.
 ### Task 2: Gallery grouping rehype plugin (TDD)
 
 **Files:**
+
 - Create: `src/plugins/rehype-gallery.mjs`
 - Test: `tests/rehype-gallery.test.ts`
 
@@ -127,8 +129,10 @@ describe("rehypeGallery", () => {
     expect(out).toHaveLength(1);
     expect(out[0].tagName).toBe("figure");
     expect(out[0].properties.className).toEqual(["gallery"]);
-    expect(out[0].properties.dataCount).toBe(2 - 1);
-    expect(out[0].children.map((c) => (c as HastElement).tagName)).toEqual(["img"]);
+    expect(out[0].properties.dataCount).toBe(1);
+    expect(out[0].children.map((c) => (c as HastElement).tagName)).toEqual([
+      "img",
+    ]);
   });
 
   test("adjacent-line images (one <p> with <br>) group; br dropped", () => {
@@ -168,7 +172,11 @@ describe("rehypeGallery", () => {
 
   test("first title attribute becomes the figcaption", () => {
     const out = run([
-      p(img("images/a.webp", { title: "Chai break" }), elem("br"), img("images/b.webp")),
+      p(
+        img("images/a.webp", { title: "Chai break" }),
+        elem("br"),
+        img("images/b.webp"),
+      ),
     ]);
     const caption = out[0].children.at(-1) as HastElement;
     expect(caption.tagName).toBe("figcaption");
@@ -177,7 +185,8 @@ describe("rehypeGallery", () => {
 });
 ```
 
-(The `2 - 1` in the first test is a placeholder for `1` — write it as `1`.)
+(`dataCount` as a hast property serializes to `data-count="N"` — verified:
+`property-information` kebab-cases any `data[A-Z]…` name generically.)
 
 **Step 2: Run to verify failure**
 
@@ -276,6 +285,7 @@ function galleryFigure(images) {
 ### Task 3: Register the plugin (ORDER MATTERS)
 
 **Files:**
+
 - Modify: `astro.config.mjs`
 
 **Step 1:** Import and register **before `rehypeSlug`** (i.e. first in `rehypePlugins` — definitely before `rehypeAnchors`, see plugin comment):
@@ -303,6 +313,7 @@ Expected: `data-count="2"`, and no `anchor-link` inside the figure.
 ### Task 4: Gallery styles
 
 **Files:**
+
 - Modify: `src/styles/global.css`
 
 Plugin-emitted classes belong in global.css (per CLAUDE.md styling rules — these elements have no component to carry Tailwind classes).
@@ -356,6 +367,7 @@ Plugin-emitted classes belong in global.css (per CLAUDE.md styling rules — the
 ### Task 5: Lightbox
 
 **Files:**
+
 - Create: `src/components/Lightbox.astro`
 - Modify: `src/layouts/Layout.astro` (render `<Lightbox />` just before `</body>`)
 
@@ -370,14 +382,16 @@ Native `<dialog>` + scroll-snap; no library. Progressive: without JS images rend
 // The largest srcset candidate is used for the full view.
 ---
 
-<dialog id="lightbox" class="lightbox" closedby="any">
+<dialog id="lightbox" class="lightbox">
   <div class="lightbox-strip" id="lightbox-strip"></div>
 </dialog>
 
 <script>
   const dialog = document.getElementById("lightbox") as HTMLDialogElement;
   const strip = document.getElementById("lightbox-strip")!;
-  const proseImages = [...document.querySelectorAll<HTMLImageElement>(".prose img")];
+  const proseImages = [
+    ...document.querySelectorAll<HTMLImageElement>(".prose img"),
+  ];
 
   const largestSource = (img: HTMLImageElement): string => {
     const candidates = img.srcset
@@ -441,6 +455,8 @@ Native `<dialog>` + scroll-snap; no library. Progressive: without JS images rend
 
 **Step 3: Manual verification** in `pnpm dev` on the smoke-test draft: click opens dialog at the clicked image, Esc and backdrop-click close, swiping snaps between images. Check a page with no images loads with no console errors.
 
+**Important:** `pnpm typecheck` does NOT parse `.astro` `<script>` blocks (verified — bare `tsc` skips them, and `astro check` isn't in this repo's toolchain), so the manual browser check is the only gate for this component. Be thorough here.
+
 **Step 4: Commit** (`feat: dialog lightbox for post images`)
 
 ---
@@ -448,20 +464,32 @@ Native `<dialog>` + scroll-snap; no library. Progressive: without JS images rend
 ### Task 6: digital-garden excerpt fix (TDD)
 
 **Files:**
+
 - Modify: `src/pages/digital-garden/index.astro` (`extractFirstParagraph`, lines ~11–26)
 
 The helper takes the first non-blank, non-`#` raw line as a fallback description — an image-leading post would show literal `![...](…)`. Skip image lines too: extend the existing line-rejection logic with `/^!\[/`. The helper lives in the .astro frontmatter; extract it to `src/utils/collections.ts` ONLY if a test is otherwise impossible — prefer the minimal in-place edit plus a manual check with the smoke-test entry moved to digital-garden shape. (If extracted, mirror an existing util test in `tests/collections.test.ts`.)
 
-Verify: temporary digital-garden entry starting with an image, `pnpm dev`, `/digital-garden` shows the post's first *text* line as the blurb. Commit (`fix: skip image lines in digital-garden excerpts`).
+Verify: temporary digital-garden entry starting with an image, `pnpm dev`, `/digital-garden` shows the post's first _text_ line as the blurb. **Delete the temporary entry before committing.** Commit (`fix: skip image lines in digital-garden excerpts`).
 
 ---
 
 ### Task 7: Feed image absolutization (TDD)
 
 **Files:**
-- Create: `src/utils/feed-images.ts`
+
+- Create: `src/utils/feed-images.ts` (pure sync rewriter — NO astro imports)
+- Create: `src/utils/feed-image-map.ts` (async resolver — imports `astro:assets`)
 - Modify: `src/utils/feeds.ts`
 - Test: `tests/feed-images.test.ts` (+ extend `tests/feeds.test.ts` mocks)
+
+**Module split rationale (load-bearing):** `astro:assets` is a virtual module
+only resolvable inside Astro's Vite pipeline — plain vitest cannot import it
+(verified: it errors at load). So the pure rewriter lives in its own module
+with no Astro imports, and only `feed-image-map.ts` touches `astro:assets`.
+`tests/feed-images.test.ts` imports ONLY the pure module; `tests/feeds.test.ts`
+(which transitively pulls in the resolver via `feeds.ts`) must add
+`vi.mock("astro:assets", () => ({ getImage: vi.fn(async () => ({ src: "/_astro/mock.webp" })) }))`
+alongside its existing `astro:content` mock.
 
 **Step 1: Failing tests** for the pure rewrite step (no Astro imports needed):
 
@@ -482,8 +510,12 @@ describe("absolutizeImages", () => {
   });
 
   test("absolute srcs pass through", () => {
+    // toContain, not toBe: sanitize-html re-serializes void elements
+    // ("<img …>" becomes "<img … />"), so byte-exact comparison fails.
     const html = '<img src="https://elsewhere.example/x.png">';
-    expect(absolutizeImages(html, map)).toBe(html);
+    expect(absolutizeImages(html, map)).toContain(
+      'src="https://elsewhere.example/x.png"',
+    );
   });
 
   test("unresolvable relative srcs are dropped rather than emitted broken", () => {
@@ -495,17 +527,55 @@ describe("absolutizeImages", () => {
 
 **Step 2:** Run → FAIL (module not found).
 
-**Step 3: Implement.** `feed-images.ts` has two halves — the pure sync rewriter (tested above; implement with `sanitize-html`'s `transformTags` + `exclusiveFilter`, already a dependency, so parsing stays consistent with `markdownToHtml`) and the async resolver used only at build:
+**Step 3: Implement.**
+
+`src/utils/feed-images.ts` — the pure rewriter (sanitize-html is already a
+dependency, so parsing stays consistent with `markdownToHtml`):
+
+```ts
+import sanitizeHtml from "sanitize-html";
+
+/** Rewrite relative img srcs through the map; drop unresolvable ones. */
+export function absolutizeImages(
+  html: string,
+  map: Map<string, string>,
+): string {
+  return sanitizeHtml(html, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+    transformTags: {
+      img: (tagName, attribs) => {
+        const src = attribs.src ?? "";
+        if (/^(https?:)?\/\//.test(src) || src.startsWith("/")) {
+          return { tagName, attribs };
+        }
+        const resolved = map.get(src);
+        // Renaming to a non-allowlisted tag makes sanitize-html discard
+        // the element — that alone is the drop mechanism (an
+        // exclusiveFilter would never even fire for a discarded tag).
+        return resolved
+          ? { tagName, attribs: { ...attribs, src: resolved } }
+          : { tagName: "dropped-img", attribs: {} };
+      },
+    },
+  });
+}
+```
+
+`src/utils/feed-image-map.ts` — the build-only resolver:
 
 ```ts
 import { getImage } from "astro:assets";
 import type { ImageMetadata } from "astro";
-import sanitizeHtml from "sanitize-html";
 import { SITE_URL } from "./site";
 
 const FEED_IMAGE_WIDTH = 1280; // from image.breakpoints — shares the derivative
 
-// Every colocated content image, keyed by site-root path.
+// Every colocated content image, keyed by site-root path. The shape
+// { default: ImageMetadata } is produced by Astro's asset Vite plugin at
+// build; under vitest this module is only ever reached via the
+// astro:assets mock in tests/feeds.test.ts. Perf note: this eager glob
+// imports every content image at module load — if vitest runs ever get
+// slow as the image library grows, convert to lazy glob + await.
 const sources = import.meta.glob<{ default: ImageMetadata }>(
   "/posts/**/images/*",
   { eager: true },
@@ -514,7 +584,8 @@ const sources = import.meta.glob<{ default: ImageMetadata }>(
 /**
  * Map of an entry's relative image references ("images/foo.webp") to
  * absolute optimized URLs. entryFilePath is entry.filePath from the glob
- * loader, e.g. "posts/blog/2026-09-07-my-post.md".
+ * loader, e.g. "posts/blog/2026-09-07-my-post.md" (root-relative POSIX —
+ * verified in Astro's glob loader source).
  */
 export async function entryImageMap(
   entryFilePath: string | undefined,
@@ -533,32 +604,7 @@ export async function entryImageMap(
   }
   return map;
 }
-
-/** Rewrite relative img srcs through the map; drop unresolvable ones. */
-export function absolutizeImages(
-  html: string,
-  map: Map<string, string>,
-): string {
-  return sanitizeHtml(html, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
-    transformTags: {
-      img: (tagName, attribs) => {
-        const src = attribs.src ?? "";
-        if (/^(https?:)?\/\//.test(src) || src.startsWith("/")) {
-          return { tagName, attribs };
-        }
-        const resolved = map.get(src);
-        return resolved
-          ? { tagName, attribs: { ...attribs, src: resolved } }
-          : { tagName: "!drop-img", attribs: {} };
-      },
-    },
-    exclusiveFilter: (frame) => frame.tag === "!drop-img",
-  });
-}
 ```
-
-(Adjust the drop mechanism to whatever sanitize-html idiom works — the test pins the behavior, not the mechanism.)
 
 **Step 4:** In `feeds.ts`, both `generateMainFeed` and `generateCollectionFeed` item mappers become async: `content: absolutizeImages(markdownToHtml(entry.body), await entryImageMap(entry.filePath))` (use `Promise.all` over the map callbacks). Extend the `TestEntry` type/mocks in `tests/feeds.test.ts` with `filePath`, and add `vi.mock("astro:assets", …)` returning a fake `getImage`.
 
@@ -569,6 +615,7 @@ export function absolutizeImages(
 ### Task 8: `pnpm img` optimize script (TDD)
 
 **Files:**
+
 - Create: `scripts/optimize-image.ts`
 - Modify: `package.json` (add script `"img": "node scripts/optimize-image.ts"`)
 - Test: `tests/optimize-image.test.ts`
@@ -635,21 +682,30 @@ export async function optimizeImage(inputPath: string): Promise<string> {
   const outPath = inputPath.replace(/\.[^.]+$/, ".webp");
   await sharp(inputPath)
     .rotate()
-    .resize({ width: 3000, height: 3000, fit: "inside", withoutEnlargement: true })
+    .resize({
+      width: 3000,
+      height: 3000,
+      fit: "inside",
+      withoutEnlargement: true,
+    })
     .webp({ quality: 85, effort: 6, smartSubsample: true })
     .toFile(outPath);
   return outPath;
 }
 
 const cliInput = process.argv[2];
-if (cliInput && import.meta.url.endsWith(process.argv[1].replace(/\\/g, "/"))) {
+if (cliInput && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const out = await optimizeImage(cliInput);
   console.log(`wrote ${out}`);
   console.log(`markdown: ![](images/${basename(out)} "")`);
 }
 ```
 
-(Follow `scripts/new-content.ts` / `scripts/transcode-audio.ts` idioms for the CLI-entry guard — check what they do and match it. Note node ≥24 runs TS directly; that's why `pnpm img` can be plain `node`.)
+(Add `import { pathToFileURL } from "node:url";` to the imports. The guard is
+needed because — unlike `scripts/new-content.ts` / `scripts/transcode-audio.ts`,
+which are never imported and so carry no guard — this module IS imported by its
+test. `pathToFileURL` comparison is the canonical form. Node ≥24 runs TS
+directly; that's why `pnpm img` can be plain `node`.)
 
 **Step 4:** Tests PASS; try the CLI once on a real photo. **Step 5: Commit** (`feat: pnpm img optimize script`).
 
@@ -658,6 +714,7 @@ if (cliInput && import.meta.url.endsWith(process.argv[1].replace(/\\/g, "/"))) {
 ### Task 9: Image guard for lint-staged + CI (TDD)
 
 **Files:**
+
 - Create: `scripts/check-image-metadata.ts`
 - Modify: `package.json` (lint-staged block)
 - Test: `tests/check-image-metadata.test.ts`
@@ -686,28 +743,29 @@ Verify manually: stage an oversized jpeg under `posts/blog/images/`, attempt a c
 ### Task 10: CI checks — EXIF backstop + repo size
 
 **Files:**
+
 - Modify: `.github/workflows/content-validation.yml`
 
 Append two steps to the existing `validate` job (it already checks out, installs pnpm, and runs on `posts/**` pushes — sharp is in node_modules after `pnpm install`):
 
 ```yaml
-      - name: Image metadata / size backstop (detects, does not block deploys)
-        run: |
-          files=$(find posts -path '*/images/*' -type f)
-          if [ -n "$files" ]; then
-            node scripts/check-image-metadata.ts $files
-          fi
+- name: Image metadata / size backstop (detects, does not block deploys)
+  run: |
+    # -print0/-0: null-delimited so filenames with spaces survive;
+    # --no-run-if-empty so zero images is a pass, not an error.
+    find posts -path '*/images/*' -type f -print0 |
+      xargs -0 --no-run-if-empty node scripts/check-image-metadata.ts
 
-      - name: Repo size threshold (R2 trigger at 750MB)
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          size_kb=$(gh api "repos/${GITHUB_REPOSITORY}" --jq .size)
-          echo "repo size: ${size_kb} KB"
-          if [ "$size_kb" -gt 768000 ]; then
-            echo "::error::Repo exceeds 750MB — time to design the R2 originals split (see docs/plans/2026-09-07-colocated-images-design.md)"
-            exit 1
-          fi
+- name: Repo size threshold (R2 trigger at 750MB)
+  env:
+    GH_TOKEN: ${{ github.token }}
+  run: |
+    size_kb=$(gh api "repos/${GITHUB_REPOSITORY}" --jq .size)
+    echo "repo size: ${size_kb} KB"
+    if [ "$size_kb" -gt 768000 ]; then
+      echo "::error::Repo exceeds 750MB — time to design the R2 originals split (see docs/plans/2026-09-07-colocated-images-design.md)"
+      exit 1
+    fi
 ```
 
 Verify YAML with `gh workflow view` after push, or minimally by running the find/node line locally. Note per the design: these detect and email (GitHub notifies the pusher on failure) — they do not gate the Netlify deploy. **Commit** (`ci: image metadata backstop and repo-size threshold`).
@@ -717,6 +775,7 @@ Verify YAML with `gh workflow view` after push, or minimally by running the find
 ### Task 11: Netlify build-time alert plugin
 
 **Files:**
+
 - Create: `netlify/plugins/build-time-alert/manifest.yml`
 - Create: `netlify/plugins/build-time-alert/index.mjs`
 - Modify: `netlify.toml`
@@ -775,20 +834,21 @@ export const onEnd = async () => {
 ### Task 12: Sveltia config
 
 **Files:**
+
 - Modify: `public/admin/config.yml`
 
 **Step 1:** Add to EACH of the six collections (blog, poetry, weeknotes, digitalGarden, notes, pages), right after its `folder:` line:
 
 ```yaml
-    media_folder: images
-    public_folder: images
+media_folder: images
+public_folder: images
 ```
 
 **Step 2:** Extend the existing `media_libraries.default.config.transformations.raster_image` with:
 
 ```yaml
-          width: 3000
-          height: 3000
+width: 3000
+height: 3000
 ```
 
 **Step 3: Smoke test** (needs the local backend): `pnpm dev`, open `/admin`, create a draft blog post, drag a large NON-SQUARE jpeg into the body. Confirm: file lands in `posts/blog/images/`, reference inserted is `images/<name>.webp`, image is ≤3000px on its long edge and NOT distorted/cropped square (this verifies the width+height bounding-box assumption flagged in review — if it crops, drop `height` and keep `width` only), and no EXIF (`node scripts/check-image-metadata.ts posts/blog/images/<name>.webp`).
@@ -800,6 +860,7 @@ export const onEnd = async () => {
 ### Task 13: Docs + cleanup + final verification
 
 **Files:**
+
 - Modify: `README.md` (commands section: `pnpm img`), `CLAUDE.md` (short "Images" note pointing at the design doc: colocated `images/` folders, relative refs, ≤3000px WebP, adjacency = album)
 - Delete: the Task-1 smoke-test post + image (unless promoted to a real fixture — if kept, move under a `_`-prefixed draft the sitemap already excludes)
 
