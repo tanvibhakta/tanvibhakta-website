@@ -11,7 +11,7 @@ Two (two!!) different projects I’ve worked on recently have had engineers deci
 
 It’s not the fault of the junior developer, of course. They [don’t know what they don’t know](https://en.wikipedia.org/wiki/Dunning%E2%80%93Kruger_effect)! It took me a while too, to understand the kinds of complexities that can exist in any technical problem space, and how to best tackle them. They haven’t thought about how to prompt the llm to tell them what they _should_ know.
 
-I think I understand the hype that surrounded “prompt engineering” a while ago. Knowing how to tell [person/machine/blob] exactly what to do, what not to do, what to consider, and how to respond, all in one go is a skill of clarity that very few have. At the time the hype felt like snake oil. Now I still side eye people who use it unironically, but it’s interesting problem to solve: In a world where llms are a normal part of the toolkit, how can we help people ~craft better prompts~ arrive at levers for manipulating an information machine better?
+I think I understand the hype that surrounded “prompt engineering” a while ago. Knowing how to tell [person/machine/blob] exactly what to do, what not to do, what to consider, and how to respond, all in one go is a skill of clarity that very few have. At the time the hype felt like snake oil. Now I still side eye people who use it unironically, but it’s interesting problem to solve: In a world where llms are a normal part of the toolkit, how can we help people ~~craft better prompts~~ arrive at levers for manipulating an information machine better?
 
 Some solutions off the top of my head, specific to engineering contexts:
 

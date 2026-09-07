@@ -10,7 +10,7 @@ Project Hail Mary 3/5
 
 I think this movie was a good watch, and I don’t regret going. But two things;
 
-1. I wish I’d watched the movie in an IMAX - ideally a 70mm IMAX, but even a regular IMAX would do. Unfortunately [India no longer has any 70mm IMAX projectors]() that show commercial movies, so it wasn’t to be.
+1. I wish I’d watched the movie in an IMAX - ideally a 70mm IMAX, but even a regular IMAX would do. Unfortunately [India no longer has any 70mm IMAX projectors](<>) that show commercial movies, so it wasn’t to be.
 
 2. I’ve listened to the audiobook, so I was familiar with the plot. My whole review henceforth hinges on this; if you’re looking for a review of the movie by itself then this review is not for you. But if you’re looking for a review of the \*story\* and how best to consume it - well, strap in.
 

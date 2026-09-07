@@ -48,7 +48,7 @@ Here’s a detailed breakdown of how I use worktrees to tackle issues of differe
 
 I think [skills](https://claude.com/docs/skills/overview) were the game changer for me. They're essentially just markdown files with some frontmatter that contain all those "You are a Senior Software Engineer" prompts we used to keep around in the clipboard from a few months ago.
 
-I know a lot of people use [workflows](), which are essentially more invokable versions of [my ten-step program]() from above. A workflow allows one to attach a type of subagent and a type of skill to every task, and is often used to set claude loose on the codebase overnight. At work a colleague uses them extensively but they're a little to out of control for me right now - or maybe I'm not confident enough in my ability to spec a problem out well enough without oversight :)
+I know a lot of people use [workflows](<>), which are essentially more invokable versions of [my ten-step program](<>) from above. A workflow allows one to attach a type of subagent and a type of skill to every task, and is often used to set claude loose on the codebase overnight. At work a colleague uses them extensively but they're a little to out of control for me right now - or maybe I'm not confident enough in my ability to spec a problem out well enough without oversight :)
 
 ## More general improvements I want to make
 

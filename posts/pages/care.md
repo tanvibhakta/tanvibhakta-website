@@ -50,7 +50,7 @@ June 2025 edit: I am off of gluten and dairy for the next two months to observe 
 - cold compress with cotton wrapped around it, pressed to area of pain
 - hot water pack pressed to place
 - ~~dynamic stretches~~
-  - ~~If I have time and haven't showered yet, [my full calisthenics]() warm up routine - just to get the blood flowing~~
+  - ~~If I have time and haven't showered yet, [my full calisthenics](<>) warm up routine - just to get the blood flowing~~
   - ~~neck rotations, direction stretches~~
   - ~~loose jumps, arm swings, shoulder cars~~
   - ~~Yuri's shoulder stretches~~
@@ -61,7 +61,7 @@ If you know how to identify knots and can offer to remove them for me, that is v
 
 Hydration is the biggest one here. If I mention I have a headache coming up and you hand me a bottle of electral[^1], I will love you forever.
 
-I could also have a headache if I haven't eaten. See [Food](). I am more likely to eat food I am handed than seek it out myself.
+I could also have a headache if I haven't eaten. See [Food](<>). I am more likely to eat food I am handed than seek it out myself.
 
 Can I breathe properly? When was the last time I saline cleansed my nose? If I don't have my spray with me (there's generally one in the car) can/should I take an antihistamine?
 

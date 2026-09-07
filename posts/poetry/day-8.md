@@ -4,11 +4,11 @@ publishedOn: 2025-04-08
 ---
 
 My parents  
- from Chikmagalur  
+from Chikmagalur  
 My context  
- the old forgotten gulf  
+the old forgotten gulf  
 My constant  
- english entertainment  
+english entertainment  
 A true false third culture kid
 
 Let me be one of your continentals, Shahid  
