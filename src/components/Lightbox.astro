@@ -1,0 +1,73 @@
+---
+// Full-screen viewer for post images. Collects every .prose img at load,
+// opens a <dialog> scroll-snap strip on click, starting at the tapped image.
+// The largest srcset candidate is used for the full view.
+---
+
+<dialog id="lightbox" class="lightbox">
+  <div class="lightbox-strip" id="lightbox-strip"></div>
+</dialog>
+
+<script>
+  const dialog = document.getElementById("lightbox") as HTMLDialogElement;
+  const strip = document.getElementById("lightbox-strip")!;
+  const proseImages = [
+    ...document.querySelectorAll<HTMLImageElement>(".prose img"),
+  ];
+
+  const largestSource = (img: HTMLImageElement): string => {
+    const candidates = img.srcset
+      .split(",")
+      .map((c) => c.trim().split(/\s+/))
+      .filter((parts) => parts[0]);
+    if (candidates.length === 0) return img.src;
+    candidates.sort((a, b) => parseInt(b[1] ?? "0") - parseInt(a[1] ?? "0"));
+    return candidates[0][0];
+  };
+
+  if (dialog && proseImages.length > 0) {
+    proseImages.forEach((img, index) => {
+      img.addEventListener("click", () => {
+        strip.replaceChildren(
+          ...proseImages.map((source) => {
+            const full = document.createElement("img");
+            full.src = largestSource(source);
+            full.alt = source.alt;
+            if (source.title) full.title = source.title;
+            return full;
+          }),
+        );
+        dialog.showModal();
+        strip.children[index]?.scrollIntoView({ inline: "center" });
+      });
+    });
+    // Click on the backdrop (the dialog itself, not an img) closes.
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog || event.target === strip) dialog.close();
+    });
+  }
+</script>
+
+<style>
+  .lightbox {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    border: none;
+    padding: 0;
+    background: rgb(0 0 0 / 0.92);
+  }
+  .lightbox-strip {
+    display: flex;
+    height: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+  .lightbox-strip :global(img) {
+    flex: 0 0 100%;
+    height: 100%;
+    object-fit: contain;
+    scroll-snap-align: center;
+  }
+</style>
