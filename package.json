@@ -64,6 +64,9 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md,astro}": [
       "prettier --write"
+    ],
+    "posts/**/images/*": [
+      "node scripts/check-image-metadata.ts"
     ]
   }
 }
