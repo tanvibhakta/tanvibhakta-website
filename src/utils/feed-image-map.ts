@@ -1,5 +1,6 @@
 import { getImage } from "astro:assets";
 import type { ImageMetadata } from "astro";
+import { matchEntryImages } from "./feed-images";
 import { SITE_URL } from "./site";
 
 const FEED_IMAGE_WIDTH = 1280; // from image.breakpoints — shares the derivative
@@ -19,19 +20,18 @@ const sources = import.meta.glob<{ default: ImageMetadata }>(
  * Map of an entry's relative image references ("images/foo.webp") to
  * absolute optimized URLs. entryFilePath is entry.filePath from the glob
  * loader, e.g. "posts/blog/2026-09-07-my-post.md" (root-relative POSIX —
- * verified in Astro's glob loader source).
+ * verified in Astro's glob loader source). The path matching itself is the
+ * pure matchEntryImages (unit-tested in tests/feed-images.test.ts — this
+ * module can't be imported under vitest because of astro:assets).
  */
 export async function entryImageMap(
   entryFilePath: string | undefined,
 ): Promise<Map<string, string>> {
   const map = new Map<string, string>();
-  if (!entryFilePath) return map;
-  const dir = entryFilePath.replace(/[^/]+$/, "");
-  for (const [path, module] of Object.entries(sources)) {
-    if (!path.startsWith(`/${dir}images/`)) continue;
-    const relative = path.slice(dir.length + 1);
+  const matched = matchEntryImages(entryFilePath, Object.keys(sources));
+  for (const [relative, path] of matched) {
     const image = await getImage({
-      src: module.default,
+      src: sources[path].default,
       width: FEED_IMAGE_WIDTH,
     });
     map.set(relative, new URL(image.src, SITE_URL).href);
