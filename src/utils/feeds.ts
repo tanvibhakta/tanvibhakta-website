@@ -10,6 +10,8 @@ import {
   type CollectionName,
 } from "./collections";
 import { formatLongDate, noteWallClockToInstant } from "./date-helpers";
+import { absolutizeImages } from "./feed-images";
+import { entryImageMap } from "./feed-image-map";
 import { getNoteNumbers } from "./notes";
 import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION } from "./site";
 
@@ -29,7 +31,9 @@ function markdownToHtml(markdown: string | undefined): string {
 // Single source of truth for which collections never get feeds. The
 // FeedCollectionName type is derived from this list, so adding a collection
 // here automatically removes it from the type as well.
-const EXCLUDED_COLLECTIONS = ["pages"] as const satisfies readonly CollectionName[];
+const EXCLUDED_COLLECTIONS = [
+  "pages",
+] as const satisfies readonly CollectionName[];
 
 /**
  * Configuration for RSS/Atom feed generation
@@ -98,6 +102,18 @@ function feedPubDate(entry: FeedEntry): Date {
     : entry.data.publishedOn;
 }
 
+/**
+ * The HTML body for a feed item: rendered markdown with relative image
+ * references rewritten to absolute optimized URLs (unresolvable ones
+ * dropped) — feed readers can't resolve site-relative paths.
+ */
+async function feedItemContent(entry: FeedEntry): Promise<string> {
+  return absolutizeImages(
+    markdownToHtml(entry.body),
+    await entryImageMap(entry.filePath),
+  );
+}
+
 export async function getAllCollectionEntries(): Promise<FeedEntry[]> {
   const allEntries: FeedEntry[] = [];
 
@@ -125,12 +141,14 @@ export async function generateMainFeed() {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     site: SITE_URL,
-    items: sortedEntries.map((entry) => ({
-      title: `[${capitalizeFirst(entry.collection)}] ${feedItemTitle(entry)}`,
-      pubDate: feedPubDate(entry),
-      link: `${getEntryPath(entry.collection, entry.id)}/`,
-      content: markdownToHtml(entry.body),
-    })),
+    items: await Promise.all(
+      sortedEntries.map(async (entry) => ({
+        title: `[${capitalizeFirst(entry.collection)}] ${feedItemTitle(entry)}`,
+        pubDate: feedPubDate(entry),
+        link: `${getEntryPath(entry.collection, entry.id)}/`,
+        content: await feedItemContent(entry),
+      })),
+    ),
   });
 }
 
@@ -150,13 +168,15 @@ export async function generateCollectionFeed(
     title: `${SITE_TITLE} - ${capitalizeFirst(collectionName)}`,
     description: `${capitalizeFirst(collectionName)} posts from ${SITE_TITLE}`,
     site: SITE_URL,
-    items: sortedEntries.map((entry) => ({
-      title: feedItemTitle(entry),
-      pubDate: feedPubDate(entry),
-      link: noteNumbers
-        ? `/notes/${noteNumbers.get(entry.id)}/`
-        : `${getEntryPath(entry.collection, entry.id)}/`,
-      content: markdownToHtml(entry.body),
-    })),
+    items: await Promise.all(
+      sortedEntries.map(async (entry) => ({
+        title: feedItemTitle(entry),
+        pubDate: feedPubDate(entry),
+        link: noteNumbers
+          ? `/notes/${noteNumbers.get(entry.id)}/`
+          : `${getEntryPath(entry.collection, entry.id)}/`,
+        content: await feedItemContent(entry),
+      })),
+    ),
   });
 }
