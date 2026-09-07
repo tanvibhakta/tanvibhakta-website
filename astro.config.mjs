@@ -10,6 +10,7 @@ import remarkBreaks from "remark-breaks";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { rehypeAnchors } from "./src/plugins/rehype-anchors.mjs";
+import { rehypeGallery } from "./src/plugins/rehype-gallery.mjs";
 
 // https://astro.build/config
 export default defineConfig({
@@ -38,6 +39,9 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [remarkBreaks],
     rehypePlugins: [
+      // Must come first: galleries absorb image-only paragraphs before
+      // rehypeAnchors targets every <p> (see plugin header comment).
+      rehypeGallery,
       rehypeSlug,
       [
         rehypeAutolinkHeadings,
