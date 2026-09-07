@@ -1,3 +1,4 @@
+import { rename } from "node:fs/promises";
 import { basename } from "node:path";
 import { pathToFileURL } from "node:url";
 import sharp from "sharp";
@@ -10,6 +11,11 @@ import sharp from "sharp";
  */
 export async function optimizeImage(inputPath: string): Promise<string> {
   const outPath = inputPath.replace(/\.[^.]+$/, ".webp");
+  // sharp refuses same-file input/output, so a .webp input (or an
+  // extensionless path, where replace() is a no-op) is written to a temp
+  // sibling and renamed over the original.
+  const inPlace = outPath === inputPath;
+  const writePath = inPlace ? `${outPath}.optimizing.tmp` : outPath;
   await sharp(inputPath)
     .rotate()
     .resize({
@@ -19,7 +25,8 @@ export async function optimizeImage(inputPath: string): Promise<string> {
       withoutEnlargement: true,
     })
     .webp({ quality: 85, effort: 6, smartSubsample: true })
-    .toFile(outPath);
+    .toFile(writePath);
+  if (inPlace) await rename(writePath, outPath);
   return outPath;
 }
 
@@ -27,7 +34,12 @@ export async function optimizeImage(inputPath: string): Promise<string> {
 // which are never imported — this module IS imported by its test.
 const cliInput = process.argv[2];
 if (cliInput && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const out = await optimizeImage(cliInput);
-  console.log(`wrote ${out}`);
-  console.log(`markdown: ![](images/${basename(out)} "")`);
+  try {
+    const out = await optimizeImage(cliInput);
+    console.log(`wrote ${out}`);
+    console.log(`markdown: ![](images/${basename(out)} "")`);
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  }
 }

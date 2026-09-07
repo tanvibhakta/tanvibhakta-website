@@ -17,6 +17,9 @@ describe("optimizeImage", () => {
       .jpeg()
       .withExifMerge({ IFD0: { ImageDescription: "secret" } })
       .toFile(input);
+    // Self-proving: the fixture must actually carry EXIF, or the strip
+    // assertion below would pass vacuously.
+    expect((await sharp(input).metadata()).exif).toBeDefined();
 
     const outPath = await optimizeImage(input);
     expect(outPath).toBe(join(dir, "big.webp"));
@@ -35,5 +38,23 @@ describe("optimizeImage", () => {
       .toFile(input);
     const outPath = await optimizeImage(input);
     expect((await sharp(outPath).metadata()).width).toBe(800);
+  });
+
+  test("webp input is optimized in place (same path)", async () => {
+    const input = join(dir, "already.webp");
+    await sharp({
+      create: { width: 4000, height: 2000, channels: 3, background: "#555" },
+    })
+      .webp()
+      .withExifMerge({ IFD0: { ImageDescription: "secret" } })
+      .toFile(input);
+    expect((await sharp(input).metadata()).exif).toBeDefined();
+
+    const outPath = await optimizeImage(input);
+    expect(outPath).toBe(input);
+    const meta = await sharp(outPath).metadata();
+    expect(meta.format).toBe("webp");
+    expect(meta.width).toBe(3000);
+    expect(meta.exif).toBeUndefined();
   });
 });
