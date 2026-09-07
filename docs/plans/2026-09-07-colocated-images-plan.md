@@ -47,7 +47,7 @@ mkdir -p posts/blog/images
 cp <some-test-image>.jpg posts/blog/images/plan-smoke-test.jpg
 ```
 
-Add `posts/blog/9999-01-01-image-smoke-test.md` with frontmatter (`title: image smoke test`, `publishedOn: 9999-01-01`, `draft: true`) and body `![smoke](images/plan-smoke-test.jpg)`.
+Add `posts/blog/9999-01-01-image-smoke-test.md` with frontmatter (`title: image smoke test`, `publishedOn: 9999-01-01`, `draft: true`) and body `![smoke](images/plan-smoke-test.jpg)`. (Superseded by numbered fixtures: `plan-smoke-test.jpg` was later replaced by 13 distinct sharp-generated images `plan-smoke-01.jpg`…`plan-smoke-13.jpg` — one per smoke-post slot — so lightbox navigation is visually verifiable.)
 
 Run: `pnpm build`
 Then: `rg -o 'srcset="[^"]*"' dist/drafts/blog/9999-01-01-image-smoke-test/index.html | head -1`
@@ -392,7 +392,8 @@ enumerated version.
 currently holds two count-2 groups — add a lone image (count 1), a
 blank-line-separated triple (count 3), and a blank-line-separated group of
 five (count 5, exercising the open-ended 3-column rule past the old
-enumerated counts), all referencing the same file. Then
+enumerated counts), all referencing the same file (superseded by numbered
+fixtures: each slot now references its own `plan-smoke-NN.jpg`). Then
 `pnpm dev`, open the smoke-test draft, eyeball 1/2/3-image variants (single
 image full-width and uncropped; multi-image rows tidy).
 
@@ -432,7 +433,11 @@ overlay reads as an overlay, not a navigation; and the lightbox integrates
 with history — opening pushes a `{ lightbox: true }` state so the browser
 back button/gesture closes it, and every other close path consumes that
 entry via `history.back()` (a `closingFromPopstate` flag prevents
-double-back).
+double-back). A later user request added arrow-key navigation: Left/Right
+move one slide (clamped at the ends), with the current slide derived from
+scroll position at keypress time so touch-swipes and keys stay consistent —
+necessary because the ✕ close button holds focus in the open dialog, making
+arrows dead keys otherwise.
 
 **Step 1: Create the component:**
 
@@ -529,6 +534,25 @@ double-back).
     // Click on the backdrop (the dialog itself, not a slide img) closes.
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog || event.target === strip) dialog.close();
+    });
+    // Arrow-key navigation (user-requested): the ✕ close button holds focus
+    // while the dialog is open, so without this handler Left/Right are dead
+    // keys in the dialog. The current slide is derived from scroll position
+    // at keypress time, so touch-swipes and arrow keys stay consistent.
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      const current = Math.round(strip.scrollLeft / strip.clientWidth);
+      const delta = event.key === "ArrowRight" ? 1 : -1;
+      const target = Math.min(
+        Math.max(current + delta, 0),
+        strip.children.length - 1,
+      );
+      strip.children[target]?.scrollIntoView({
+        inline: "center",
+        block: "nearest",
+        behavior: "smooth",
+      });
     });
     // Back button/gesture while open: close instead of navigating away.
     window.addEventListener("popstate", () => {
@@ -1025,7 +1049,7 @@ height: 3000
 **Files:**
 
 - Modify: `README.md` (commands section: `pnpm img`), `CLAUDE.md` (short "Images" note pointing at the design doc: colocated `images/` folders, relative refs, ≤3000px WebP, adjacency = album)
-- Delete: the Task-1 smoke-test post + image (unless promoted to a real fixture — if kept, move under a `_`-prefixed draft the sitemap already excludes)
+- Delete: the smoke-test post `posts/blog/9999-01-01-image-smoke-test.md` and the 13 numbered fixtures `posts/blog/images/plan-smoke-01.jpg`…`plan-smoke-13.jpg` (unless promoted to real fixtures — if kept, move under a `_`-prefixed draft the sitemap already excludes)
 
 **Final gate (run bare, never through tail/head):**
 

@@ -91,6 +91,25 @@
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog || event.target === strip) dialog.close();
     });
+    // Arrow-key navigation (user-requested): the ✕ close button holds focus
+    // while the dialog is open, so without this handler Left/Right are dead
+    // keys in the dialog. The current slide is derived from scroll position
+    // at keypress time, so touch-swipes and arrow keys stay consistent.
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      const current = Math.round(strip.scrollLeft / strip.clientWidth);
+      const delta = event.key === "ArrowRight" ? 1 : -1;
+      const target = Math.min(
+        Math.max(current + delta, 0),
+        strip.children.length - 1,
+      );
+      strip.children[target]?.scrollIntoView({
+        inline: "center",
+        block: "nearest",
+        behavior: "smooth",
+      });
+    });
     // Back button/gesture while open: close instead of navigating away.
     window.addEventListener("popstate", () => {
       if (dialog.open) {
