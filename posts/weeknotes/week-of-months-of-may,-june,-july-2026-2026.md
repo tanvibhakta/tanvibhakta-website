@@ -58,6 +58,6 @@ Lots, details on [my Goodreads profile](https://www.goodreads.com/tanvibhakta) (
 ### Listening to
 
 - I went to the [middle room music festival](https://linktr.ee/middleroomblr) where I discovered there is - more than one form of electronic music - I might like those other forms
-- Thank you to [Devanjal]() who called it that I liked synthwave. Current artists on the roster include [Curtain Blue](https://open.spotify.com/artist/6r8STBLeZpOSMiYySins15), [The Canons](https://open.spotify.com/artist/7FtCyCJCJaxabYO7Uyda5B), Late Night Dinner Party, [Ariana Grande](https://open.spotify.com/artist/66CXWjxzNUsdJxJ2JdwvnR)’s new album, Nightcall, The Daughters, [Magdalene Bay](https://open.spotify.com/artist/1oPRcJUkloHaRLYx0olBLJ).
+- Thank you to [Devanjal](<>) who called it that I liked synthwave. Current artists on the roster include [Curtain Blue](https://open.spotify.com/artist/6r8STBLeZpOSMiYySins15), [The Canons](https://open.spotify.com/artist/7FtCyCJCJaxabYO7Uyda5B), Late Night Dinner Party, [Ariana Grande](https://open.spotify.com/artist/66CXWjxzNUsdJxJ2JdwvnR)’s new album, Nightcall, The Daughters, [Magdalene Bay](https://open.spotify.com/artist/1oPRcJUkloHaRLYx0olBLJ).
 
 [^1]: Three months when I started writing this, 4 months at the time of publishing

@@ -17,7 +17,7 @@ Rebase optimises for code preservation - but with Claude code and the ilk, code 
 
 ### 3. You cannot confirm the atomicity of a commit.
 
-Since a merge commit is a new commit, you can run precommit hooks and other validators and confirm that your merge works as intended. That’s not true for rebase ([precommit doesn’t run after every conflict fixed]()). It’s hard to fix conflicts correctly when you have 112 commits in one branch and 52 commits in the other and they touch a lot of the same services. (This commit flow seems to be normal for teams heavily relying on codegen practices!). What this means is that you’ll often have a commit at the end anyway that “fixes something” - yes you could track down what commit the issue originated from and do a [fixup](), but how likely are you to to this at 8pm before your kid’s birthday party and you want to just get the PR in?
+Since a merge commit is a new commit, you can run precommit hooks and other validators and confirm that your merge works as intended. That’s not true for rebase ([precommit doesn’t run after every conflict fixed](<>)). It’s hard to fix conflicts correctly when you have 112 commits in one branch and 52 commits in the other and they touch a lot of the same services. (This commit flow seems to be normal for teams heavily relying on codegen practices!). What this means is that you’ll often have a commit at the end anyway that “fixes something” - yes you could track down what commit the issue originated from and do a [fixup](<>), but how likely are you to to this at 8pm before your kid’s birthday party and you want to just get the PR in?
 
 I suspect rebase can work well if
 

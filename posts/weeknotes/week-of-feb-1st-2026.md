@@ -10,7 +10,7 @@ tags:
 
 I spent last weekend at Lollapalooza, and I [wrote about the experience](/blog/lollapalooza-2026).
 
-I spent Monday in Bombay doing some much needed shopping, and then took the train overnight to Goa, where I’ve spent the last few days imposing on [Deepti](https://deeptimegh.com/)’s lovely home and hospitality, and overcoming my fear of dogs via proximity to Ira, the ~puppy Dee has just adopted~ smartest bestest puppy in the world!
+I spent Monday in Bombay doing some much needed shopping, and then took the train overnight to Goa, where I’ve spent the last few days imposing on [Deepti](https://deeptimegh.com/)’s lovely home and hospitality, and overcoming my fear of dogs via proximity to Ira, the ~~puppy Dee has just adopted~~ smartest bestest puppy in the world!
 
 Goa has changed so much. Most shocking to me has been the outsider sentiment. As early as 5 years ago, when I lived here, I was unable to speak Konkani to anyone because I speak only one of the [eight possible Konkanis](https://en.wikipedia.org/wiki/Konkani_language#Dialects) - and the one I speak is wrong for the region. This time, people were so glad to hear some konkani - any konkani! - that they actively engaged with me, responded with a smile, and made an effort to understand me. [Many words](https://kaustubhnaik.substack.com/p/how-to-belong-in-goa) [have been written](https://kagi.com/search?q=the+goan+identity&r=in&sh=sUFYrE68DRmstgP372yJYQ) about who is allowed to call themselves Goan. I don’t call myself Goan because I’m not, but I _am_ coastal. I so rarely get to speak my language, so I will take the crumbs I am offered.
 
@@ -25,7 +25,7 @@ I have changed so much in the years I have been coming to Goa. Here, in the past
 
 Today, I am tired. I was tired before Lolla, I have been tired since September, and I knew I would want to go home immediately after. So here I am, home in weather/clothes/eyes/food/loves. Today, I am tired but I am resting. I still spend ten hours a day working, but when I am done the empty trails and chirping birds greet me. I walked a dog and made small talk with the neighbours, and with the strangers at the tiny places I took myself to. I woke up with a headache for two days straight, and then Dee gave me a massage, I did my stretches, I basked in the sun, and I healed.
 
-I ~published~wrote four posts in three days! I am finishing what I started. After work, when I’m tired, I can actually pause and breathe instead of thinking about the next thing I need to do. I miss my friends when I’m eating a thali by myself, but not enough to go back. I can hear myself think after 5 months of just trudging forward. I think I’m going to spend the rest of this month here - accommodation, transportation, and cat care willing.
+I ~~published~~wrote four posts in three days! I am finishing what I started. After work, when I’m tired, I can actually pause and breathe instead of thinking about the next thing I need to do. I miss my friends when I’m eating a thali by myself, but not enough to go back. I can hear myself think after 5 months of just trudging forward. I think I’m going to spend the rest of this month here - accommodation, transportation, and cat care willing.
 
 I have eaten strawberries and dipped myself in clean salt water. I ran into an old friend of an old friend and we were surprisingly vulnerable with each other. I have taken myself out to write these notes, and to work. I am so content.
 
