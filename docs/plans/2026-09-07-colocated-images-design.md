@@ -90,31 +90,26 @@ posts/weeknotes/images/…
   loading. This one line is the "serve to each user as their bandwidth
   allows" requirement. **Depends on Astro ≥5.10** — the version bump happens
   first, in its own worktree/PR.
-- **Side-by-side images (albums in posts)**: markdown images written on
-  adjacent lines share a `<p>`; blank-line-separated images stack. CSS in
-  `global.css` turns multi-image paragraphs into an equal-width row:
-
-  ```css
-  .prose p:has(> img + img) {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
-    gap: 0.5rem;
-  }
-  ```
-
-  (plus `object-fit: cover` and a shared `aspect-ratio` for tidy rows).
-  Raw HTML `<img>` in markdown is never used — it bypasses the asset
-  pipeline entirely.
-- **MDX for curated layouts**: add `@astrojs/mdx`, widen loaders to
-  `**/*.{md,mdx}`. Individual posts can opt into `.mdx` for component use,
-  authored in Zed. MDX does **not** become the default: Sveltia has no MDX
-  support (Lexical-based editor outputs plain markdown and would mangle
-  JSX on round-trip), and drag-and-drop authoring is a core requirement.
-- **`Images.astro`**: generic gallery component (`paths: string[]` +
-  optional `sizes`), resolving via `import.meta.glob`, rendering
-  `<Picture>` with AVIF/WebP, figure/figcaption for captions, grid for 3+.
-  Used from `.mdx` posts now; ready for frontmatter-driven uses later.
+- **Albums via a grouping plugin — drag-and-drop IS album authoring.** A
+  remark/rehype plugin in the existing markdown pipeline (alongside
+  rehype-anchors) wraps any run of consecutive image-only paragraphs in a
+  gallery container (`<figure class="gallery" data-count="N">`). Layout by
+  count: 1 full-width, 2 side-by-side, 3+ a grid (`object-fit: cover`,
+  shared `aspect-ratio`; classes styled in `global.css`, where
+  plugin-emitted classes belong). Captions use markdown's title syntax:
+  `![alt](images/chai.webp "Chai break")` → `<figcaption>`. Prose between
+  images breaks the group — adjacency always means album; to stack
+  full-width images, put text (even an HTML comment) between them.
+  Sveltia only ever sees plain `![]()` lines, so dropping three files
+  into a draft creates an album with zero extra syntax. Raw HTML `<img>`
+  in markdown is never used — it bypasses the asset pipeline entirely.
+- **No MDX, no `Images.astro`.** Considered and rejected: MDX-by-default
+  breaks Sveltia (its Lexical editor outputs plain markdown and would
+  mangle JSX on round-trip); Sveltia custom editor components would put
+  nonstandard shortcodes in the content; `:::gallery` directives make you
+  hand-type fences around drag-drops. The grouping plugin gets albums
+  from structure the CMS already produces. Revisit a component only if a
+  layout need ever exceeds what count-based grouping expresses.
 - **Lightbox**: ~30 lines of vanilla JS + native `<dialog>`. Every
   `.prose img` opens full-size on tap (mobile full-view), scroll-snap to
   swipe between a post's images. Progressive: no JS → image is still
