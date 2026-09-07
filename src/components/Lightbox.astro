@@ -1,16 +1,23 @@
 ---
 // Full-screen viewer for post images. Collects every .prose img at load,
-// opens a <dialog> scroll-snap strip on click, starting at the tapped image.
-// The largest srcset candidate is used for the full view.
+// opens a <dialog> scroll-snap strip on click or keyboard, starting at the
+// tapped image. The largest srcset candidate is used for the full view.
 ---
 
 <dialog id="lightbox" class="lightbox">
+  <button
+    id="lightbox-close"
+    class="lightbox-close"
+    type="button"
+    aria-label="Close">✕</button
+  >
   <div class="lightbox-strip" id="lightbox-strip"></div>
 </dialog>
 
 <script>
   const dialog = document.getElementById("lightbox") as HTMLDialogElement;
   const strip = document.getElementById("lightbox-strip")!;
+  const closeButton = document.getElementById("lightbox-close")!;
   const proseImages = [
     ...document.querySelectorAll<HTMLImageElement>(".prose img"),
   ];
@@ -25,23 +32,52 @@
     return candidates[0][0];
   };
 
+  const buildSlide = (source: HTMLImageElement): HTMLDivElement => {
+    const slide = document.createElement("div");
+    slide.className = "lightbox-slide";
+    const full = document.createElement("img");
+    full.src = largestSource(source);
+    full.alt = source.alt;
+    full.loading = "lazy";
+    // The image box fills the slide (object-fit only letterboxes pixels),
+    // so on touch it would swallow every backdrop tap — tapping it closes.
+    full.addEventListener("click", () => dialog.close());
+    slide.appendChild(full);
+    if (source.title) {
+      full.title = source.title;
+      // title tooltips are hover-only; surface the caption for touch too.
+      const caption = document.createElement("div");
+      caption.className = "lightbox-caption";
+      caption.textContent = source.title;
+      slide.appendChild(caption);
+    }
+    return slide;
+  };
+
+  const open = (index: number) => {
+    strip.replaceChildren(...proseImages.map(buildSlide));
+    dialog.showModal();
+    strip.children[index]?.scrollIntoView({
+      inline: "center",
+      block: "nearest",
+    });
+  };
+
   if (dialog && proseImages.length > 0) {
     proseImages.forEach((img, index) => {
-      img.addEventListener("click", () => {
-        strip.replaceChildren(
-          ...proseImages.map((source) => {
-            const full = document.createElement("img");
-            full.src = largestSource(source);
-            full.alt = source.alt;
-            if (source.title) full.title = source.title;
-            return full;
-          }),
-        );
-        dialog.showModal();
-        strip.children[index]?.scrollIntoView({ inline: "center" });
+      // Keyboard path in: inline images act as buttons.
+      img.setAttribute("tabindex", "0");
+      img.setAttribute("role", "button");
+      img.addEventListener("click", () => open(index));
+      img.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          open(index);
+        }
       });
     });
-    // Click on the backdrop (the dialog itself, not an img) closes.
+    closeButton.addEventListener("click", () => dialog.close());
+    // Click on the backdrop (the dialog itself, not a slide img) closes.
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog || event.target === strip) dialog.close();
     });
@@ -51,23 +87,57 @@
 <style>
   .lightbox {
     width: 100vw;
-    height: 100vh;
+    height: 100vh; /* fallback for browsers without dvh */
+    height: 100dvh; /* mobile Safari: track the collapsing toolbar */
     max-width: 100vw;
     max-height: 100vh;
+    max-height: 100dvh;
     border: none;
     padding: 0;
     background: rgb(0 0 0 / 0.92);
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 1;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: none;
+    border-radius: 9999px;
+    background: rgb(0 0 0 / 0.5);
+    color: white;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
   }
   .lightbox-strip {
     display: flex;
     height: 100%;
     overflow-x: auto;
+    overscroll-behavior: contain;
     scroll-snap-type: x mandatory;
   }
-  .lightbox-strip :global(img) {
+  /* Slides and captions are created by the script, so :global is required —
+     runtime-built elements never receive Astro's scoping attribute. */
+  .lightbox-strip :global(.lightbox-slide) {
+    position: relative;
     flex: 0 0 100%;
     height: 100%;
-    object-fit: contain;
     scroll-snap-align: center;
+  }
+  .lightbox-strip :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .lightbox-strip :global(.lightbox-caption) {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 0.5rem 1rem;
+    background: rgb(0 0 0 / 0.6);
+    color: white;
+    font-size: 0.875rem;
+    text-align: center;
   }
 </style>

@@ -21,6 +21,6 @@ More prose before the blank-line-separated triple.
 
 ![smoke five](images/plan-smoke-test.jpg)
 
-![smoke six](images/plan-smoke-test.jpg)
+![smoke six](images/plan-smoke-test.jpg "A test caption")
 
 ![smoke seven](images/plan-smoke-test.jpg)

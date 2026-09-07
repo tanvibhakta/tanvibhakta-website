@@ -58,20 +58,11 @@ a:visited {
   gap: 0.5rem;
   grid-template-columns: repeat(var(--gallery-cols, 1), 1fr);
 }
-.prose figure.gallery[data-count="2"] {
-  --gallery-cols: 2;
-}
-.prose figure.gallery[data-count="3"],
-.prose figure.gallery[data-count="4"],
-.prose figure.gallery[data-count="5"],
-.prose figure.gallery[data-count="6"] {
+.prose figure.gallery:not([data-count="1"]) {
   --gallery-cols: 2;
 }
 @media (min-width: 48rem) {
-  .prose figure.gallery[data-count="3"],
-  .prose figure.gallery[data-count="4"],
-  .prose figure.gallery[data-count="5"],
-  .prose figure.gallery[data-count="6"] {
+  .prose figure.gallery:not([data-count="1"]):not([data-count="2"]) {
     --gallery-cols: 3;
   }
 }

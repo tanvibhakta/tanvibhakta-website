@@ -350,6 +350,13 @@ Expected: `data-count="2"` for the adjacent-lines pair AND `data-count="2"` for 
 
 Plugin-emitted classes belong in global.css (per CLAUDE.md styling rules — these elements have no component to carry Tailwind classes).
 
+**Review deviation (Task 4/5 code review):** the column rules originally
+enumerated `data-count="2"`…`"6"`, which silently degraded galleries of 7+
+to one column while still square-cropping them. Replaced with open-ended
+`:not()` selectors — 2 columns for anything above count 1, 3 columns at
+≥48rem for anything above count 2. Counts 1/2/3 behave identically to the
+enumerated version.
+
 **Step 1: Add:**
 
 ```css
@@ -359,20 +366,11 @@ Plugin-emitted classes belong in global.css (per CLAUDE.md styling rules — the
   gap: 0.5rem;
   grid-template-columns: repeat(var(--gallery-cols, 1), 1fr);
 }
-.prose figure.gallery[data-count="2"] {
-  --gallery-cols: 2;
-}
-.prose figure.gallery[data-count="3"],
-.prose figure.gallery[data-count="4"],
-.prose figure.gallery[data-count="5"],
-.prose figure.gallery[data-count="6"] {
+.prose figure.gallery:not([data-count="1"]) {
   --gallery-cols: 2;
 }
 @media (min-width: 48rem) {
-  .prose figure.gallery[data-count="3"],
-  .prose figure.gallery[data-count="4"],
-  .prose figure.gallery[data-count="5"],
-  .prose figure.gallery[data-count="6"] {
+  .prose figure.gallery:not([data-count="1"]):not([data-count="2"]) {
     --gallery-cols: 3;
   }
 }
@@ -417,22 +415,37 @@ plugins from MDX).
 
 Native `<dialog>` + scroll-snap; no library. Progressive: without JS images render in place; the dialog full-view shows the largest derivative (browser pinch-zoom works inside it).
 
+**Review deviations (code review):** the first draft had no close affordance
+reachable on touch (slide image boxes fill the dialog, so backdrop taps never
+land) and no keyboard path in. The shipped version adds a visible ✕ close
+button, makes tapping a slide image close, promotes inline images to
+keyboard-operable buttons (`tabindex`/`role`/Enter/Space), overlays `title`
+captions on slides (tooltips are hover-only), and picks up `100dvh`,
+`overscroll-behavior: contain`, `loading="lazy"`, and `block: "nearest"`.
+
 **Step 1: Create the component:**
 
 ```astro
 ---
 // Full-screen viewer for post images. Collects every .prose img at load,
-// opens a <dialog> scroll-snap strip on click, starting at the tapped image.
-// The largest srcset candidate is used for the full view.
+// opens a <dialog> scroll-snap strip on click or keyboard, starting at the
+// tapped image. The largest srcset candidate is used for the full view.
 ---
 
 <dialog id="lightbox" class="lightbox">
+  <button
+    id="lightbox-close"
+    class="lightbox-close"
+    type="button"
+    aria-label="Close">✕</button
+  >
   <div class="lightbox-strip" id="lightbox-strip"></div>
 </dialog>
 
 <script>
   const dialog = document.getElementById("lightbox") as HTMLDialogElement;
   const strip = document.getElementById("lightbox-strip")!;
+  const closeButton = document.getElementById("lightbox-close")!;
   const proseImages = [
     ...document.querySelectorAll<HTMLImageElement>(".prose img"),
   ];
@@ -447,23 +460,52 @@ Native `<dialog>` + scroll-snap; no library. Progressive: without JS images rend
     return candidates[0][0];
   };
 
+  const buildSlide = (source: HTMLImageElement): HTMLDivElement => {
+    const slide = document.createElement("div");
+    slide.className = "lightbox-slide";
+    const full = document.createElement("img");
+    full.src = largestSource(source);
+    full.alt = source.alt;
+    full.loading = "lazy";
+    // The image box fills the slide (object-fit only letterboxes pixels),
+    // so on touch it would swallow every backdrop tap — tapping it closes.
+    full.addEventListener("click", () => dialog.close());
+    slide.appendChild(full);
+    if (source.title) {
+      full.title = source.title;
+      // title tooltips are hover-only; surface the caption for touch too.
+      const caption = document.createElement("div");
+      caption.className = "lightbox-caption";
+      caption.textContent = source.title;
+      slide.appendChild(caption);
+    }
+    return slide;
+  };
+
+  const open = (index: number) => {
+    strip.replaceChildren(...proseImages.map(buildSlide));
+    dialog.showModal();
+    strip.children[index]?.scrollIntoView({
+      inline: "center",
+      block: "nearest",
+    });
+  };
+
   if (dialog && proseImages.length > 0) {
     proseImages.forEach((img, index) => {
-      img.addEventListener("click", () => {
-        strip.replaceChildren(
-          ...proseImages.map((source) => {
-            const full = document.createElement("img");
-            full.src = largestSource(source);
-            full.alt = source.alt;
-            if (source.title) full.title = source.title;
-            return full;
-          }),
-        );
-        dialog.showModal();
-        strip.children[index]?.scrollIntoView({ inline: "center" });
+      // Keyboard path in: inline images act as buttons.
+      img.setAttribute("tabindex", "0");
+      img.setAttribute("role", "button");
+      img.addEventListener("click", () => open(index));
+      img.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          open(index);
+        }
       });
     });
-    // Click on the backdrop (the dialog itself, not an img) closes.
+    closeButton.addEventListener("click", () => dialog.close());
+    // Click on the backdrop (the dialog itself, not a slide img) closes.
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog || event.target === strip) dialog.close();
     });
@@ -473,31 +515,65 @@ Native `<dialog>` + scroll-snap; no library. Progressive: without JS images rend
 <style>
   .lightbox {
     width: 100vw;
-    height: 100vh;
+    height: 100vh; /* fallback for browsers without dvh */
+    height: 100dvh; /* mobile Safari: track the collapsing toolbar */
     max-width: 100vw;
     max-height: 100vh;
+    max-height: 100dvh;
     border: none;
     padding: 0;
     background: rgb(0 0 0 / 0.92);
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 1;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: none;
+    border-radius: 9999px;
+    background: rgb(0 0 0 / 0.5);
+    color: white;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
   }
   .lightbox-strip {
     display: flex;
     height: 100%;
     overflow-x: auto;
+    overscroll-behavior: contain;
     scroll-snap-type: x mandatory;
   }
-  .lightbox-strip :global(img) {
+  /* Slides and captions are created by the script, so :global is required —
+     runtime-built elements never receive Astro's scoping attribute. */
+  .lightbox-strip :global(.lightbox-slide) {
+    position: relative;
     flex: 0 0 100%;
     height: 100%;
-    object-fit: contain;
     scroll-snap-align: center;
+  }
+  .lightbox-strip :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .lightbox-strip :global(.lightbox-caption) {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 0.5rem 1rem;
+    background: rgb(0 0 0 / 0.6);
+    color: white;
+    font-size: 0.875rem;
+    text-align: center;
   }
 </style>
 ```
 
 **Step 2:** In `Layout.astro`, import and render `<Lightbox />` before `</body>`.
 
-**Step 3: Manual verification** in `pnpm dev` on the smoke-test draft: click opens dialog at the clicked image, Esc and backdrop-click close, swiping snaps between images. Check a page with no images loads with no console errors.
+**Step 3: Manual verification** in `pnpm dev` on the smoke-test draft: click opens dialog at the clicked image; ✕ button, Esc, backdrop-click, and tapping the slide image all close; Tab reaches an inline image and Enter/Space opens it; the titled image shows its caption bar in the strip; swiping snaps between images. Check a page with no images loads with no console errors.
 
 **Important:** `pnpm typecheck` does NOT parse `.astro` `<script>` blocks (verified — bare `tsc` skips them, and `astro check` isn't in this repo's toolchain), so the manual browser check is the only gate for this component. Be thorough here.
 
