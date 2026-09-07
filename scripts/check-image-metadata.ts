@@ -2,6 +2,7 @@ import { pathToFileURL } from "node:url";
 import sharp from "sharp";
 
 const MAX_EDGE = 3000;
+const RASTER_EXTENSION = /\.(jpe?g|png|webp|gif|avif|tiff?)$/i;
 
 /**
  * Guard shared by lint-staged and CI: a raster image must be ≤3000px on
@@ -14,6 +15,11 @@ export async function checkImage(path: string): Promise<string | null> {
   try {
     metadata = await sharp(path).metadata();
   } catch {
+    // A file that CLAIMS to be a raster but sharp can't read is broken, not
+    // exempt — a truncated upload must not slip past the guard.
+    if (RASTER_EXTENSION.test(path)) {
+      return "unreadable — corrupt or truncated?";
+    }
     // Not something sharp can read — not a raster image, nothing to guard.
     return null;
   }

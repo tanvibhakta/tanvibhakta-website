@@ -1,0 +1,5 @@
+{
+  "name": "build-time-alert",
+  "type": "module",
+  "main": "index.mjs"
+}

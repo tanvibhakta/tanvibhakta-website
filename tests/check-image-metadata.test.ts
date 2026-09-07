@@ -59,4 +59,17 @@ describe("checkImage", () => {
     await writeFile(path, "not an image at all");
     expect(await checkImage(path)).toBeNull();
   });
+
+  test("unreadable file with a raster extension fails", async () => {
+    const path = join(dir, "corrupt.jpg");
+    await writeFile(path, "");
+    const reason = await checkImage(path);
+    expect(reason).toMatch(/unreadable/i);
+  });
+
+  test("unreadable file with a non-raster extension still passes", async () => {
+    const path = join(dir, "empty.txt");
+    await writeFile(path, "");
+    expect(await checkImage(path)).toBeNull();
+  });
 });
