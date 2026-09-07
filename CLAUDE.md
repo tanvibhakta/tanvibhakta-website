@@ -67,6 +67,20 @@ can't cover:
 Site-wide element defaults, `@theme`/`@plugin` config, and classes emitted by
 rehype plugins (`.anchor-link`) belong in `src/styles/global.css`.
 
+### Images
+
+- Post images live in a sibling `images/` folder per collection
+  (e.g. `posts/blog/images/`) and are referenced relatively from markdown:
+  `![alt](images/foo.webp)`.
+- One profile everywhere: ≤3000px longest edge, WebP q85, metadata stripped.
+  `pnpm img <file>` produces it; Sveltia's upload transform matches it; a
+  pre-commit guard (`scripts/check-image-metadata.ts` via lint-staged, with a
+  CI backstop) enforces it.
+- Adjacent image lines, or image-only paragraphs separated by blank lines,
+  group into a `<figure class="gallery">` (gallery grid + lightbox); any
+  intervening prose breaks the group.
+- Full design: `docs/plans/2026-09-07-colocated-images-design.md`.
+
 ### Code Quality
 
 - ESLint with TypeScript support configured in `eslint.config.js`
