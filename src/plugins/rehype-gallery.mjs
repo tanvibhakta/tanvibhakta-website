@@ -35,6 +35,16 @@ function walk(parent) {
     const images = imageOnlyParagraph(node);
     if (images) {
       runImages.push(...images);
+    } else if (
+      runImages.length > 0 &&
+      node.type === "text" &&
+      node.value.trim() === ""
+    ) {
+      // mdast-util-to-hast emits interstitial "\n" text nodes between block
+      // siblings, so blank-line-separated image paragraphs arrive with a
+      // newline between them. While a run is open, whitespace-only text is
+      // run-neutral: skipped, not emitted, not run-breaking.
+      continue;
     } else {
       flush();
       out.push(node);

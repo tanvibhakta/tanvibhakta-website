@@ -160,7 +160,13 @@ describe("rehypeGallery", () => {
   });
 
   test("consecutive image paragraphs merge into one gallery", () => {
-    const out = run([p(img("images/a.webp")), p(img("images/b.webp"))]);
+    // mdast-util-to-hast emits a "\n" text node between block siblings,
+    // so this is the shape real trees carry.
+    const out = run([
+      p(img("images/a.webp")),
+      text("\n"),
+      p(img("images/b.webp")),
+    ]);
     expect(out).toHaveLength(1);
     expect(out[0].properties.dataCount).toBe(2);
   });
@@ -168,13 +174,17 @@ describe("rehypeGallery", () => {
   test("prose between images breaks the group", () => {
     const out = run([
       p(img("images/a.webp")),
+      text("\n"),
       p(text("hello")),
+      text("\n"),
       p(img("images/b.webp")),
     ]);
-    expect(out).toHaveLength(3);
+    // [figure, p, "\n", figure]: the newline after the first image
+    // paragraph is consumed with its run; the one after the prose survives.
+    expect(out).toHaveLength(4);
     expect(out[0].properties.dataCount).toBe(1);
     expect(out[1].tagName).toBe("p");
-    expect(out[2].properties.dataCount).toBe(1);
+    expect(out[3].properties.dataCount).toBe(1);
   });
 
   test("paragraph mixing text and image is untouched", () => {
@@ -240,6 +250,16 @@ function walk(parent) {
     const images = imageOnlyParagraph(node);
     if (images) {
       runImages.push(...images);
+    } else if (
+      runImages.length > 0 &&
+      node.type === "text" &&
+      node.value.trim() === ""
+    ) {
+      // mdast-util-to-hast emits interstitial "\n" text nodes between block
+      // siblings, so blank-line-separated image paragraphs arrive with a
+      // newline between them. While a run is open, whitespace-only text is
+      // run-neutral: skipped, not emitted, not run-breaking.
+      continue;
     } else {
       flush();
       out.push(node);
@@ -311,10 +331,10 @@ import { rehypeGallery } from "./src/plugins/rehype-gallery.mjs";
       // …existing entries unchanged
 ```
 
-**Step 2: Verify against the smoke-test post** — give it two adjacent image lines, run `pnpm build`, and check:
+**Step 2: Verify against the smoke-test post** — give it BOTH shapes: two adjacent image lines, and two images separated by a blank line (blank-line paragraphs arrive with an interstitial `"\n"` text node between them in the real pipeline, so this shape must also merge). Run `pnpm build`, and check:
 
 Run: `rg -o '<figure class="gallery"[^>]*'  dist/drafts/blog/9999-01-01-image-smoke-test/index.html`
-Expected: `data-count="2"`, and no `anchor-link` inside the figure.
+Expected: `data-count="2"` for the adjacent-lines pair AND `data-count="2"` for the blank-line-separated pair (two figures total, each count 2), and no `anchor-link` inside either figure.
 
 **Note:** content is cached — if the rebuilt HTML looks stale, delete `node_modules/.astro/data-store.json` and rebuild (known repo behavior).
 

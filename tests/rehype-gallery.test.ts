@@ -53,7 +53,13 @@ describe("rehypeGallery", () => {
   });
 
   test("consecutive image paragraphs merge into one gallery", () => {
-    const out = run([p(img("images/a.webp")), p(img("images/b.webp"))]);
+    // mdast-util-to-hast emits a "\n" text node between block siblings,
+    // so this is the shape real trees carry.
+    const out = run([
+      p(img("images/a.webp")),
+      text("\n"),
+      p(img("images/b.webp")),
+    ]);
     expect(out).toHaveLength(1);
     expect(out[0].properties.dataCount).toBe(2);
   });
@@ -61,13 +67,46 @@ describe("rehypeGallery", () => {
   test("prose between images breaks the group", () => {
     const out = run([
       p(img("images/a.webp")),
+      text("\n"),
       p(text("hello")),
+      text("\n"),
       p(img("images/b.webp")),
     ]);
-    expect(out).toHaveLength(3);
+    // [figure, p, "\n", figure]: the newline after the first image
+    // paragraph is consumed with its run; the one after the prose survives.
+    expect(out).toHaveLength(4);
     expect(out[0].properties.dataCount).toBe(1);
     expect(out[1].tagName).toBe("p");
-    expect(out[2].properties.dataCount).toBe(1);
+    expect(out[3].properties.dataCount).toBe(1);
+  });
+
+  test("image paragraphs inside a blockquote merge across newline nodes", () => {
+    const out = run([
+      elem("blockquote", {}, [
+        text("\n"),
+        p(img("images/q.webp")),
+        text("\n"),
+        p(img("images/r.webp")),
+        text("\n"),
+      ]),
+    ]);
+    const bq = out[0];
+    expect(bq.tagName).toBe("blockquote");
+    const figure = bq.children.find(
+      (c) => (c as HastElement).tagName === "figure",
+    ) as HastElement;
+    expect(figure).toBeDefined();
+    expect(figure.properties.dataCount).toBe(2);
+    expect(
+      figure.children.filter((c) => (c as HastElement).tagName === "img"),
+    ).toHaveLength(2);
+  });
+
+  test("linked image (p > a > img) stays a paragraph", () => {
+    const out = run([
+      p(elem("a", { href: "https://example.com" }, [img("images/l.webp")])),
+    ]);
+    expect(out[0].tagName).toBe("p");
   });
 
   test("paragraph mixing text and image is untouched", () => {
