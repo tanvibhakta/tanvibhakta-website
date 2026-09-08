@@ -9,6 +9,7 @@
     "astro": "astro",
     "test": "vitest",
     "typecheck": "astro sync && tsc --noEmit",
+    "lint": "eslint .",
     "prepare": "husky",
     "weeknotes:new": "node scripts/new-content.ts weeknotes",
     "blog:new": "node scripts/new-content.ts blog",
