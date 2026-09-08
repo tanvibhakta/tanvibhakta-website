@@ -13,7 +13,13 @@
  * audio files are pushed to main. Requires ffmpeg on PATH.
  */
 
-import { readdirSync, readFileSync, writeFileSync, statSync, unlinkSync } from "node:fs";
+import {
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+  statSync,
+  unlinkSync,
+} from "node:fs";
 import { join, dirname, basename, extname, relative } from "node:path";
 import { execFileSync } from "node:child_process";
 
@@ -72,13 +78,7 @@ function main() {
     console.log(`transcoding: ${srcPath} → ${outPath}`);
     execFileSync(
       "ffmpeg",
-      [
-        "-y",
-        "-i", srcPath,
-        "-c:a", "libopus",
-        "-b:a", "64k",
-        outPath,
-      ],
+      ["-y", "-i", srcPath, "-c:a", "libopus", "-b:a", "64k", outPath],
       { stdio: "inherit" },
     );
 
@@ -108,7 +108,9 @@ function main() {
     }
   }
 
-  console.log(`\ndone. transcoded ${renames.size} file(s), updated ${touchedPosts} post(s).`);
+  console.log(
+    `\ndone. transcoded ${renames.size} file(s), updated ${touchedPosts} post(s).`,
+  );
 }
 
 main();

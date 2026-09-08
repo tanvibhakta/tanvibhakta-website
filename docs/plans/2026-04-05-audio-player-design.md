@@ -147,12 +147,14 @@ Example shape for `src/pages/blog/[...slug].astro`:
 ```astro
 <ProseLayout frontmatter={blogPost.data}>
   <Content />
-  {blogPost.data.audio && (
-    <AudioPlayer
-      src={blogPost.data.audio}
-      title={blogPost.data.audioTitle ?? "Listen to this blog"}
-    />
-  )}
+  {
+    blogPost.data.audio && (
+      <AudioPlayer
+        src={blogPost.data.audio}
+        title={blogPost.data.audioTitle ?? "Listen to this blog"}
+      />
+    )
+  }
 </ProseLayout>
 ```
 

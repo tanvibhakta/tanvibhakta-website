@@ -18,7 +18,7 @@ Engineering teams have always dealt with problems of knowledge silos. When LLMs 
 
 Last weekend was the healthiest I’ve been in a while. Goa always does that to me, I thought...until I arrived at the Airbnb on Monday, which was so chock-full of dust mites (not dust, remember) that I had such a horrible stuffed nose and bad throat and headache and the whole works. That’s when I discovered that it’s actually [Nats](https://stateofnats.com/)’ home, and not Goa, that had been the antidote I needed all along. Well, now that I have made this discovery, let’s just say that spare bed will be getting a lot more use :)
 
-I have written about [perfect Goa days](https://tanvibhakta.in/weeknotes/week-of-feb-1st-2026/) before; last weekend was another such. How do I know when I’m home? When there is a kitchen that is mine. Nats’ condiment drawer puts mine to shame,  her fridge gives me life, and I made - casually - about 6 different lovely things over the span of two days.
+I have written about [perfect Goa days](https://tanvibhakta.in/weeknotes/week-of-feb-1st-2026/) before; last weekend was another such. How do I know when I’m home? When there is a kitchen that is mine. Nats’ condiment drawer puts mine to shame, her fridge gives me life, and I made - casually - about 6 different lovely things over the span of two days.
 
 Goa is also good for movement - I ran 1.5k on Sat, did pickleball for 1ish hour on Tue and Fri, ran a 3k on Wed in no small part thanks to Devanjal, did a bunch of laps in the pool yesterday...
 

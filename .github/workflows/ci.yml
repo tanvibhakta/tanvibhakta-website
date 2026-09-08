@@ -1,0 +1,28 @@
+# Runs `pnpm check` — the same commands the pre-commit hook enforces locally
+# (prettier, eslint, typecheck, tests), defined once in package.json. CI
+# additionally covers commit paths that never see local hooks (Telegram
+# notes pipeline, Sveltia CMS). Difference by design: the hook auto-formats
+# staged files; `check` verifies the whole repo.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm check

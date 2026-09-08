@@ -43,7 +43,9 @@ const frontmatter = { title: tag };
               return title ? (
                 <li>
                   <a href={post.href}>{title}</a>
-                  <span class="date">{formatLongDate(post.data.publishedOn)}</span>
+                  <span class="date">
+                    {formatLongDate(post.data.publishedOn)}
+                  </span>
                 </li>
               ) : (
                 <li>

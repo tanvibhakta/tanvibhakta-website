@@ -4,7 +4,7 @@ publishedOn: 2026-03-21
 draft: true
 ---
 
-Ranking Haleem in Bangalore 
+Ranking Haleem in Bangalore
 
 I cannot explain to you the importance Haleem has acquired in my life. But here are the facts:
 
@@ -12,15 +12,15 @@ I cannot explain to you the importance Haleem has acquired in my life. But here 
 
 2. When I’m sick and need to get better: haleem.
 
-3. When I didn’t trust myself to eat solids yet after [my wisdom tooth removal](): two point six kilograms of haleem, over the course of five days. No, I did not share. 
+3. When I didn’t trust myself to eat solids yet after [my wisdom tooth removal](<>): two point six kilograms of haleem, over the course of five days. No, I did not share.
 
 Good haleem should be
 
-1. Rich 
+1. Rich
 
-2. Not too hot, but well rounded with spice 
+2. Not too hot, but well rounded with spice
 
-3. Texturally interesting 
+3. Texturally interesting
 
 4. NO BONES
 

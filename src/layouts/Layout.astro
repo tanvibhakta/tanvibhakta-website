@@ -89,7 +89,10 @@ const fullTitle = pageName ? `${pageName} | ${SITE_TAB_TITLE}` : SITE_TAB_TITLE;
     <script>
       window.plausible =
         window.plausible ||
+        // Official Plausible queue snippet, kept verbatim — `arguments` is
+        // the vendor idiom and the queue consumer expects it.
         function () {
+          // eslint-disable-next-line prefer-rest-params
           (window.plausible.q = window.plausible.q || []).push(arguments);
         };
     </script>
