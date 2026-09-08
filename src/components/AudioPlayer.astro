@@ -13,7 +13,9 @@ const { src, title } = Astro.props;
   <figure class="audio-player" data-audio-src={src}>
     <div class="audio-player__waveform" aria-hidden="true"></div>
     {
-      /* TODO(a11y): recordings have no caption tracks yet; add <track kind="captions"> when transcripts exist */
+      /* TODO(a11y): the post text is the transcript — make that explicit
+         (figcaption + sr-only note) per
+         https://github.com/tanvibhakta/tanvibhakta-website/issues/123 */
     }
     {/* eslint-disable-next-line astro/jsx-a11y/media-has-caption */}
     <audio class="audio-player__native" controls preload="metadata" src={src}>
