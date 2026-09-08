@@ -74,6 +74,9 @@
     ],
     "posts/**/images/*": [
       "node scripts/check-image-metadata.ts"
+    ],
+    "*.{js,mjs,cjs,ts,astro}": [
+      "eslint --max-warnings 0"
     ]
   }
 }

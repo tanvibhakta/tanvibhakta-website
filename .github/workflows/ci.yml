@@ -1,0 +1,35 @@
+# Mirrors the pre-commit hook (.husky/pre-commit): the same set of checks —
+# prettier, eslint, typecheck, tests — runs on every commit locally and here.
+# CI additionally covers commit paths that never see local hooks (Telegram
+# notes pipeline, Sveltia CMS).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Prettier (same fileset as lint-staged)
+        run: pnpm exec prettier --check "**/*.{js,jsx,ts,tsx,json,css,scss,md,astro}"
+
+      - run: pnpm lint
+
+      - run: pnpm typecheck
+
+      - name: Tests (includes full build + link check)
+        run: pnpm test
