@@ -1,6 +1,8 @@
 ---
-title: "Week of Aug 22nd, 2026"
+title: Week of Aug 22nd, 2026
 publishedOn: 2026-08-22
+draft: true
+tags: []
 ---
 
 ## Work
