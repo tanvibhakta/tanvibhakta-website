@@ -22,12 +22,13 @@ export default defineConfig([
     files: ["scripts/**", "tests/**", "**/*.cjs", "**/*.mjs"],
     languageOptions: { globals: { ...globals.node } },
   },
+  tseslint.configs.recommended,
   {
+    // After tseslint so the rule-off actually wins for CJS files.
     files: ["**/*.cjs"],
     languageOptions: { sourceType: "commonjs" },
     rules: { "@typescript-eslint/no-require-imports": "off" },
   },
-  tseslint.configs.recommended,
   eslintPluginAstro.configs.recommended,
   eslintPluginAstro.configs["flat/jsx-a11y-recommended"],
 ]);
