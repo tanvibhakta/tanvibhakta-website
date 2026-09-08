@@ -143,6 +143,16 @@ posts/weeknotes/images/…
   swipe between a post's images. Progressive: no JS → image is still
   visible in place. No library (PhotoSwipe rejected; wavesurfer stays the
   site's only JS dependency of note).
+- **Derivative quality knob (documented, deliberately not turned).**
+  Reader-facing derivatives encode at sharp's WebP default, q80 — Astro has
+  no global `image.quality` config. But `rehype-images` spreads every img
+  node property into the transform options, so `rehype-gallery` (which every
+  post image passes through) is a de-facto global knob: one line adding
+  `quality: 85` beside its `sizes` assignment raises site-wide derivative
+  quality (+~25–30% reader bytes); mirror it in `feed-image-map.ts`'s
+  `getImage()` for feeds. Left at q80 because derivatives from the clean q95
+  source carry no compounded artifacts — turn it only if live images ever
+  look soft.
 
 ## RSS feeds
 
