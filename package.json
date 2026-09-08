@@ -10,6 +10,7 @@
     "test": "vitest",
     "typecheck": "astro sync && tsc --noEmit",
     "prepare": "husky",
+    "img": "node scripts/optimize-image.ts",
     "weeknotes:new": "node scripts/new-content.ts weeknotes",
     "blog:new": "node scripts/new-content.ts blog",
     "poetry:new": "node scripts/new-content.ts poetry",
@@ -63,6 +64,9 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md,astro}": [
       "prettier --write"
+    ],
+    "posts/**/images/*": [
+      "node scripts/check-image-metadata.ts"
     ]
   }
 }

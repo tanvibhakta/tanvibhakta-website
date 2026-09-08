@@ -1,5 +1,6 @@
 ---
 import "/src/styles/global.css";
+import Lightbox from "../components/Lightbox.astro";
 import { SITE_TAB_TITLE, SITE_DESCRIPTION } from "../utils/site";
 import { getPageName } from "../utils/sections";
 const {
@@ -95,6 +96,7 @@ const fullTitle = pageName ? `${pageName} | ${SITE_TAB_TITLE}` : SITE_TAB_TITLE;
   </head>
   <body class=`${className || "text-stone-800 bg-stone-100"}`>
     <slot />
+    <Lightbox />
   </body>
 </html>
 

@@ -19,6 +19,7 @@ type TestEntry = {
   collection: string;
   data: { title?: string; publishedOn: Date; draft?: boolean };
   body: string;
+  filePath?: string;
 };
 
 // vi.hoisted gives the vi.mock factories and the tests one shared, properly
@@ -56,6 +57,12 @@ vi.mock("astro:content", () => ({
 // Mock astro/loaders
 vi.mock("astro/loaders", () => ({
   glob: vi.fn(),
+}));
+
+// Mock astro:assets — a virtual module only resolvable inside Astro's Vite
+// pipeline; feeds.ts pulls it in transitively via feed-image-map.ts.
+vi.mock("astro:assets", () => ({
+  getImage: vi.fn(async () => ({ src: "/_astro/mock.webp" })),
 }));
 
 // Mock @astrojs/rss
@@ -277,6 +284,7 @@ describe("Feed Content Generation", () => {
         publishedOn: new Date("2025-01-01"),
       },
       body: "# Hello World\n\nThis is a **test** post with markdown.",
+      filePath: "posts/blog/test-post.md",
     };
 
     mocks.getCollection.mockImplementation(async (_name, filter) => {
@@ -306,6 +314,7 @@ describe("Feed Content Generation", () => {
         draft: false,
       },
       body: "Published content",
+      filePath: "posts/blog/published-post.md",
     };
 
     const mockDraftPost = {
@@ -317,6 +326,7 @@ describe("Feed Content Generation", () => {
         draft: true,
       },
       body: "Draft content",
+      filePath: "posts/blog/draft-post.md",
     };
 
     const mockNoDraftField = {
@@ -327,6 +337,7 @@ describe("Feed Content Generation", () => {
         publishedOn: new Date("2025-01-03"),
       },
       body: "Content without draft field",
+      filePath: "posts/blog/no-draft-field.md",
     };
 
     const allEntries = [mockPublishedPost, mockDraftPost, mockNoDraftField];
@@ -352,6 +363,7 @@ describe("Feed Content Generation", () => {
         collection: "poetry",
         data: { title: "Published Poem", publishedOn: new Date("2025-01-01") },
         body: "poem",
+        filePath: "posts/poetry/pub.md",
       },
       {
         id: "draft",
@@ -362,6 +374,7 @@ describe("Feed Content Generation", () => {
           draft: true,
         },
         body: "draft poem",
+        filePath: "posts/poetry/draft.md",
       },
     ];
     mocks.getCollection.mockImplementation(async (_name, filter) =>
@@ -384,6 +397,7 @@ describe("Feed Content Generation", () => {
         collection: "notes",
         data: { publishedOn: new Date("2026-06-21T12:00:00Z") },
         body: "Just shipped a tiny new content type for short posts.",
+        filePath: "posts/notes/2026-06-21-1200.md",
       },
     ];
     mocks.getCollection.mockImplementation(async (_name, filter) =>

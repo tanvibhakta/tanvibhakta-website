@@ -29,3 +29,6 @@
   to = "https://epi.stic.earth/api/public/subscription"
   status = 200
   force = true
+
+[[plugins]]
+  package = "./netlify/plugins/build-time-alert"

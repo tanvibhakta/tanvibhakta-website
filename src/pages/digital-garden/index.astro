@@ -14,8 +14,9 @@ function extractFirstParagraph(content: string): string {
 
   for (const line of lines) {
     const trimmed = line.trim();
-    // Skip empty lines and headers
-    if (trimmed === "" || trimmed.startsWith("#")) continue;
+    // Skip empty lines, headers, and image lines
+    if (trimmed === "" || trimmed.startsWith("#") || /^!\[/.test(trimmed))
+      continue;
 
     // Found first non-empty, non-header line
     firstParagraph = trimmed;

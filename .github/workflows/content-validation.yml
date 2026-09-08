@@ -23,3 +23,21 @@ jobs:
 
       - name: Run tests (link checker + feeds)
         run: pnpm test
+
+      - name: Image metadata / size backstop (detects, does not block deploys)
+        run: |
+          # -print0/-0: null-delimited so filenames with spaces survive;
+          # --no-run-if-empty so zero images is a pass, not an error.
+          find posts -path '*/images/*' -type f -print0 |
+            xargs -0 --no-run-if-empty node scripts/check-image-metadata.ts
+
+      - name: Repo size threshold (R2 trigger at 750MB)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          size_kb=$(gh api "repos/${GITHUB_REPOSITORY}" --jq .size)
+          echo "repo size: ${size_kb} KB"
+          if [ "$size_kb" -gt 768000 ]; then
+            echo "::error::Repo exceeds 750MB — time to design the R2 originals split (see docs/plans/2026-09-07-colocated-images-design.md)"
+            exit 1
+          fi

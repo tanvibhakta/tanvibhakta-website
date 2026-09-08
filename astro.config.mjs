@@ -10,10 +10,21 @@ import remarkBreaks from "remark-breaks";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { rehypeAnchors } from "./src/plugins/rehype-anchors.mjs";
+import { rehypeGallery } from "./src/plugins/rehype-gallery.mjs";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://tanvibhakta.in",
+
+  image: {
+    // Responsive markdown images: srcset + sizes + lazy loading for every
+    // relative ![]() image. Stabilized in Astro 5.10.
+    layout: "constrained",
+    // The prose column is md:w-1/2 (~50vw desktop); cap candidate widths so
+    // browsers don't over-fetch. 1280 is also the width feeds.ts requests,
+    // keeping the feed derivative shared with this set.
+    breakpoints: [640, 960, 1280, 1600, 2048],
+  },
 
   vite: {
     // Cast needed: @tailwindcss/vite types against vite 7 while astro bundles
@@ -28,6 +39,9 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [remarkBreaks],
     rehypePlugins: [
+      // Must come first: galleries absorb image-only paragraphs before
+      // rehypeAnchors targets every <p> (see plugin header comment).
+      rehypeGallery,
       rehypeSlug,
       [
         rehypeAutolinkHeadings,

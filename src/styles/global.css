@@ -51,3 +51,30 @@ a:visited {
   opacity: 1;
   filter: none;
 }
+
+/* Galleries emitted by rehype-gallery (src/plugins/rehype-gallery.mjs). */
+.prose figure.gallery {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(var(--gallery-cols, 1), 1fr);
+}
+.prose figure.gallery:not([data-count="1"]) {
+  --gallery-cols: 2;
+}
+@media (min-width: 48rem) {
+  .prose figure.gallery:not([data-count="1"]):not([data-count="2"]) {
+    --gallery-cols: 3;
+  }
+}
+.prose figure.gallery img {
+  margin: 0;
+  width: 100%;
+  cursor: pointer;
+}
+.prose figure.gallery[data-count]:not([data-count="1"]) img {
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+.prose figure.gallery figcaption {
+  grid-column: 1 / -1;
+}

@@ -1,0 +1,194 @@
+---
+// Full-screen viewer for post images. Collects every .prose img at load,
+// opens a <dialog> scroll-snap strip on click or keyboard, starting at the
+// tapped image. The largest srcset candidate is used for the full view.
+---
+
+<dialog id="lightbox" class="lightbox">
+  <button
+    id="lightbox-close"
+    class="lightbox-close"
+    type="button"
+    aria-label="Close">✕</button
+  >
+  <div class="lightbox-strip" id="lightbox-strip"></div>
+</dialog>
+
+<script>
+  const dialog = document.getElementById("lightbox") as HTMLDialogElement;
+  const strip = document.getElementById("lightbox-strip")!;
+  const closeButton = document.getElementById("lightbox-close")!;
+  const proseImages = [
+    ...document.querySelectorAll<HTMLImageElement>(".prose img"),
+  ];
+
+  const largestSource = (img: HTMLImageElement): string => {
+    const candidates = img.srcset
+      .split(",")
+      .map((c) => c.trim().split(/\s+/))
+      .filter((parts) => parts[0]);
+    if (candidates.length === 0) return img.src;
+    candidates.sort((a, b) => parseInt(b[1] ?? "0") - parseInt(a[1] ?? "0"));
+    return candidates[0][0];
+  };
+
+  const buildSlide = (source: HTMLImageElement): HTMLDivElement => {
+    const slide = document.createElement("div");
+    slide.className = "lightbox-slide";
+    const full = document.createElement("img");
+    full.src = largestSource(source);
+    full.alt = source.alt;
+    full.loading = "lazy";
+    // The image box fills the slide (object-fit only letterboxes pixels),
+    // so on touch it would swallow every backdrop tap — tapping it closes.
+    full.addEventListener("click", () => dialog.close());
+    slide.appendChild(full);
+    if (source.title) {
+      full.title = source.title;
+      // title tooltips are hover-only; surface the caption for touch too.
+      const caption = document.createElement("div");
+      caption.className = "lightbox-caption";
+      caption.textContent = source.title;
+      slide.appendChild(caption);
+    }
+    return slide;
+  };
+
+  // History integration: opening pushes a state so the browser back
+  // button/gesture closes the lightbox instead of leaving the page —
+  // on mobile especially, "back" is the instinctive dismiss gesture.
+  // Set while a popstate is closing the dialog, so the close handler
+  // knows the history entry is already consumed and doesn't back() again.
+  let closingFromPopstate = false;
+
+  const open = (index: number) => {
+    // Guard: never push twice for one open (currently unreachable — inline
+    // images sit under the modal while it's open — but cheap insurance).
+    if (!dialog.open) history.pushState({ lightbox: true }, "");
+    strip.replaceChildren(...proseImages.map(buildSlide));
+    dialog.showModal();
+    strip.children[index]?.scrollIntoView({
+      inline: "center",
+      block: "nearest",
+    });
+  };
+
+  if (dialog && proseImages.length > 0) {
+    proseImages.forEach((img, index) => {
+      // Keyboard path in: inline images act as buttons.
+      img.setAttribute("tabindex", "0");
+      img.setAttribute("role", "button");
+      img.addEventListener("click", () => open(index));
+      img.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          open(index);
+        }
+      });
+    });
+    closeButton.addEventListener("click", () => dialog.close());
+    // Click on the backdrop (the dialog itself, not a slide img) closes.
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog || event.target === strip) dialog.close();
+    });
+    // Arrow-key navigation (user-requested): the ✕ close button holds focus
+    // while the dialog is open, so without this handler Left/Right are dead
+    // keys in the dialog. The current slide is derived from scroll position
+    // at keypress time, so touch-swipes and arrow keys stay consistent.
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      const current = Math.round(strip.scrollLeft / strip.clientWidth);
+      const delta = event.key === "ArrowRight" ? 1 : -1;
+      const target = Math.min(
+        Math.max(current + delta, 0),
+        strip.children.length - 1,
+      );
+      strip.children[target]?.scrollIntoView({
+        inline: "center",
+        block: "nearest",
+        behavior: "smooth",
+      });
+    });
+    // Back button/gesture while open: close instead of navigating away.
+    window.addEventListener("popstate", () => {
+      if (dialog.open) {
+        closingFromPopstate = true;
+        dialog.close();
+      }
+    });
+    // "close" fires for EVERY close path (✕, image tap, backdrop, Esc).
+    // Unless this close was itself triggered by popstate, the pushed
+    // lightbox entry is still on the stack — consume it so the next back
+    // press navigates normally instead of no-opping on a stale entry.
+    dialog.addEventListener("close", () => {
+      if (closingFromPopstate) {
+        closingFromPopstate = false;
+      } else if (history.state?.lightbox) {
+        history.back();
+      }
+    });
+  }
+</script>
+
+<style>
+  .lightbox {
+    width: 100vw;
+    height: 100vh; /* fallback for browsers without dvh */
+    height: 100dvh; /* mobile Safari: track the collapsing toolbar */
+    max-width: 100vw;
+    max-height: 100vh;
+    max-height: 100dvh;
+    border: none;
+    padding: 0;
+    /* Translucent, not near-opaque: the page staying visible underneath is
+       what tells the user this is an overlay, not a navigation. The close
+       button and caption bar carry their own dark backgrounds, so their
+       contrast doesn't depend on this value. */
+    background: rgb(0 0 0 / 0.65);
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 1;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: none;
+    border-radius: 9999px;
+    background: rgb(0 0 0 / 0.5);
+    color: white;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .lightbox-strip {
+    display: flex;
+    height: 100%;
+    overflow-x: auto;
+    overscroll-behavior: contain;
+    scroll-snap-type: x mandatory;
+  }
+  /* Slides and captions are created by the script, so :global is required —
+     runtime-built elements never receive Astro's scoping attribute. */
+  .lightbox-strip :global(.lightbox-slide) {
+    position: relative;
+    flex: 0 0 100%;
+    height: 100%;
+    scroll-snap-align: center;
+  }
+  .lightbox-strip :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .lightbox-strip :global(.lightbox-caption) {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 0.5rem 1rem;
+    background: rgb(0 0 0 / 0.6);
+    color: white;
+    font-size: 0.875rem;
+    text-align: center;
+  }
+</style>
