@@ -1,7 +1,8 @@
-# Mirrors the pre-commit hook (.husky/pre-commit): the same set of checks —
-# prettier, eslint, typecheck, tests — runs on every commit locally and here.
-# CI additionally covers commit paths that never see local hooks (Telegram
-# notes pipeline, Sveltia CMS).
+# Runs `pnpm check` — the same commands the pre-commit hook enforces locally
+# (prettier, eslint, typecheck, tests), defined once in package.json. CI
+# additionally covers commit paths that never see local hooks (Telegram
+# notes pipeline, Sveltia CMS). Difference by design: the hook auto-formats
+# staged files; `check` verifies the whole repo.
 name: CI
 
 on:
@@ -24,12 +25,4 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Prettier (same fileset as lint-staged)
-        run: pnpm exec prettier --check "**/*.{js,jsx,ts,tsx,json,css,scss,md,astro}"
-
-      - run: pnpm lint
-
-      - run: pnpm typecheck
-
-      - name: Tests (includes full build + link check)
-        run: pnpm test
+      - run: pnpm check

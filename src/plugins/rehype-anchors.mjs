@@ -50,9 +50,7 @@ export function rehypeAnchors(options = {}) {
         properties: {
           href: `#${id}`,
           className: ["anchor-link"],
-          ariaLabel: isPara
-            ? "Link to this paragraph"
-            : "Link to this item",
+          ariaLabel: isPara ? "Link to this paragraph" : "Link to this item",
         },
         children: [{ type: "text", value: " #" }],
       });

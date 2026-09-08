@@ -25,7 +25,10 @@ export default async (req: Request): Promise<Response> => {
     return new Response("Method not allowed", { status: 405 });
   }
   const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
-  if (!secret || req.headers.get("x-telegram-bot-api-secret-token") !== secret) {
+  if (
+    !secret ||
+    req.headers.get("x-telegram-bot-api-secret-token") !== secret
+  ) {
     return new Response("Forbidden", { status: 403 });
   }
 

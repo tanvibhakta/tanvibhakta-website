@@ -10,6 +10,7 @@
     "test": "vitest",
     "typecheck": "astro sync && tsc --noEmit",
     "lint": "eslint .",
+    "check": "prettier --check --ignore-unknown . && pnpm lint && pnpm typecheck && vitest run",
     "prepare": "husky",
     "img": "node scripts/optimize-image.ts",
     "weeknotes:new": "node scripts/new-content.ts weeknotes",
@@ -69,8 +70,8 @@
     "node": ">=24"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,json,css,scss,md,astro}": [
-      "prettier --write"
+    "*": [
+      "prettier --write --ignore-unknown"
     ],
     "posts/**/images/*": [
       "node scripts/check-image-metadata.ts"
