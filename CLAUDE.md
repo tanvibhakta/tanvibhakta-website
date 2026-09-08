@@ -72,7 +72,7 @@ rehype plugins (`.anchor-link`) belong in `src/styles/global.css`.
 - Post images live in a sibling `images/` folder per collection
   (e.g. `posts/blog/images/`) and are referenced relatively from markdown:
   `![alt](images/foo.webp)`.
-- One profile everywhere: ≤3000px longest edge, WebP q85, metadata stripped.
+- One profile everywhere: ≤3000px longest edge, WebP q95, metadata stripped.
   `pnpm img <file>` produces it; Sveltia's upload transform matches it; a
   pre-commit guard (`scripts/check-image-metadata.ts` via lint-staged, with a
   CI backstop) enforces it.

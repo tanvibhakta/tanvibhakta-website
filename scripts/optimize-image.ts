@@ -5,9 +5,12 @@ import sharp from "sharp";
 
 /**
  * The repo's one image profile (matches Sveltia's upload transform):
- * ≤3000px longest edge, WebP q85, all metadata stripped (orientation baked
+ * ≤3000px longest edge, WebP q95, all metadata stripped (orientation baked
  * in first via rotate()). Equivalent to
- * `cwebp -q 85 -m 6 -sharp_yuv` for the encoding step.
+ * `cwebp -q 95 -m 6 -sharp_yuv` for the encoding step. q95, not 85: the
+ * committed file is the source Astro re-encodes derivatives from, so this
+ * buys freedom from generational loss; q100 would double the bytes for an
+ * imperceptible gain.
  */
 export async function optimizeImage(inputPath: string): Promise<string> {
   const outPath = inputPath.replace(/\.[^.]+$/, ".webp");
@@ -24,7 +27,7 @@ export async function optimizeImage(inputPath: string): Promise<string> {
       fit: "inside",
       withoutEnlargement: true,
     })
-    .webp({ quality: 85, effort: 6, smartSubsample: true })
+    .webp({ quality: 95, effort: 6, smartSubsample: true })
     .toFile(writePath);
   if (inPlace) await rename(writePath, outPath);
   return outPath;

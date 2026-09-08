@@ -53,9 +53,13 @@ posts/weeknotes/images/…
   collisions.
 - Markdown references are relative: `![alt](images/darjeeling-tea-garden.webp)`.
   This is the form Astro optimizes and the form Sveltia inserts.
-- Committed files are **display-grade**: longest edge ≤3000px, WebP q85
-  (visually lossless on a 4K screen, ~1–1.5MB). Full-resolution originals
-  stay in the photo library; the repo archives what the site serves.
+- Committed files are **display-grade**: longest edge ≤3000px, WebP q95
+  (bumped from q85 in PR #120 review). Rationale: the committed file is the
+  _source_ Astro re-encodes derivatives from — readers never download it —
+  so q95 eliminates generational loss at ~1.5–2MB per photo, while q100
+  would double the bytes for an imperceptible gain. Full-resolution
+  originals stay in the photo library; the repo archives what the site
+  serves.
 - Filenames are descriptive slugs (`darjeeling-tea-garden.webp`, not
   `IMG_4032.webp`). Sveltia's `slugify_filename` handles its path; manual
   naming is a habit.
@@ -81,7 +85,7 @@ posts/weeknotes/images/…
    transformations:
      raster_image:
        format: webp
-       quality: 85
+       quality: 95
        width: 3000
        height: 3000
    ```
@@ -159,7 +163,7 @@ for an image-leading post — skip lines matching `/^!\[/`.
 
 - **`pnpm img <file>` script** (`scripts/optimize-image.ts`): sharp — already
   a dependency, no cwebp binary needed — `.rotate()` (bake orientation),
-  resize to ≤3000px, WebP `{ quality: 85, effort: 6, smartSubsample: true }`
+  resize to ≤3000px, WebP `{ quality: 95, effort: 6, smartSubsample: true }`
   (equivalent to `cwebp -q 85 -m 6 -sharp_yuv`). Strips all metadata (sharp's
   default). Prints the markdown snippet to paste.
 - **lint-staged guard**: staged raster images under `posts/**/images/` must

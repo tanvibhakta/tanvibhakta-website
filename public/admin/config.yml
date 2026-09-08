@@ -177,7 +177,7 @@ media_libraries:
       transformations:
         raster_image:
           format: webp
-          quality: 85
+          quality: 95
           # Bounding box, not a crop: Sveltia scales to fit within 3000x3000,
           # matching the check-image-metadata guard's MAX_EDGE.
           width: 3000
