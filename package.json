@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@astrojs/ts-plugin": "^1.10.11",
-    "@eslint/js": "^9.39.5",
+    "@eslint/js": "^10.0.1",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/typography": "^0.5.20",
     "@types/markdown-it": "^14.2.0",
@@ -42,10 +42,10 @@
     "@types/sanitize-html": "^2.16.1",
     "@typescript-eslint/parser": "^8.69.0",
     "cheerio": "^1.2.0",
-    "eslint": "^9.39.5",
-    "eslint-plugin-astro": "^1.7.0",
+    "eslint": "^10.10.0",
+    "eslint-plugin-astro": "^3.1.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
-    "globals": "^16.5.0",
+    "globals": "^17.12.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
     "prettier": "3.9.6",
@@ -57,6 +57,13 @@
     "yaml": "^2.9.0"
   },
   "packageManager": "pnpm@10.33.0",
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "eslint-plugin-jsx-a11y>eslint": "^10"
+      }
+    }
+  },
   "engines": {
     "node": ">=24"
   },
