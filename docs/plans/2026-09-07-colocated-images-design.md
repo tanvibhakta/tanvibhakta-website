@@ -1,7 +1,10 @@
 # Colocated images: storage, authoring, and serving
 
 **Date:** 2026-09-07
-**Status:** Validated design, not yet implemented
+**Status:** Implemented (PR #120, 2026-09-08). Execution log with all
+review deviations: `2026-09-07-colocated-images-plan.md`. The build-time
+alert was verified end-to-end on the deploy preview; the Sveltia
+drag-and-drop smoke test remains as a post-merge check.
 
 ## Goal
 
@@ -45,7 +48,7 @@ posts/weeknotes/images/…
 - A sibling `images/` folder per collection directory (same shape for
   poetry, digital-garden, notes, and pages). Note this folder is shared by
   every entry in the collection — Sveltia's relative `media_folder` resolves
-  against the *collection* folder, not per-entry — so ambiguous filenames
+  against the _collection_ folder, not per-entry — so ambiguous filenames
   (`sunset.webp`) should be prefixed with the post slug to avoid cross-post
   collisions.
 - Markdown references are relative: `![alt](images/darjeeling-tea-garden.webp)`.
@@ -115,15 +118,15 @@ posts/weeknotes/images/…
     `<p>` with `<br>` separators, while blank-line-separated images arrive
     as consecutive `<p>`s. The plugin must normalize both shapes (and drop
     the `<br>`s). Layout by
-  count: 1 full-width, 2 side-by-side, 3+ a grid (`object-fit: cover`,
-  shared `aspect-ratio`; classes styled in `global.css`, where
-  plugin-emitted classes belong). Captions use markdown's title syntax:
-  `![alt](images/chai.webp "Chai break")` → `<figcaption>`. Prose between
-  images breaks the group — adjacency always means album; to stack
-  full-width images, put text (even an HTML comment) between them.
-  Sveltia only ever sees plain `![]()` lines, so dropping three files
-  into a draft creates an album with zero extra syntax. Raw HTML `<img>`
-  in markdown is never used — it bypasses the asset pipeline entirely.
+    count: 1 full-width, 2 side-by-side, 3+ a grid (`object-fit: cover`,
+    shared `aspect-ratio`; classes styled in `global.css`, where
+    plugin-emitted classes belong). Captions use markdown's title syntax:
+    `![alt](images/chai.webp "Chai break")` → `<figcaption>`. Prose between
+    images breaks the group — adjacency always means album; to stack
+    full-width images, put text (even an HTML comment) between them.
+    Sveltia only ever sees plain `![]()` lines, so dropping three files
+    into a draft creates an album with zero extra syntax. Raw HTML `<img>`
+    in markdown is never used — it bypasses the asset pipeline entirely.
 - **No MDX, no `Images.astro`.** Considered and rejected: MDX-by-default
   breaks Sveltia (its Lexical editor outputs plain markdown and would
   mangle JSX on round-trip); Sveltia custom editor components would put
