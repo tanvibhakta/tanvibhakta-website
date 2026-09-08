@@ -27,7 +27,7 @@ I was going to read [WhatMurdah’s Bloody, Slutty and Pathetic](https://archive
 
 ### Watching
 
-I watched Wuthering Heights in the theatre and [wrote about my thoughts](https://tanvibhakta.in/blog/review-wuthering-heights/). 
+I watched Wuthering Heights in the theatre and [wrote about my thoughts](https://tanvibhakta.in/blog/review-wuthering-heights/).
 
 ### Listening
 

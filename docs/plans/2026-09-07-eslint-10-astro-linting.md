@@ -17,6 +17,7 @@
 ### Task 1: Bump the packages
 
 **Files:**
+
 - Modify: `package.json` (devDependencies + `pnpm` key)
 
 **Step 1: Upgrade via CLI (always `@latest`, never hand-edited versions)**
@@ -27,6 +28,7 @@ pnpm add -D eslint@latest @eslint/js@latest eslint-plugin-astro@latest globals@l
 ```
 
 Expected: installs eslint 10.10.x, @eslint/js 10.0.x, eslint-plugin-astro 3.1.x, globals 17.x. Two warnings are expected and OK:
+
 - unmet peer `eslint@^9` from `eslint-plugin-jsx-a11y` (fixed in Step 2)
 - engines warning from eslint-plugin-astro (`node ^24.16.0` vs local 24.13) — advisory only; see Task 5.
 
@@ -66,6 +68,7 @@ git commit -m "bump eslint to 10, eslint-plugin-astro to 3, globals to 17"
 ### Task 2: Rewrite eslint.config.js
 
 **Files:**
+
 - Modify: `eslint.config.js` (full replacement, it's 17 lines)
 
 **Step 1: Replace the config with:**
@@ -107,6 +110,7 @@ export default defineConfig([
 ```
 
 Notes for the implementer:
+
 - The glob fix (`ts,astro` — no space) plus the two plugin configs at the end are the point of this task. The plugin configs register `astro-eslint-parser` for `*.astro`; order matters — they come after `tseslint.configs.recommended` so their parser settings win for `.astro` files.
 - `defineConfig` flattens nested arrays, so the plugin's config arrays can be listed directly.
 - `node_modules` is ignored by ESLint automatically; the `globalIgnores` entries are the repo-specific ones.
@@ -139,6 +143,7 @@ git commit -m "wire astro + jsx-a11y plugins into eslint config, add ignores"
 ### Task 3: Triage and fix the findings
 
 **Files:**
+
 - Modify: `tests/linkChecker.test.ts:36` (unused `error` binding in catch)
 - Modify: `tests/linkChecker.test.ts:157` (`prefer-const` for `pathname`)
 - Modify: whatever the newly-linted `.astro` files and ESLint 10's three new recommended rules (`no-unassigned-vars`, `no-useless-assignment`, `preserve-caught-error`) surface — unknown until the config lands.
@@ -189,6 +194,7 @@ git commit -m "fix lint findings surfaced by astro-aware eslint"
 ### Task 4: Add the lint script and CI job
 
 **Files:**
+
 - Modify: `package.json` (scripts)
 - Create: `.github/workflows/lint.yml`
 

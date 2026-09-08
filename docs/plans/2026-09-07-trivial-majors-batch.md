@@ -15,6 +15,7 @@
 ### Task 1: Bump and prune
 
 **Files:**
+
 - Modify: `package.json`, `pnpm-lock.yaml`
 
 **Step 1: Upgrade via CLI**
