@@ -1,4 +1,5 @@
 ---
+import { titleHtml } from "../../utils/title-markdown";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 import { getPublishedEntries } from "../../utils/collections";
 import { SECTIONS } from "../../content.config";
@@ -51,7 +52,10 @@ const postsWithDescriptions = await Promise.all(
           {postsWithDescriptions.map((post) => {
             return (
               <li>
-                <a href={`/digital-garden/${post.id}`}>{post.data.title}</a>
+                <a
+                  href={`/digital-garden/${post.id}`}
+                  set:html={titleHtml(post.data.title)}
+                />
                 {post.description && <p>{post.description}</p>}
               </li>
             );
