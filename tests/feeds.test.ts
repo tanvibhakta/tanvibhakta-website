@@ -87,6 +87,12 @@ vi.mock("markdown-it", () => {
   };
 });
 
+// title-markdown builds its own parser from markdown-it, which the mock above
+// can't serve. Its behavior has its own tests; here titles pass through as-is.
+vi.mock("../src/utils/title-markdown", () => ({
+  titleText: (title: string) => title,
+}));
+
 vi.mock("sanitize-html", () => {
   const sanitizeDefault = Object.assign(
     vi.fn((html: string) => html),

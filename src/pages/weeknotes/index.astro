@@ -1,4 +1,5 @@
 ---
+import { titleHtml } from "../../utils/title-markdown";
 import { render } from "astro:content";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 import { getPublishedEntriesSorted } from "../../utils/collections";
@@ -16,7 +17,7 @@ const { Content } = latestWeeknote
   {
     latestWeeknote && (
       <article>
-        <h1>{latestWeeknote.data.title}</h1>
+        <h1 set:html={titleHtml(latestWeeknote.data.title)} />
         <Content />
       </article>
     )
@@ -30,7 +31,10 @@ const { Content } = latestWeeknote
           {previousWeeknotes.map((weeknote) => {
             return (
               <li>
-                <a href={`/weeknotes/${weeknote.id}`}>{weeknote.data.title}</a>
+                <a
+                  href={`/weeknotes/${weeknote.id}`}
+                  set:html={titleHtml(weeknote.data.title)}
+                />
               </li>
             );
           })}
