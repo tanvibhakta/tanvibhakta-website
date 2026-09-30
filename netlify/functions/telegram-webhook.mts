@@ -1,6 +1,7 @@
 import { Buffer } from "node:buffer";
 import {
   buildNote,
+  formatNote,
   noteNumberFromListing,
   type NoteFile,
   type TelegramMessage,
@@ -51,7 +52,7 @@ export default async (req: Request): Promise<Response> => {
   // resent. Telling the sender and letting them resend keeps one message
   // ↔ one note.
   try {
-    const path = await commitNote(note, message.message_id);
+    const path = await commitNote(await formatNote(note), message.message_id);
     await reply(
       message,
       `Published ${await noteLink(path)} — live once the rebuild finishes (~2 min).`,
