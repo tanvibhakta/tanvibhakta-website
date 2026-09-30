@@ -4,6 +4,33 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Content Manager</title>
+    <style>
+      /* Sveltia has no config option for side-by-side fields, so this targets
+         its editor DOM: each field is a `section.field[data-key-path="<name>"]`
+         sibling. When Draft directly follows Publish Date, they share a row
+         if both fit and wrap onto separate rows if they don't. Each field's
+         divider is an inset `::after` line; dropping the inner insets and
+         letting Draft grow keeps the divider continuous across the row. */
+      .content-editor .pane[data-mode="edit"] :has(> .field[data-key-path="publishedOn"] + .field[data-key-path="draft"]) {
+        display: flex;
+        flex-wrap: wrap;
+        > * {
+          flex: 1 1 100%;
+        }
+        > .field[data-key-path="publishedOn"] {
+          flex: 0 0 auto;
+          &::after {
+            right: 0;
+          }
+        }
+        > .field[data-key-path="draft"] {
+          flex: 1 0 auto;
+          &::after {
+            left: 0;
+          }
+        }
+      }
+    </style>
   </head>
   <body>
     <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
