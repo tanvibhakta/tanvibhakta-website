@@ -1,7 +1,8 @@
 # Telegram photo notes
 
 **Date:** 2026-10-05
-**Status:** Design agreed; not yet planned or implemented.
+**Status:** Implemented on branch `telegram-photo-notes`; end-to-end test
+on the deploy preview pending. Plan: `2026-10-05-telegram-photo-notes-plan.md`.
 **Revisit:** album buffering, around 2026-11-05 (see "Albums").
 
 ## Goal

@@ -4,6 +4,7 @@ import { join } from "node:path";
 import sharp from "sharp";
 import { afterAll, describe, expect, test } from "vitest";
 import { optimizeImage } from "../scripts/optimize-image.ts";
+import { toSiteWebp } from "../src/utils/image-profile.ts";
 
 const dir = await mkdtemp(join(tmpdir(), "img-test-"));
 afterAll(() => rm(dir, { recursive: true, force: true }));
@@ -56,5 +57,26 @@ describe("optimizeImage", () => {
     expect(meta.format).toBe("webp");
     expect(meta.width).toBe(3000);
     expect(meta.exif).toBeUndefined();
+  });
+});
+
+describe("toSiteWebp", () => {
+  test("buffer in, profiled webp buffer out", async () => {
+    const input = await sharp({
+      create: { width: 4000, height: 2000, channels: 3, background: "#888" },
+    })
+      .jpeg()
+      .withExifMerge({ IFD0: { ImageDescription: "secret" } })
+      .toBuffer();
+    expect((await sharp(input).metadata()).exif).toBeDefined();
+
+    const meta = await sharp(await toSiteWebp(input)).metadata();
+    expect(meta.format).toBe("webp");
+    expect(meta.width).toBe(3000);
+    expect(meta.exif).toBeUndefined();
+  });
+
+  test("rejects input sharp can't decode", async () => {
+    await expect(toSiteWebp(Buffer.from("not an image"))).rejects.toThrow();
   });
 });

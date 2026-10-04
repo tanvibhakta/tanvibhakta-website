@@ -15,6 +15,8 @@
 </dialog>
 
 <script>
+  import { stripImages } from "../utils/lightbox-scope";
+
   const dialog = document.getElementById("lightbox") as HTMLDialogElement;
   const strip = document.getElementById("lightbox-strip")!;
   const closeButton = document.getElementById("lightbox-close")!;
@@ -61,28 +63,30 @@
   // knows the history entry is already consumed and doesn't back() again.
   let closingFromPopstate = false;
 
-  const open = (index: number) => {
+  const open = (clicked: HTMLImageElement) => {
     // Guard: never push twice for one open (currently unreachable — inline
     // images sit under the modal while it's open — but cheap insurance).
     if (!dialog.open) history.pushState({ lightbox: true }, "");
-    strip.replaceChildren(...proseImages.map(buildSlide));
+    // Scoped to the clicked image's note on the /notes feed.
+    const images = stripImages(clicked, document);
+    strip.replaceChildren(...images.map(buildSlide));
     dialog.showModal();
-    strip.children[index]?.scrollIntoView({
+    strip.children[images.indexOf(clicked)]?.scrollIntoView({
       inline: "center",
       block: "nearest",
     });
   };
 
   if (dialog && proseImages.length > 0) {
-    proseImages.forEach((img, index) => {
+    proseImages.forEach((img) => {
       // Keyboard path in: inline images act as buttons.
       img.setAttribute("tabindex", "0");
       img.setAttribute("role", "button");
-      img.addEventListener("click", () => open(index));
+      img.addEventListener("click", () => open(img));
       img.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          open(index);
+          open(img);
         }
       });
     });
