@@ -46,7 +46,20 @@ the only grouping is Telegram's own album (`media_group_id`).
   `entities`; `entitiesToMarkdown` converts it unchanged.
 - **Alt text:** empty. A caption isn't an image description; generated alt
   text is issue #118.
-- **Timestamp:** the message's send time, exactly as for text notes.
+- **Timestamp:** the message's send time, exactly as for text notes,
+  except for forwards of your own messages (below).
+
+## Forwarded messages keep their original date
+
+On a forward, `message.date` is the time of the forward. Telegram keeps the
+original send time in `forward_origin.date`. `buildNote` uses it **only when
+the original sender is the allowlisted user** (`forward_origin.type ===
+"user"` and `sender_user.id` matches `TELEGRAM_ALLOWED_USER_ID`). A forward
+from anyone else's chat or channel keeps the forward time: the original
+date there is when they posted, not when you shared it.
+
+This applies to text and photo notes alike, and it is the backfill path:
+forwarding an old message to the bot publishes it with its real timestamp.
 
 ## Rendering change: per-note lightbox
 
@@ -147,19 +160,32 @@ idempotency:
   existing `optimize-image` test).
 - **Lightbox:** with images in two `<article>`s, opening one only strips
   its own article's images; with no article, all page images.
-- **Deploy preview:** `sharp` loads in the function. The preview must not
-  commit to `main`, so the end-to-end test points the webhook at the
-  preview with commits redirected to a scratch branch, or runs after merge
-  with a test note deleted afterwards. The plan picks one.
-- **After deploy:** re-register the webhook (same URL, secret,
-  `allowed_updates`, plus `max_connections=1`) and confirm with
-  `getWebhookInfo`. Send a captioned photo, a captionless photo, a 3-photo
-  album, and an image as a file.
+- **Forward dating:** own-message forward uses `forward_origin.date`; a
+  forward from another user or a channel uses `message.date`.
+- **End-to-end on the PR's deploy preview** (no production testing):
+  1. The webhook commits to `process.env.NOTES_BRANCH ?? "main"`. On
+     Netlify, `NOTES_BRANCH=telegram-photo-notes` is scoped to the
+     deploy-preview context only.
+  2. Save `getWebhookInfo`, then point the webhook at the PR's stable
+     alias, `deploy-preview-<N>--tanvibhakta.netlify.app/api/telegram-webhook`
+     (each test commit triggers a new preview build; the alias always
+     serves the newest).
+  3. Send: a captioned photo, a captionless photo, a 3-photo album, an
+     image as a file, a non-image file, and a forward of an old message.
+     Test notes land on the PR branch, so the preview shows them; check
+     the gallery, the per-note lightbox on `/notes`, and
+     `/notes/feed.xml`.
+  4. Re-register the production webhook (same URL, secret,
+     `allowed_updates`, plus `max_connections=1`) and confirm with
+     `getWebhookInfo`. No real notes during the window; any that slip in
+     are cherry-picked to `main`.
+  5. Drop the test commits from the branch before merging.
 
 ## Out of scope
 
-- **Backfilling** the three photos from the 2026-09-27 export. That will be
-  done later from the export, in a separate step. Backdated notes change
+- **Backfilling** the three photos from 2026-09-27. Once this ships, it's
+  a matter of forwarding those messages to the bot (see "Forwarded
+  messages"); no export script. Backdated notes change
   the `/notes/N` numbering of later notes, and feed readers use those links
   as item IDs, which is worth checking when the backfill is planned.
 - Album buffering (above).
