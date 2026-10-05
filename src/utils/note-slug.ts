@@ -7,46 +7,30 @@
 //
 // Kept free of astro:content so the Telegram webhook can share it.
 
-const MONTHS = [
-  "jan",
-  "feb",
-  "mar",
-  "apr",
-  "may",
-  "jun",
-  "jul",
-  "aug",
-  "sep",
-  "oct",
-  "nov",
-  "dec",
-];
-
-const NOTE_SLUG = new RegExp(`^\\d{4}(${MONTHS.join("|")})\\d{2}-\\d{2,}$`);
-
 // Whether a path segment is a note slug, e.g. "2026oct05-02". Notes share
 // the root with pages, so this is how a root path is known to be a note.
 export function isNoteSlug(segment: string): boolean {
-  return NOTE_SLUG.test(segment);
+  return /^\d{4}[a-z]{3}\d{2}-\d{2,}$/.test(segment);
 }
 
 const pad2 = (n: number) => String(n).padStart(2, "0");
 
-function dayKey(year: number, month: number, day: number): string {
-  return `${year}${MONTHS[month - 1]}${pad2(day)}`;
-}
+// en-US pinned: other locales differ (en-GB's September is "Sept").
+// timeZone UTC: notes store a naive IST wall clock that parses as UTC (see
+// formatNoteTimestamp), so reading it in UTC gives the authored date.
+const DAY_FORMAT = new Intl.DateTimeFormat("en-US", {
+  timeZone: "UTC",
+  year: "numeric",
+  month: "short",
+  day: "2-digit",
+});
 
-/**
- * "2026oct05" for a note's publishedOn. Notes store a naive IST wall clock
- * that parses as UTC (see formatNoteTimestamp), so the UTC fields are the
- * authored date.
- */
+/** "2026oct05" for a note's publishedOn. */
 export function noteDayKey(publishedOn: Date): string {
-  return dayKey(
-    publishedOn.getUTCFullYear(),
-    publishedOn.getUTCMonth() + 1,
-    publishedOn.getUTCDate(),
+  const parts = Object.fromEntries(
+    DAY_FORMAT.formatToParts(publishedOn).map((p) => [p.type, p.value]),
   );
+  return `${parts.year}${parts.month}${parts.day}`.toLowerCase();
 }
 
 interface SlugInput {
@@ -92,6 +76,6 @@ export function noteSlugFromListing(
     .filter((name) => name.endsWith(".md") && name.startsWith(date))
     .map((name) => name.slice(0, -3))
     .sort();
-  const [year, month, day] = date.split("-").map(Number);
-  return `${dayKey(year, month, day)}-${pad2(sameDay.indexOf(stem) + 1)}`;
+  const day = noteDayKey(new Date(`${date}T00:00:00Z`));
+  return `${day}-${pad2(sameDay.indexOf(stem) + 1)}`;
 }

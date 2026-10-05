@@ -14,6 +14,15 @@ describe("noteDayKey", () => {
     expect(noteDayKey(at("2026-10-05T15:51:00"))).toBe("2026oct05");
   });
 
+  test("uses three-letter months for all twelve", () => {
+    const months = Array.from({ length: 12 }, (_, m) =>
+      noteDayKey(new Date(Date.UTC(2026, m, 1))).slice(4, 7),
+    );
+    expect(months).toEqual(
+      "jan feb mar apr may jun jul aug sep oct nov dec".split(" "),
+    );
+  });
+
   test("reads the authored wall-clock date, not a shifted instant", () => {
     // 00:44 IST on 2 Oct must not slip back to 1 Oct.
     expect(noteDayKey(at("2026-10-02T00:44:25"))).toBe("2026oct02");
