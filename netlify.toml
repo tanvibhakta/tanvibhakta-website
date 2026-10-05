@@ -5,6 +5,12 @@
 [build.environment]
   NODE_VERSION = "24"
 
+# sharp is a native module (the Telegram webhook converts photos with it):
+# ship it from node_modules instead of letting the bundler inline it, so
+# the Linux binary Netlify installed at build time comes along.
+[functions]
+  external_node_modules = ["sharp"]
+
 # [[redirects]]
 #   from = "/weeknotes/"
 #   to = "https://tanvibhakta.mataroa.blog"
