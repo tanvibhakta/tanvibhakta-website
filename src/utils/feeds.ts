@@ -14,6 +14,7 @@ import { absolutizeImages } from "./feed-images";
 import { entryImageMap } from "./feed-image-map";
 import { getNoteNumbers } from "./notes";
 import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION } from "./site";
+import { titleText } from "./title-markdown";
 
 const FEED_LIMIT = 25;
 const markdownParser = new MarkdownIt();
@@ -87,7 +88,7 @@ function capitalizeFirst(str: string): string {
  */
 function feedItemTitle(entry: FeedEntry): string {
   return "title" in entry.data
-    ? entry.data.title
+    ? titleText(entry.data.title)
     : formatLongDate(entry.data.publishedOn);
 }
 

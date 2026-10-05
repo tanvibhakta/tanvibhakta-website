@@ -1,5 +1,5 @@
 ---
-title: Birthday B̶l̶u̶e̶s̶ Purples
+title: Birthday ~~Blues~~ Purples
 publishedOn: 2026-09-30T13:16:00+05:30
 draft: false
 audio: ""
