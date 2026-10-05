@@ -12,7 +12,7 @@ import {
 import { formatLongDate, noteWallClockToInstant } from "./date-helpers";
 import { absolutizeImages } from "./feed-images";
 import { entryImageMap } from "./feed-image-map";
-import { getNoteNumbers } from "./notes";
+import { getNoteSlugs } from "./notes";
 import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION } from "./site";
 import { titleText } from "./title-markdown";
 
@@ -158,9 +158,8 @@ export async function generateCollectionFeed(
 ) {
   const entries = await getCollectionEntries(collectionName);
 
-  // Notes are permalinked by number, not by filename id.
-  const noteNumbers =
-    collectionName === "notes" ? await getNoteNumbers() : null;
+  // Notes are permalinked by day slug at the root, not by filename id.
+  const noteSlugs = collectionName === "notes" ? await getNoteSlugs() : null;
 
   // Sort by date and limit
   const sortedEntries = entries.sort(newestFirst).slice(0, FEED_LIMIT);
@@ -173,8 +172,8 @@ export async function generateCollectionFeed(
       sortedEntries.map(async (entry) => ({
         title: feedItemTitle(entry),
         pubDate: feedPubDate(entry),
-        link: noteNumbers
-          ? `/notes/${noteNumbers.get(entry.id)}/`
+        link: noteSlugs
+          ? `/${noteSlugs.get(entry.id)}/`
           : `${getEntryPath(entry.collection, entry.id)}/`,
         content: await feedItemContent(entry),
       })),

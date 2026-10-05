@@ -3,7 +3,6 @@ import {
   buildNote,
   messageImage,
   noteDate,
-  noteNumberFromListing,
   noteStem,
   type TelegramMessage,
 } from "../src/utils/telegram-note";
@@ -47,33 +46,6 @@ describe("buildNote", () => {
 
   test("returns null for whitespace-only text", () => {
     expect(buildNote(msg({ text: "  \n " }), TZ)).toBeNull();
-  });
-
-  test("note number is the note's position among markdown files", () => {
-    const listing = [
-      "2026-08-16-2341.md",
-      "2026-06-21-1200.md",
-      ".DS_Store",
-      "images",
-    ];
-    expect(noteNumberFromListing(listing, "2026-08-16-2341.md")).toBe(2);
-    expect(noteNumberFromListing(listing, "2026-06-21-1200.md")).toBe(1);
-  });
-
-  test("a backdated note is numbered by date, not by arrival", () => {
-    const listing = [
-      "2026-09-27-1150.md",
-      "2026-09-27-1151.md",
-      "2026-10-05-0900.md",
-    ];
-    expect(noteNumberFromListing(listing, "2026-09-27-1151.md")).toBe(2);
-  });
-
-  test("a suffixed filename sorts right after its unsuffixed sibling", () => {
-    // "-" sorts before "." byte-wise, so comparing full filenames would put
-    // 1200-77.md before 1200.md; comparing stems keeps publish order.
-    const listing = ["2026-06-21-1200-77.md", "2026-06-21-1200.md"];
-    expect(noteNumberFromListing(listing, "2026-06-21-1200-77.md")).toBe(2);
   });
 
   test("midnight formats as 00, not 24", () => {

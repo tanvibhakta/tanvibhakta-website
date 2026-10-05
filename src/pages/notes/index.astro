@@ -2,14 +2,14 @@
 import { render } from "astro:content";
 import NotesLayout from "../../layouts/NotesLayout.astro";
 import Note from "../../components/Note.astro";
-import { getNumberedNotes } from "../../utils/notes";
+import { getSluggedNotes } from "../../utils/notes";
 
-// Numbered oldest-first, displayed newest-first.
-const numbered = await getNumberedNotes();
+// Sorted oldest-first, displayed newest-first.
+const slugged = await getSluggedNotes();
 const rendered = await Promise.all(
-  [...numbered].reverse().map(async ({ note, number }) => ({
+  [...slugged].reverse().map(async ({ note, slug }) => ({
     note,
-    number,
+    slug,
     Content: (await render(note)).Content,
   })),
 );
@@ -18,10 +18,10 @@ const rendered = await Promise.all(
 <NotesLayout title="Notes">
   {rendered.length === 0 && <p>No notes yet.</p>}
   {
-    rendered.map(({ note, number, Content }) => (
+    rendered.map(({ note, slug, Content }) => (
       <Note
         publishedOn={note.data.publishedOn}
-        href={`/notes/${number}`}
+        href={`/${slug}`}
         tags={note.data.tags}
       >
         <Content />

@@ -115,25 +115,6 @@ export function messageImage(message: TelegramMessage): MessageImage | null {
   return null;
 }
 
-/**
- * The permalink number of a note, given the filenames in posts/notes/.
- * Notes get xkcd-style sequential slugs ordered by publish time
- * (src/utils/notes.ts); filenames start with the publish minute, so sorting
- * stems approximates that order — exact except for two notes in the same
- * minute, where notes.ts compares seconds. Stems, not full names: "-" sorts
- * before ".", so `1200-77.md` would otherwise precede `1200.md`.
- */
-export function noteNumberFromListing(
-  filenames: string[],
-  filename: string,
-): number {
-  const stems = filenames
-    .filter((name) => name.endsWith(".md"))
-    .map((name) => name.slice(0, -3))
-    .sort();
-  return stems.indexOf(filename.replace(/\.md$/, "")) + 1;
-}
-
 // "YYYY-MM-DDTHH:mm:ss" as read off a clock in `timeZone`.
 function wallClockTimestamp(epochSeconds: number, timeZone: string): string {
   const parts = Object.fromEntries(

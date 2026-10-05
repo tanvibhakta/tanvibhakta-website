@@ -4,7 +4,7 @@ import {
   SECTIONS,
   type collections,
 } from "../content.config";
-import { getNoteNumbers } from "./notes";
+import { getNoteSlugs } from "./notes";
 import { TAGGED_COLLECTIONS } from "./tagged-collections";
 
 export type CollectionName = keyof typeof collections;
@@ -93,8 +93,8 @@ export async function getDraftEntries(collectionName: CollectionName) {
  * annotated with their collection's display label and their page href.
  */
 export async function getAllTaggedPosts() {
-  // Notes are permalinked by number, not by filename id.
-  const noteNumbers = await getNoteNumbers();
+  // Notes are permalinked by day slug at the root, not by filename id.
+  const noteSlugs = await getNoteSlugs();
   const perCollection = await Promise.all(
     TAGGED_COLLECTIONS.map(async (name) =>
       (await getPublishedEntries(name)).map((p) => ({
@@ -102,7 +102,7 @@ export async function getAllTaggedPosts() {
         label: SECTIONS[name].title,
         href:
           name === "notes"
-            ? `/notes/${noteNumbers.get(p.id)}`
+            ? `/${noteSlugs.get(p.id)}`
             : getEntryPath(name, p.id),
       })),
     ),
