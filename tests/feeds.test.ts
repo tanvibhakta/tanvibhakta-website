@@ -8,6 +8,7 @@ import {
   getMainFeedEligibleCollections,
   generateMainFeed,
   generateCollectionFeed,
+  noteReplyPrefix,
 } from "../src/utils/feeds";
 
 // The real getCollection is overloaded against Astro's generated collection
@@ -420,5 +421,18 @@ describe("Feed Content Generation", () => {
     expect(feedItems[0].pubDate?.toISOString()).toBe(
       "2026-06-21T06:30:00.000Z",
     );
+  });
+});
+
+describe("noteReplyPrefix", () => {
+  it("links a reply's parent note by its slug", () => {
+    const prefix = noteReplyPrefix("2026oct05-02");
+    expect(prefix).toMatch(
+      /^<p>↳ replying to <a href="[^"]+\/2026oct05-02\/">2026oct05-02<\/a><\/p>$/,
+    );
+  });
+
+  it("is empty when the parent no longer exists", () => {
+    expect(noteReplyPrefix(undefined)).toBe("");
   });
 });

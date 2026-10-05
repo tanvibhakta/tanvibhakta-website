@@ -108,6 +108,17 @@ function feedPubDate(entry: FeedEntry): Date {
  * references rewritten to absolute optimized URLs (unresolvable ones
  * dropped) — feed readers can't resolve site-relative paths.
  */
+/**
+ * The line a reply's feed item opens with, linking its parent note. Empty
+ * when the parent is missing (deleted), which the site shows as a
+ * placeholder instead.
+ */
+export function noteReplyPrefix(parentSlug: string | undefined): string {
+  if (!parentSlug) return "";
+  const href = new URL(`/${parentSlug}/`, SITE_URL).href;
+  return `<p>↳ replying to <a href="${href}">${parentSlug}</a></p>`;
+}
+
 async function feedItemContent(entry: FeedEntry): Promise<string> {
   return absolutizeImages(
     markdownToHtml(entry.body),
@@ -175,7 +186,10 @@ export async function generateCollectionFeed(
         link: noteSlugs
           ? `/${noteSlugs.get(entry.id)}/`
           : `${getEntryPath(entry.collection, entry.id)}/`,
-        content: await feedItemContent(entry),
+        content:
+          (noteSlugs && "inReplyTo" in entry.data && entry.data.inReplyTo
+            ? noteReplyPrefix(noteSlugs.get(entry.data.inReplyTo))
+            : "") + (await feedItemContent(entry)),
       })),
     ),
   });
