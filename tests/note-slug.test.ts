@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
   assignNoteSlugs,
+  isNoteSlug,
   noteDayKey,
   noteSlugFromListing,
 } from "../src/utils/note-slug";
@@ -65,4 +66,12 @@ describe("noteSlugFromListing", () => {
       "2026jun21-02",
     );
   });
+});
+
+test("isNoteSlug accepts note slugs and rejects other path segments", () => {
+  expect(isNoteSlug("2026oct05-01")).toBe(true);
+  expect(isNoteSlug("2026oct05-123")).toBe(true);
+  expect(isNoteSlug("2026Oct05-01")).toBe(false);
+  expect(isNoteSlug("2026oct05-1")).toBe(false);
+  expect(isNoteSlug("now")).toBe(false);
 });

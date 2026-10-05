@@ -22,6 +22,14 @@ const MONTHS = [
   "dec",
 ];
 
+const NOTE_SLUG = new RegExp(`^\\d{4}(${MONTHS.join("|")})\\d{2}-\\d{2,}$`);
+
+// Whether a path segment is a note slug, e.g. "2026oct05-02". Notes share
+// the root with pages, so this is how a root path is known to be a note.
+export function isNoteSlug(segment: string): boolean {
+  return NOTE_SLUG.test(segment);
+}
+
 const pad2 = (n: number) => String(n).padStart(2, "0");
 
 function dayKey(year: number, month: number, day: number): string {

@@ -6,6 +6,7 @@ import fs from "fs";
 import { exec } from "child_process";
 import { promisify } from "util";
 import { SITE_TAB_TITLE } from "../src/utils/site";
+import { isNoteSlug } from "../src/utils/note-slug";
 
 const execAsync = promisify(exec);
 
@@ -81,26 +82,35 @@ describe("Page Titles", () => {
     expect(extractTitle(html)).toBe("Notes | Tanvi's Web Home");
   });
 
+  // Notes are permalinked at the root by day slug (/2026oct05-01). An empty
+  // collection is a valid state (notes publish via Telegram, and the set can
+  // be cleared); the per-note assertions only apply when notes exist.
+  async function firstNoteHtml(): Promise<string | undefined> {
+    const entries = await fs.promises.readdir(distDir);
+    const note = entries.find((e) => isNoteSlug(e));
+    if (!note) return undefined;
+    return fs.promises.readFile(path.join(distDir, note, "index.html"), "utf8");
+  }
+
   test("Note has date title with Notes suffix", async () => {
-    const notesDir = path.join(distDir, "notes");
-    const entries = await fs.promises.readdir(notesDir);
-    const posts = entries.filter(
-      (e) =>
-        e !== "feed.xml" && fs.statSync(path.join(notesDir, e)).isDirectory(),
-    );
-
-    // Notes are permalinked by an xkcd-style sequential number. An empty
-    // collection is a valid state (notes publish via Telegram, and the set
-    // can be cleared); the per-note assertions only apply when notes exist.
-    expect(posts.every((p) => /^\d+$/.test(p))).toBe(true);
-    if (posts.length === 0) return;
-    expect(posts).toContain("1");
-
-    const html = await fs.promises.readFile(
-      path.join(notesDir, posts[0], "index.html"),
-      "utf8",
-    );
+    const html = await firstNoteHtml();
+    if (!html) return;
     expect(extractTitle(html)).toMatch(/^.+ \| Notes \| Tanvi's Web Home$/);
+  });
+
+  test("Note marks Notes as the current nav section", async () => {
+    const html = await firstNoteHtml();
+    if (!html) return;
+    const $ = cheerio.load(html);
+    const current = $('nav a[aria-current="page"]');
+    expect(current.text().trim()).toBe("Notes");
+    expect(current.attr("href")).toBe("/notes");
+  });
+
+  test("Note pages carry the site footer", async () => {
+    const html = await firstNoteHtml();
+    if (!html) return;
+    expect(cheerio.load(html)('footer a[href="/sitemap"]').length).toBe(1);
   });
 
   test("Blog post has title with Blog suffix", async () => {
