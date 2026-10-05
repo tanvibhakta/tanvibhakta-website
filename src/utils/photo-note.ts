@@ -32,6 +32,9 @@ const IMAGE_LINE = /^!\[[^\]]*\]\(images\/[^)\s]+\)$/;
  *   and group id, so each computes the same path; the first creates the
  *   note, the rest append their image after the last image line.
  *
+ * A reply's `inReplyTo` goes on the note it creates; later album photos
+ * leave the note's frontmatter alone.
+ *
  * Image lines sit on adjacent lines so rehype-gallery groups them into one
  * gallery; the caption follows after a blank line.
  */
@@ -40,6 +43,7 @@ export async function planPhotoNote(
   timeZone: string,
   ownerId: number | undefined,
   readNote: (path: string) => Promise<string | null>,
+  inReplyTo?: string,
 ): Promise<PhotoNotePlan> {
   const epoch = noteDate(message, ownerId);
   const stem = noteStem(epoch, timeZone);
@@ -58,6 +62,7 @@ export async function planPhotoNote(
       epoch,
       timeZone,
       caption ? `${imageLine}\n\n${caption}` : imageLine,
+      inReplyTo,
     ),
   });
 

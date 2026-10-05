@@ -4,6 +4,7 @@ import {
   isNoteSlug,
   noteDayKey,
   noteSlugFromListing,
+  filenameForSlug,
 } from "../src/utils/note-slug";
 
 // Notes store naive wall clocks that parse as UTC; fixtures use Z to match.
@@ -83,4 +84,29 @@ test("isNoteSlug accepts note slugs and rejects other path segments", () => {
   expect(isNoteSlug("2026Oct05-01")).toBe(false);
   expect(isNoteSlug("2026oct05-1")).toBe(false);
   expect(isNoteSlug("now")).toBe(false);
+});
+
+describe("filenameForSlug", () => {
+  const listing = [
+    "2026-10-05-0900.md",
+    "2026-10-05-1551-66.md",
+    "2026-10-05-1551.md",
+    "2026-10-04-2300.md",
+    "images",
+  ];
+
+  test("is the inverse of noteSlugFromListing", () => {
+    for (const name of listing.filter((n) => n.endsWith(".md"))) {
+      const slug = noteSlugFromListing(listing, name);
+      expect(filenameForSlug(listing, slug)).toBe(name);
+    }
+  });
+
+  test("is null for a slug past the end of its day", () => {
+    expect(filenameForSlug(listing, "2026oct05-09")).toBeNull();
+  });
+
+  test("is null for something that isn't a note slug", () => {
+    expect(filenameForSlug(listing, "care")).toBeNull();
+  });
 });
