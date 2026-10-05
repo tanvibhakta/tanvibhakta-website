@@ -5,6 +5,7 @@ import SiteFooter from "../components/SiteFooter.astro";
 import SectionFooter from "../components/SectionFooter.astro";
 import { shortenWeeknoteTitles, formatLongDate } from "../utils/date-helpers";
 import type { SectionNav } from "../utils/collections";
+import { titleHtml, titleText } from "../utils/title-markdown";
 
 const { frontmatter, category, readingTimeMinutes, hidePublishedOn, noindex } =
   Astro.props;
@@ -18,15 +19,16 @@ const publishedOnFormatted = showPublishedOn
 const publishedOnIso = showPublishedOn ? publishedOn.toISOString() : undefined;
 
 let pageTitle = "";
-if (frontmatter?.title) {
+const plainTitle = frontmatter?.title ? titleText(frontmatter.title) : "";
+if (plainTitle) {
   if (category === "weeknotes") {
-    pageTitle = `${shortenWeeknoteTitles(frontmatter.title)} | Weeknote`;
+    pageTitle = `${shortenWeeknoteTitles(plainTitle)} | Weeknote`;
   } else if (category === "blog") {
-    pageTitle = `${frontmatter.title} | Blog`;
+    pageTitle = `${plainTitle} | Blog`;
   } else if (category === "poetry") {
-    pageTitle = `${frontmatter.title} | Poetry`;
+    pageTitle = `${plainTitle} | Poetry`;
   } else {
-    pageTitle = frontmatter.title;
+    pageTitle = plainTitle;
   }
 }
 /** TODO: different formats for different kinds of pages
@@ -50,7 +52,7 @@ if (frontmatter?.title) {
     {
       frontmatter?.title && (
         <header class="title-block">
-          <h1>{frontmatter.title}</h1>
+          <h1 set:html={titleHtml(frontmatter.title)} />
           {(publishedOnFormatted || readingTimeMinutes) && (
             <p class="post-meta">
               {publishedOnFormatted && (

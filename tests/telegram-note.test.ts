@@ -1,7 +1,10 @@
 import { describe, expect, test } from "vitest";
 import {
   buildNote,
+  messageImage,
+  noteDate,
   noteNumberFromListing,
+  noteStem,
   type TelegramMessage,
 } from "../src/utils/telegram-note";
 
@@ -46,17 +49,31 @@ describe("buildNote", () => {
     expect(buildNote(msg({ text: "  \n " }), TZ)).toBeNull();
   });
 
-  test("note number is the count of markdown files in the listing", () => {
-    // Notes are numbered by publish order and only added forward in time
-    // (see src/utils/notes.ts), so the newest note's number is the total
-    // count of note files after it lands.
-    expect(
-      noteNumberFromListing([
-        "2026-06-21-1200.md",
-        "2026-08-16-2341.md",
-        ".DS_Store",
-      ]),
-    ).toBe(2);
+  test("note number is the note's position among markdown files", () => {
+    const listing = [
+      "2026-08-16-2341.md",
+      "2026-06-21-1200.md",
+      ".DS_Store",
+      "images",
+    ];
+    expect(noteNumberFromListing(listing, "2026-08-16-2341.md")).toBe(2);
+    expect(noteNumberFromListing(listing, "2026-06-21-1200.md")).toBe(1);
+  });
+
+  test("a backdated note is numbered by date, not by arrival", () => {
+    const listing = [
+      "2026-09-27-1150.md",
+      "2026-09-27-1151.md",
+      "2026-10-05-0900.md",
+    ];
+    expect(noteNumberFromListing(listing, "2026-09-27-1151.md")).toBe(2);
+  });
+
+  test("a suffixed filename sorts right after its unsuffixed sibling", () => {
+    // "-" sorts before "." byte-wise, so comparing full filenames would put
+    // 1200-77.md before 1200.md; comparing stems keeps publish order.
+    const listing = ["2026-06-21-1200-77.md", "2026-06-21-1200.md"];
+    expect(noteNumberFromListing(listing, "2026-06-21-1200-77.md")).toBe(2);
   });
 
   test("midnight formats as 00, not 24", () => {
@@ -67,5 +84,105 @@ describe("buildNote", () => {
     );
     expect(note?.filename).toBe("2026-06-22-0005.md");
     expect(note?.content).toContain("publishedOn: 2026-06-22T00:05:00");
+  });
+});
+
+const OWNER = 213974271;
+
+describe("noteDate", () => {
+  const sent = Date.UTC(2026, 9, 5, 4, 0, 0) / 1000;
+  const original = Date.UTC(2026, 8, 27, 6, 21, 21) / 1000;
+
+  test("a plain message is dated when sent", () => {
+    expect(noteDate(msg({ date: sent }), OWNER)).toBe(sent);
+  });
+
+  test("a forward of your own message keeps its original date", () => {
+    const forward = msg({
+      date: sent,
+      forward_origin: {
+        type: "user",
+        date: original,
+        sender_user: { id: OWNER },
+      },
+    });
+    expect(noteDate(forward, OWNER)).toBe(original);
+  });
+
+  test("a forward from someone else is dated when forwarded", () => {
+    const forward = msg({
+      date: sent,
+      forward_origin: { type: "user", date: original, sender_user: { id: 1 } },
+    });
+    expect(noteDate(forward, OWNER)).toBe(sent);
+  });
+
+  test("a forward from a channel is dated when forwarded", () => {
+    const forward = msg({
+      date: sent,
+      forward_origin: { type: "channel", date: original },
+    });
+    expect(noteDate(forward, OWNER)).toBe(sent);
+  });
+
+  test("buildNote uses the original date of an own forward", () => {
+    const forward = msg({
+      date: sent,
+      forward_origin: {
+        type: "user",
+        date: original,
+        sender_user: { id: OWNER },
+      },
+    });
+    expect(buildNote(forward, TZ, OWNER)?.filename).toBe("2026-09-27-1151.md");
+  });
+});
+
+describe("noteStem", () => {
+  test("is the filename stem buildNote derives", () => {
+    expect(noteStem(Date.UTC(2026, 5, 21, 6, 30, 0) / 1000, TZ)).toBe(
+      "2026-06-21-1200",
+    );
+  });
+});
+
+describe("messageImage", () => {
+  test("picks the largest photo size", () => {
+    const image = messageImage(
+      msg({
+        text: undefined,
+        photo: [
+          { file_id: "small", width: 90, height: 60, file_size: 1000 },
+          { file_id: "large", width: 1280, height: 853, file_size: 90000 },
+          { file_id: "medium", width: 320, height: 213, file_size: 9000 },
+        ],
+      }),
+    );
+    expect(image).toEqual({ fileId: "large", fileSize: 90000 });
+  });
+
+  test("accepts an image sent as a file", () => {
+    const image = messageImage(
+      msg({
+        text: undefined,
+        document: { file_id: "doc", mime_type: "image/jpeg", file_size: 5 },
+      }),
+    );
+    expect(image).toEqual({ fileId: "doc", fileSize: 5 });
+  });
+
+  test("ignores a non-image file", () => {
+    expect(
+      messageImage(
+        msg({
+          text: undefined,
+          document: { file_id: "doc", mime_type: "application/pdf" },
+        }),
+      ),
+    ).toBeNull();
+  });
+
+  test("a text message has no image", () => {
+    expect(messageImage(msg({}))).toBeNull();
   });
 });

@@ -1,4 +1,6 @@
 ---
+import { titleHtml } from "../utils/title-markdown";
+
 // The site's directional navigation link. Without a destination title it is
 // one line, "← all tags". With one, the arrow stays with the label, which
 // becomes a quiet caption stacked over the destination itself: "next →"
@@ -29,9 +31,7 @@ const LINK_CLASS = "no-underline hover:underline";
         {label}
         {!back && <span aria-hidden="true">&nbsp;→</span>}
       </span>
-      <a href={href} class={LINK_CLASS}>
-        {title}
-      </a>
+      <a href={href} class={LINK_CLASS} set:html={titleHtml(title)} />
     </>
   ) : (
     <a href={href} class={LINK_CLASS}>

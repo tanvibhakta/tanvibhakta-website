@@ -1,34 +1,20 @@
-import { rename } from "node:fs/promises";
+import { rename, writeFile } from "node:fs/promises";
 import { basename } from "node:path";
 import { pathToFileURL } from "node:url";
-import sharp from "sharp";
+import { toSiteWebp } from "../src/utils/image-profile.ts";
 
 /**
- * The repo's one image profile (matches Sveltia's upload transform):
- * ≤3000px longest edge, WebP q95, all metadata stripped (orientation baked
- * in first via rotate()). Equivalent to
- * `cwebp -q 95 -m 6 -sharp_yuv` for the encoding step. q95, not 85: the
- * committed file is the source Astro re-encodes derivatives from, so this
- * buys freedom from generational loss; q100 would double the bytes for an
- * imperceptible gain.
+ * Converts a file on disk to the repo's image profile (see toSiteWebp),
+ * writing `<name>.webp` next to it.
  */
 export async function optimizeImage(inputPath: string): Promise<string> {
   const outPath = inputPath.replace(/\.[^.]+$/, ".webp");
-  // sharp refuses same-file input/output, so a .webp input (or an
-  // extensionless path, where replace() is a no-op) is written to a temp
-  // sibling and renamed over the original.
+  // Written to a temp sibling and renamed when converting in place (a .webp
+  // input, or an extensionless path where replace() is a no-op), so a
+  // failed encode never truncates the original.
   const inPlace = outPath === inputPath;
   const writePath = inPlace ? `${outPath}.optimizing.tmp` : outPath;
-  await sharp(inputPath)
-    .rotate()
-    .resize({
-      width: 3000,
-      height: 3000,
-      fit: "inside",
-      withoutEnlargement: true,
-    })
-    .webp({ quality: 95, effort: 6, smartSubsample: true })
-    .toFile(writePath);
+  await writeFile(writePath, await toSiteWebp(inputPath));
   if (inPlace) await rename(writePath, outPath);
   return outPath;
 }

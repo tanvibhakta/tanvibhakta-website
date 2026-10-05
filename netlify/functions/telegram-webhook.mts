@@ -1,8 +1,12 @@
-import { Buffer } from "node:buffer";
+import { createGitHub } from "../../src/utils/github-commit";
+import { toSiteWebp } from "../../src/utils/image-profile";
+import { planPhotoNote } from "../../src/utils/photo-note";
+import { downloadTelegramFile } from "../../src/utils/telegram-api";
 import {
   buildNote,
+  messageImage,
   noteNumberFromListing,
-  type NoteFile,
+  type MessageImage,
   type TelegramMessage,
 } from "../../src/utils/telegram-note";
 
@@ -12,10 +16,21 @@ export const config = { path: "/api/telegram-webhook" };
  * Publishes Telegram DMs sent to the notes bot as entries in posts/notes/.
  *
  * Flow: Telegram POSTs every update here (registered via setWebhook with a
- * secret_token). We verify the secret header, drop anything not a plain text
- * DM from the allowlisted user, convert it to a note file, and commit it to
- * the repo via the GitHub Contents API — Netlify then rebuilds the site from
- * that commit like any other push.
+ * secret_token and max_connections=1, so updates — album photos included —
+ * arrive one at a time). We verify the secret header, drop anything not
+ * from the allowlisted user, convert the message to a note, and commit it
+ * via the GitHub API — Netlify then rebuilds the site from that commit
+ * like any other push.
+ *
+ * - Text → one note file (Contents API).
+ * - Photo, or an image sent as a file → note + WebP image in one commit
+ *   (Git Data API); album photos accumulate in one note. See
+ *   docs/plans/2026-10-05-telegram-photo-notes-design.md.
+ * - Anything else → skipped, with a reply saying so.
+ *
+ * Commits go to NOTES_BRANCH (default main). Deploy previews set it to the
+ * PR branch, so the bot can be pointed at a preview for an end-to-end test
+ * without touching production content.
  *
  * Ignored updates still return 200: any other status makes Telegram retry
  * the same update for up to 24h.
@@ -39,10 +54,11 @@ export default async (req: Request): Promise<Response> => {
     return skip("sender not allowlisted");
   }
 
-  const note = buildNote(message, process.env.NOTES_TZ ?? "Asia/Kolkata");
-  if (!note) {
-    await reply(message, "Skipped: only plain-text messages become notes.");
-    return skip("no text");
+  const image = messageImage(message);
+  const note = image ? null : buildNote(message, timeZone(), ownerId());
+  if (!image && !note) {
+    await reply(message, "Skipped: only text and images become notes.");
+    return skip("unsupported message");
   }
 
   // Failures ack with 200 + an error reply instead of a 500: a 500 makes
@@ -51,7 +67,8 @@ export default async (req: Request): Promise<Response> => {
   // resent. Telling the sender and letting them resend keeps one message
   // ↔ one note.
   try {
-    const path = await commitNote(note, message.message_id);
+    if (image) return await publishPhoto(message, image);
+    const path = await commitTextNote(note!, message.message_id);
     await reply(
       message,
       `Published ${await noteLink(path)} — live once the rebuild finishes (~2 min).`,
@@ -69,67 +86,108 @@ export default async (req: Request): Promise<Response> => {
 
 const skip = (reason: string) => Response.json({ ok: true, skipped: reason });
 
+const branch = () => process.env.NOTES_BRANCH || "main";
+const timeZone = () => process.env.NOTES_TZ ?? "Asia/Kolkata";
+const ownerId = () => Number(process.env.TELEGRAM_ALLOWED_USER_ID);
+const github = () =>
+  createGitHub({
+    repo: process.env.GITHUB_REPO ?? "",
+    token: process.env.GITHUB_TOKEN ?? "",
+  });
+
 /**
- * The public URL of the note that was just committed. Notes get sequential
- * numeric slugs by publish order, so the newest note's number is the count
- * of files now in posts/notes/ — one directory listing away. Falls back to
- * the repo path if the listing fails: the publish already succeeded, and a
- * worse link must not turn it into an error reply.
+ * Photo → note: download, convert to the site's image profile, then commit
+ * the note and image together. Only the photo that creates a note replies;
+ * later album photos (and Telegram redeliveries) stay silent, so an album
+ * gets one confirmation.
+ */
+async function publishPhoto(
+  message: TelegramMessage,
+  image: MessageImage,
+): Promise<Response> {
+  const gh = github();
+  const plan = await planPhotoNote(message, timeZone(), ownerId(), (path) =>
+    gh.readFile(path, branch()),
+  );
+  if (plan.kind === "duplicate") return skip("already published");
+
+  const original = await downloadTelegramFile(
+    process.env.TELEGRAM_BOT_TOKEN ?? "",
+    image,
+  );
+  let webp: Buffer;
+  try {
+    webp = await toSiteWebp(original);
+  } catch {
+    throw new Error("couldn't read that file as an image");
+  }
+  await gh.commitFiles(
+    [
+      { path: plan.notePath, content: plan.content },
+      { path: plan.imagePath, content: webp },
+    ],
+    plan.kind === "create"
+      ? "note: publish photo from telegram"
+      : "note: add album photo from telegram",
+    branch(),
+  );
+  if (plan.kind === "create") {
+    await reply(
+      message,
+      `Published ${await noteLink(plan.notePath)} — live once the rebuild finishes (~2 min).`,
+    );
+  }
+  return Response.json({ ok: true, path: plan.notePath, kind: plan.kind });
+}
+
+async function commitTextNote(
+  note: { filename: string; content: string },
+  messageId: number,
+): Promise<string> {
+  const gh = github();
+  let path = `posts/notes/${note.filename}`;
+  if (
+    !(await gh.createFile(
+      path,
+      note.content,
+      "note: publish from telegram",
+      branch(),
+    ))
+  ) {
+    // Filename taken (two notes in the same minute, or a Telegram retry
+    // after a partial failure). The message_id suffix is deterministic per
+    // message, so retries converge instead of multiplying.
+    path = `posts/notes/${note.filename.replace(/\.md$/, `-${messageId}.md`)}`;
+    if (
+      !(await gh.createFile(
+        path,
+        note.content,
+        "note: publish from telegram",
+        branch(),
+      ))
+    ) {
+      throw new Error(`GitHub commit failed: ${path} already exists`);
+    }
+  }
+  return path;
+}
+
+/**
+ * The public URL of a note that was just committed: its permalink number
+ * is its position in publish order among posts/notes/ — one directory
+ * listing away. Falls back to the repo path if the listing fails: the
+ * publish already succeeded, and a worse link must not turn it into an
+ * error reply.
  */
 async function noteLink(path: string): Promise<string> {
   try {
-    const res = await fetch(
-      `https://api.github.com/repos/${process.env.GITHUB_REPO}/contents/posts/notes?ref=main`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-          Accept: "application/vnd.github+json",
-          "User-Agent": "tanvibhakta-notes-webhook",
-        },
-      },
-    );
-    if (!res.ok) throw new Error(`listing failed: ${res.status}`);
-    const listing: { name: string }[] = await res.json();
-    const number = noteNumberFromListing(listing.map((f) => f.name));
+    const listing = await github().listDir("posts/notes", branch());
+    const number = noteNumberFromListing(listing, path.split("/").pop()!);
     return `${process.env.SITE_URL ?? "https://tanvibhakta.in"}/notes/${number}`;
   } catch (error) {
     console.error("telegram-webhook note numbering failed:", error);
     return path;
   }
-}
-
-async function commitNote(note: NoteFile, messageId: number): Promise<string> {
-  const put = async (path: string) =>
-    fetch(
-      `https://api.github.com/repos/${process.env.GITHUB_REPO}/contents/${path}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-          Accept: "application/vnd.github+json",
-          "User-Agent": "tanvibhakta-notes-webhook",
-        },
-        body: JSON.stringify({
-          message: `note: publish from telegram`,
-          content: Buffer.from(note.content).toString("base64"),
-          branch: "main",
-        }),
-      },
-    );
-
-  let path = `posts/notes/${note.filename}`;
-  let res = await put(path);
-  if (res.status === 422) {
-    // Filename taken (two notes in the same minute, or a Telegram retry
-    // after a partial failure). The message_id suffix is deterministic per
-    // message, so retries converge instead of multiplying.
-    path = `posts/notes/${note.filename.replace(/\.md$/, `-${messageId}.md`)}`;
-    res = await put(path);
-  }
-  if (!res.ok) {
-    throw new Error(`GitHub commit failed: ${res.status} ${await res.text()}`);
-  }
-  return path;
 }
 
 // Confirmation back to the sender; best-effort, never fails the publish.

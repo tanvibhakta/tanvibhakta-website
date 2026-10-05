@@ -1,4 +1,5 @@
 ---
+import { titleHtml } from "../../utils/title-markdown";
 import { getPublishedEntriesSorted } from "../../utils/collections";
 import ProseLayout from "../../layouts/ProseLayout.astro";
 import { SECTIONS } from "../../content.config";
@@ -15,7 +16,10 @@ const frontmatter = SECTIONS.blog;
         sortedBlogPosts.map((blogPost) => {
           return (
             <li>
-              <a href={`/blog/${blogPost.id}`}>{blogPost.data.title}</a>
+              <a
+                href={`/blog/${blogPost.id}`}
+                set:html={titleHtml(blogPost.data.title)}
+              />
               <span class="date">
                 {blogPost.data.publishedOn.toLocaleDateString("en-US", {
                   day: "numeric",
