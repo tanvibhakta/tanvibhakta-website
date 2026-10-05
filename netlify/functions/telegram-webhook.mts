@@ -1,11 +1,11 @@
 import { createGitHub } from "../../src/utils/github-commit";
 import { toSiteWebp } from "../../src/utils/image-profile";
 import { planPhotoNote } from "../../src/utils/photo-note";
+import { noteSlugFromListing } from "../../src/utils/note-slug";
 import { downloadTelegramFile } from "../../src/utils/telegram-api";
 import {
   buildNote,
   messageImage,
-  noteNumberFromListing,
   type MessageImage,
   type TelegramMessage,
 } from "../../src/utils/telegram-note";
@@ -173,19 +173,19 @@ async function commitTextNote(
 }
 
 /**
- * The public URL of a note that was just committed: its permalink number
- * is its position in publish order among posts/notes/ — one directory
- * listing away. Falls back to the repo path if the listing fails: the
+ * The public URL of a note that was just committed: its slug is its date
+ * plus its position among that day's posts/notes/ — one directory listing
+ * away. Falls back to the repo path if the listing fails: the
  * publish already succeeded, and a worse link must not turn it into an
  * error reply.
  */
 async function noteLink(path: string): Promise<string> {
   try {
     const listing = await github().listDir("posts/notes", branch());
-    const number = noteNumberFromListing(listing, path.split("/").pop()!);
-    return `${process.env.SITE_URL ?? "https://tanvibhakta.in"}/notes/${number}`;
+    const slug = noteSlugFromListing(listing, path.split("/").pop()!);
+    return `${process.env.SITE_URL ?? "https://tanvibhakta.in"}/${slug}`;
   } catch (error) {
-    console.error("telegram-webhook note numbering failed:", error);
+    console.error("telegram-webhook note slug failed:", error);
     return path;
   }
 }

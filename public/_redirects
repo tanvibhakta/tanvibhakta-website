@@ -1,0 +1,30 @@
+# Notes used to live at /notes/<n>, numbered across all notes by publish
+# order; they now live at /<yyyymondd>-<nn> (src/utils/note-slug.ts). This map
+# freezes the old numbering as it stood at the switch, so links already
+# shared keep resolving. Do not regenerate it: the old numbers would shift.
+/notes/1   /2026aug20-01   301
+/notes/2   /2026aug20-02   301
+/notes/3   /2026aug20-03   301
+/notes/4   /2026aug20-04   301
+/notes/5   /2026aug21-01   301
+/notes/6   /2026aug22-01   301
+/notes/7   /2026sep08-01   301
+/notes/8   /2026sep09-01   301
+/notes/9   /2026sep10-01   301
+/notes/10  /2026sep19-01   301
+/notes/11  /2026sep27-01   301
+/notes/12  /2026sep27-02   301
+/notes/13  /2026sep27-03   301
+/notes/14  /2026sep27-04   301
+/notes/15  /2026sep27-05   301
+/notes/16  /2026sep27-06   301
+/notes/17  /2026sep27-07   301
+/notes/18  /2026sep27-08   301
+/notes/19  /2026sep28-01   301
+/notes/20  /2026sep28-02   301
+/notes/21  /2026sep28-03   301
+/notes/22  /2026sep29-01   301
+/notes/23  /2026oct02-01   301
+/notes/24  /2026oct03-01   301
+/notes/25  /2026oct03-02   301
+/notes/26  /2026oct05-01   301

@@ -11,7 +11,11 @@
          if both fit and wrap onto separate rows if they don't. Each field's
          divider is an inset `::after` line; dropping the inner insets and
          letting Draft grow keeps the divider continuous across the row. */
-      .content-editor .pane[data-mode="edit"] :has(> .field[data-key-path="publishedOn"] + .field[data-key-path="draft"]) {
+      .content-editor
+        .pane[data-mode="edit"]
+        :has(
+          > .field[data-key-path="publishedOn"] + .field[data-key-path="draft"]
+        ) {
         display: flex;
         flex-wrap: wrap;
         > * {

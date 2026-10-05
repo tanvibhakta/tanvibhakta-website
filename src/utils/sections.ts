@@ -2,6 +2,7 @@
 // section) and by Layout (to derive the document <title> as
 // "{PageName} | {SITE_TAB_TITLE}").
 import { SECTIONS, STANDALONE_PAGES } from "../content.config";
+import { isNoteSlug } from "./note-slug";
 
 export type Section = { label: string; href: string };
 
@@ -37,9 +38,14 @@ export function getCurrentSection(
     .sort((a, b) => b.href.length - a.href.length)
     .find((s) => path === s.href || path.startsWith(`${s.href}/`));
   if (known) return known;
+
+  // Notes are served at the root (/2026oct05-01), outside /notes.
+  const firstSegment = path.split("/").filter(Boolean)[0];
+  if (firstSegment && isNoteSlug(firstSegment)) {
+    return { label: SECTIONS.notes.title, href: SECTIONS.notes.href };
+  }
   if (!allowFallback) return undefined;
 
-  const firstSegment = path.split("/").filter(Boolean)[0];
   if (!firstSegment || firstSegment === "404") return undefined;
   return { label: titleCase(firstSegment), href: `/${firstSegment}` };
 }
