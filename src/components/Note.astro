@@ -23,7 +23,7 @@ const machineTime = publishedOn.toISOString();
     <time datetime={machineTime}>{timestamp}</time>
     {
       href && (
-        <a href={href} class="text-inherit no-underline hover:underline">
+        <a href={href} class="text-inherit! no-underline hover:underline">
           permalink
         </a>
       )
@@ -42,5 +42,7 @@ const machineTime = publishedOn.toISOString();
         </span>
       )
     }
+    <!-- Extra footer items, e.g. a thread note's "3 of 11". -->
+    <slot name="meta" />
   </footer>
 </article>
