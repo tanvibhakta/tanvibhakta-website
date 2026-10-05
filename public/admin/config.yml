@@ -45,6 +45,7 @@ collections:
           default: true,
           required: false,
         }
+      - { label: Body, name: body, widget: markdown }
       - label: Audio
         name: audio
         widget: file
@@ -66,7 +67,6 @@ collections:
         name: tags
         widget: list
         required: false
-      - { label: Body, name: body, widget: markdown }
 
   - name: poetry
     label: Poetry
@@ -104,6 +104,7 @@ collections:
           default: true,
           required: false,
         }
+      - { label: Body, name: body, widget: markdown }
       - label: Audio
         name: audio
         widget: file
@@ -117,7 +118,6 @@ collections:
           required: false,
         }
       - *tagsField
-      - { label: Body, name: body, widget: markdown }
 
   - name: weeknotes
     label: Weeknotes
