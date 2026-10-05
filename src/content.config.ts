@@ -137,6 +137,11 @@ const notes = defineCollection({
   schema: z.object({
     publishedOn: z.date(),
     tags: z.array(tagSchema).optional().default([]),
+    // A reply's parent: that note's file id (e.g. "2026-10-05-1549"). A plain
+    // string rather than reference(), because a deleted parent must not fail
+    // the build — the thread shows a placeholder instead. See
+    // docs/plans/2026-10-05-notes-threading-design.md.
+    inReplyTo: z.string().optional(),
   }),
 });
 
