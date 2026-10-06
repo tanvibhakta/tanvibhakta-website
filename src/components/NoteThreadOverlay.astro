@@ -48,7 +48,7 @@ const graph = {
       <div
         data-member={id}
         data-position={label}
-        class="relative flow-root py-4 [&>article]:my-0 [&>article>p:first-child]:mt-0"
+        class="relative flow-root py-4 [&>article]:my-0 [&>article>:first-child]:mt-0"
       >
         <span
           data-line
@@ -301,7 +301,9 @@ const graph = {
 
   document.addEventListener("click", (event) => {
     const target = event.target as HTMLElement;
-    if (target.closest("a")) return;
+    // Links navigate, and a photo the lightbox handles (it marks them
+    // role=button) opens the lightbox — neither also opens the thread.
+    if (target.closest("a, img[role=button]")) return;
 
     // "↳ replying to N of M": re-focus on that parent.
     const goto = target.closest<HTMLElement>("#conversation [data-goto]");

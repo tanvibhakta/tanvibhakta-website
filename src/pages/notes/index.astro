@@ -61,7 +61,7 @@ const overlayNotes: OverlayNote[] = rendered.flatMap(
         data-note={note.id}
         data-thread={position?.threadId}
         class:list={[
-          "relative flow-root py-4 first:pt-0 [&>article]:my-0 [&>article>p:first-child]:mt-0",
+          "relative flow-root py-4 first:pt-0 [&>article]:my-0 [&>article>:first-child]:mt-0",
           position && "cursor-pointer",
         ]}
       >
