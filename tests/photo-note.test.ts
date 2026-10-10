@@ -31,6 +31,20 @@ describe("planPhotoNote: single photos", () => {
     });
   });
 
+  test("a photo sent as a reply names its parent note", async () => {
+    const plan = await planPhotoNote(
+      photo(),
+      TZ,
+      OWNER,
+      repo(),
+      "2026-10-05-1200",
+    );
+    expect(plan.kind === "create" && plan.content).toBe(
+      "---\npublishedOn: 2026-10-05T14:32:07\ninReplyTo: 2026-10-05-1200\n---\n\n" +
+        "![](images/2026-10-05-1432-500.webp)\n",
+    );
+  });
+
   test("a caption becomes the text below the image, with formatting", async () => {
     const plan = await planPhotoNote(
       photo({

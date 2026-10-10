@@ -2,30 +2,89 @@
 import { render } from "astro:content";
 import NotesLayout from "../../layouts/NotesLayout.astro";
 import Note from "../../components/Note.astro";
-import { getSluggedNotes } from "../../utils/notes";
+import NoteSpine from "../../components/NoteSpine.astro";
+import NoteThreadOverlay, {
+  type OverlayNote,
+} from "../../components/NoteThreadOverlay.astro";
+import { getThreadedNotes } from "../../utils/notes";
+import { feedLinks } from "../../utils/note-threads";
 
-// Sorted oldest-first, displayed newest-first.
-const slugged = await getSluggedNotes();
+// Sorted oldest-first, displayed newest-first. Threads never reorder the
+// feed: a thread note sits at its own date, and a margin line plus "N of M"
+// say it belongs to a thread. Design:
+// docs/plans/2026-10-05-notes-threading-design.md.
+const threaded = await getThreadedNotes();
 const rendered = await Promise.all(
-  [...slugged].reverse().map(async ({ note, slug }) => ({
-    note,
-    slug,
-    Content: (await render(note)).Content,
+  threaded.map(async (entry) => ({
+    ...entry,
+    Content: (await render(entry.note)).Content,
   })),
+);
+const feed = [...rendered].reverse();
+const links = feedLinks(
+  feed.map(({ note }) => note.id),
+  new Map(
+    threaded.flatMap(({ note, position }) =>
+      position ? [[note.id, position] as const] : [],
+    ),
+  ),
+);
+
+const label = (index: number, size: number) => `${index + 1} of ${size}`;
+
+const overlayNotes: OverlayNote[] = rendered.flatMap(
+  ({ note, slug, position, Content }) =>
+    position
+      ? [
+          {
+            id: note.id,
+            slug,
+            publishedOn: note.data.publishedOn,
+            tags: note.data.tags,
+            Content,
+            label: label(position.index, position.size),
+            parent: position.missingParent
+              ? null
+              : (note.data.inReplyTo ?? null),
+            missingParent: position.missingParent,
+          },
+        ]
+      : [],
 );
 ---
 
 <NotesLayout title="Notes">
-  {rendered.length === 0 && <p>No notes yet.</p>}
+  {feed.length === 0 && <p>No notes yet.</p>}
   {
-    rendered.map(({ note, slug, Content }) => (
-      <Note
-        publishedOn={note.data.publishedOn}
-        href={`/${slug}`}
-        tags={note.data.tags}
+    feed.map(({ note, slug, position, Content }) => (
+      <div
+        data-note={note.id}
+        data-thread={position?.threadId}
+        class:list={[
+          "relative flow-root py-4 first:pt-0 [&>article]:my-0 [&>article>:first-child]:mt-0",
+          position && "cursor-pointer",
+        ]}
       >
-        <Content />
-      </Note>
+        {position && <NoteSpine {...links.get(note.id)!} />}
+        <Note
+          publishedOn={note.data.publishedOn}
+          href={`/${slug}`}
+          tags={note.data.tags}
+        >
+          <Content />
+          {position && (
+            <button
+              slot="meta"
+              type="button"
+              aria-haspopup="dialog"
+              class="cursor-pointer tracking-wide hover:underline [font-variant:small-caps]"
+            >
+              {label(position.index, position.size)}
+            </button>
+          )}
+        </Note>
+      </div>
     ))
   }
+  {overlayNotes.length > 0 && <NoteThreadOverlay notes={overlayNotes} />}
 </NotesLayout>

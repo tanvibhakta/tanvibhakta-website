@@ -26,7 +26,10 @@ export interface TelegramMessage {
     date: number; // when the original message was sent
     sender_user?: { id: number };
   };
-  from?: { id: number };
+  from?: { id: number; is_bot?: boolean };
+  // The message this one replies to — a reply in the bot chat is a reply
+  // to that note. See src/utils/note-reply.ts.
+  reply_to_message?: TelegramMessage;
   chat?: { id: number; type: string };
 }
 
@@ -50,23 +53,29 @@ export function buildNote(
   message: TelegramMessage,
   timeZone: string,
   ownerId?: number,
+  inReplyTo?: string,
 ): NoteFile | null {
   if (!message.text?.trim()) return null;
   const epoch = noteDate(message, ownerId);
   const body = entitiesToMarkdown(message.text, message.entities);
   return {
     filename: `${noteStem(epoch, timeZone)}.md`,
-    content: noteContent(epoch, timeZone, body),
+    content: noteContent(epoch, timeZone, body, inReplyTo),
   };
 }
 
-/** A note file's full text: frontmatter, blank line, body. */
+/**
+ * A note file's full text: frontmatter, blank line, body. `inReplyTo` is the
+ * parent note's file id when the message was a reply.
+ */
 export function noteContent(
   epoch: number,
   timeZone: string,
   body: string,
+  inReplyTo?: string,
 ): string {
-  return `---\npublishedOn: ${wallClockTimestamp(epoch, timeZone)}\n---\n\n${body}\n`;
+  const reply = inReplyTo ? `inReplyTo: ${inReplyTo}\n` : "";
+  return `---\npublishedOn: ${wallClockTimestamp(epoch, timeZone)}\n${reply}---\n\n${body}\n`;
 }
 
 /**

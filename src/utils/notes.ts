@@ -1,6 +1,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getPublishedEntries } from "./collections";
 import { assignNoteSlugs } from "./note-slug";
+import { threadPositions, type ThreadPosition } from "./note-threads";
 
 export interface SluggedNote {
   note: CollectionEntry<"notes">;
@@ -20,6 +21,24 @@ export async function getSluggedNotes(): Promise<SluggedNote[]> {
       return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
     })
     .map((note) => ({ note, slug: slugs.get(note.id)! }));
+}
+
+export interface ThreadedNote extends SluggedNote {
+  /** Present when the note is part of a thread (see note-threads.ts). */
+  position?: ThreadPosition;
+}
+
+// Slugged notes, oldest-first, with each threaded note's place in its thread.
+export async function getThreadedNotes(): Promise<ThreadedNote[]> {
+  const slugged = await getSluggedNotes();
+  const positions = threadPositions(
+    slugged.map(({ note }) => ({
+      id: note.id,
+      publishedOn: note.data.publishedOn,
+      inReplyTo: note.data.inReplyTo,
+    })),
+  );
+  return slugged.map((s) => ({ ...s, position: positions.get(s.note.id) }));
 }
 
 // Map of note id -> slug, for linking to a note from elsewhere.

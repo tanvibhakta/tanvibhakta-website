@@ -1,0 +1,350 @@
+---
+// The conversation overlay for the notes feed. Clicking a thread note (or
+// its "3 of 11") opens a <dialog> showing the note's ancestors (root first),
+// the note itself, then its replies (depth-first, siblings oldest first —
+// Mastodon's order). Clicking another note inside re-focuses on it; each
+// focus is a history entry, so Back steps back through them.
+//
+// The clicked note keeps its exact screen position: the box lines its text
+// column up with the feed's, and scrolls so the note lands where it was
+// clicked. Design: docs/plans/2026-10-05-notes-threading-design.md.
+//
+// The feed marks each thread note with data-thread / data-note; this
+// component supplies every thread note once, pre-rendered, in a <template>.
+// Render it inside NotesLayout's <main> so the notes inherit its prose
+// typography.
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+import Note from "./Note.astro";
+
+export interface OverlayNote {
+  id: string;
+  slug: string;
+  publishedOn: Date;
+  tags: string[];
+  Content: AstroComponentFactory;
+  /** "3 of 11" */
+  label: string;
+  /** The accepted parent's id; null for a thread root. */
+  parent: string | null;
+  /** `inReplyTo` names a note that no longer exists. */
+  missingParent: boolean;
+}
+
+interface Props {
+  /** Every thread note, oldest first. */
+  notes: OverlayNote[];
+}
+const { notes } = Astro.props;
+
+const graph = {
+  parentOf: Object.fromEntries(notes.map((n) => [n.id, n.parent])),
+  missing: notes.filter((n) => n.missingParent).map((n) => n.id),
+};
+---
+
+<template id="thread-notes">
+  {
+    notes.map(({ id, slug, publishedOn, tags, Content, label }) => (
+      <div
+        data-member={id}
+        data-position={label}
+        class="relative flow-root py-4 [&>article]:my-0 [&>article>:first-child]:mt-0"
+      >
+        <span
+          data-line
+          aria-hidden="true"
+          class="absolute -left-[1.125rem] w-0 border-l-[1.5px] border-stone-300"
+        />
+        <p
+          data-branch
+          hidden
+          class="not-prose mb-2 text-sm tracking-wide opacity-75 [font-variant:small-caps]"
+        >
+          ↳ replying to{" "}
+          <button
+            type="button"
+            data-goto
+            class="cursor-pointer tracking-wide underline-offset-2 hover:underline [font-variant:small-caps]"
+          />
+        </p>
+        <Note publishedOn={publishedOn} href={`/${slug}`} tags={tags}>
+          <Content />
+          <span slot="meta">{label}</span>
+        </Note>
+      </div>
+    ))
+  }
+</template>
+
+<template id="thread-missing-parent">
+  <p
+    class="not-prose pt-4 text-sm tracking-wide opacity-75 [font-variant:small-caps]"
+  >
+    ↳ replying to a note that no longer exists
+  </p>
+</template>
+
+<!--
+  Soft, not stark: a light blurred wash of the page colour rather than a
+  dark scrim, a box in the page colour with a hairline border, and content
+  that fades at the box edges instead of being sliced off. No header — just
+  an icon close button (Esc and clicking outside also close).
+-->
+<dialog
+  id="conversation"
+  aria-label="Thread"
+  class="fixed top-[7.5vh] m-0 h-[85vh] max-h-none max-w-none overflow-hidden rounded-xl border border-stone-300 [&.edge-to-edge]:rounded-none [&.edge-to-edge]:border-x-0 bg-stone-100 p-0 text-stone-800 shadow-[0_8px_40px_-12px_rgb(41_37_36/0.25)] backdrop:bg-stone-100/60 backdrop:backdrop-blur-[2px]"
+>
+  <button
+    type="button"
+    data-close
+    aria-label="Close thread"
+    class="absolute top-3 right-3 z-10 grid size-8 cursor-pointer place-items-center rounded-full bg-stone-100/90 text-stone-500 hover:bg-stone-200 hover:text-stone-800"
+  >
+    <svg aria-hidden="true" viewBox="0 0 16 16" class="size-3.5">
+      <path
+        d="M3 3l10 10M13 3L3 13"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"></path>
+    </svg>
+  </button>
+  <!-- Focused on open (not the ✕) so opening doesn't ring the close button
+       and arrow keys scroll the thread straight away. The 60vh bottom
+       padding lets a note near its thread's end still scroll to the spot it
+       was clicked at. -->
+  <div
+    data-scroller
+    tabindex="-1"
+    style="--pad: 3rem"
+    class="h-full overflow-y-auto overscroll-contain px-(--pad) pt-6 pb-[60vh] outline-none [mask-image:linear-gradient(to_bottom,transparent,black_2rem,black_calc(100%-3rem),transparent)]"
+  >
+    <div data-list></div>
+  </div>
+</dialog>
+
+<script
+  type="application/json"
+  id="thread-graph"
+  set:html={JSON.stringify(graph)}
+/>
+
+<script>
+  const graph: { parentOf: Record<string, string | null>; missing: string[] } =
+    JSON.parse(document.getElementById("thread-graph")!.textContent!);
+  const { parentOf } = graph;
+  const missing = new Set(graph.missing);
+  const template = document.getElementById(
+    "thread-notes",
+  ) as HTMLTemplateElement;
+  const missingTemplate = document.getElementById(
+    "thread-missing-parent",
+  ) as HTMLTemplateElement;
+  const dialog = document.getElementById("conversation") as HTMLDialogElement;
+  const list = dialog.querySelector<HTMLElement>("[data-list]")!;
+  const scroller = dialog.querySelector<HTMLElement>("[data-scroller]")!;
+
+  // We pin the clicked note ourselves; the browser's own scroll anchoring
+  // (Chrome/Firefox, not Safari) would otherwise adjust a second time.
+  document.documentElement.style.overflowAnchor = "none";
+
+  // Template members are in time order, so filtering keeps that order.
+  const members = [
+    ...template.content.querySelectorAll<HTMLElement>("[data-member]"),
+  ];
+  const byId = new Map(members.map((m) => [m.dataset.member!, m]));
+  const order = new Map(members.map((m, i) => [m.dataset.member!, i]));
+  const byTime = (a: string, b: string) => order.get(a)! - order.get(b)!;
+
+  function ancestors(id: string): string[] {
+    const out: string[] = [];
+    for (let p = parentOf[id]; p; p = parentOf[p]) out.push(p);
+    return out.sort(byTime);
+  }
+
+  // Replies depth-first, siblings oldest first, so a branch's chain stays
+  // together instead of interleaving by time.
+  function descendants(id: string): string[] {
+    const children = (parent: string) =>
+      Object.keys(parentOf)
+        .filter((c) => parentOf[c] === parent)
+        .sort(byTime);
+    const out: string[] = [];
+    const walk = (parent: string) => {
+      for (const child of children(parent)) {
+        out.push(child);
+        walk(child);
+      }
+    };
+    walk(id);
+    return out;
+  }
+
+  // Render the conversation around `id`: ancestors, the note, its replies.
+  // `anchorY` is where (viewport px) the note was when clicked; the focal
+  // note is scrolled to that exact spot so it doesn't appear to move.
+  function render(id: string, anchorY?: number) {
+    const ids = [...ancestors(id), id, ...descendants(id)];
+    list.replaceChildren(
+      ...ids.map((n) => byId.get(n)!.cloneNode(true) as HTMLElement),
+    );
+    // The chain starts at a reply whose parent was deleted: say so.
+    if (missing.has(ids[0])) {
+      list.prepend(missingTemplate.content.cloneNode(true));
+    }
+
+    const items = [...list.querySelectorAll<HTMLElement>("[data-member]")];
+    items.forEach((item, i) => {
+      const itemId = item.dataset.member!;
+      // Join a note to its neighbour only when that neighbour is its parent
+      // or child; at a branch the line breaks.
+      const prev = items[i - 1]?.dataset.member;
+      const next = items[i + 1]?.dataset.member;
+      const joinsUp = !!prev && parentOf[itemId] === prev;
+      const joinsDown = !!next && parentOf[next] === itemId;
+      const line = item.querySelector<HTMLElement>("[data-line]")!;
+      line.style.top = joinsUp ? "0" : "1rem";
+      line.style.bottom = joinsDown ? "0" : "1rem";
+      // A reply whose parent isn't directly above it starts a branch: say
+      // which note it answers, in the same "N of M" terms as the footers.
+      const parent = parentOf[itemId];
+      if (i > 0 && !joinsUp && parent) {
+        const branch = item.querySelector<HTMLElement>("[data-branch]")!;
+        const goto = branch.querySelector<HTMLElement>("[data-goto]")!;
+        goto.textContent = byId.get(parent)!.dataset.position!;
+        goto.dataset.goto = parent;
+        branch.hidden = false;
+      }
+      if (itemId === id) {
+        item.setAttribute("aria-current", "true");
+      } else {
+        item.classList.add(
+          "cursor-pointer",
+          "hover:bg-stone-200/60",
+          "-mx-(--pad)",
+          "px-(--pad)",
+        );
+        line.classList.replace(
+          "-left-[1.125rem]",
+          "left-[calc(var(--pad)-1.125rem)]",
+        );
+      }
+    });
+
+    const focal = list.querySelector<HTMLElement>("[aria-current] > article")!;
+    list.style.paddingTop = "0";
+    scroller.scrollTop = 0;
+    const box = scroller.getBoundingClientRect();
+    // Without an anchor (Back/Forward, "replying to"), leave a sliver of the
+    // parent showing above the focal note. A note clicked too near the box's
+    // top or bottom edge can't keep its exact spot; get as close as allowed.
+    const target = Math.min(
+      Math.max(anchorY ?? box.top + 48, box.top + 32),
+      box.bottom - 160,
+    );
+    let scroll = focal.getBoundingClientRect().top - target;
+    if (scroll < 0) {
+      // Not enough content above to scroll into: pad the top instead.
+      list.style.paddingTop = `${-scroll}px`;
+      scroll = 0;
+    }
+    scroller.scrollTop = scroll;
+  }
+
+  // Line the overlay's text column up with the feed's, so the clicked note
+  // keeps its x position and line breaks too. With room (desktop), the box
+  // sits 48px (--pad) plus its 1px border outside the text on each side.
+  // Without it (phones), the box spans the screen edge to edge, borderless
+  // at the sides, and --pad is just the feed's own margin.
+  function placeDialog(article: Element) {
+    const { left, width } = article.getBoundingClientRect();
+    const roomy = left - 49 >= 8;
+    const pad = roomy ? 48 : left;
+    scroller.style.setProperty("--pad", `${pad}px`);
+    dialog.classList.toggle("edge-to-edge", !roomy);
+    dialog.style.left = roomy ? `${left - pad - 1}px` : "0px";
+    dialog.style.width = roomy
+      ? `${width + 2 * pad + 2}px`
+      : `${document.documentElement.clientWidth}px`;
+  }
+
+  // Each focus is one history entry; depth counts how many this overlay
+  // session has pushed, so closing can unwind all of them at once.
+  const depth = () => (history.state as { depth?: number } | null)?.depth ?? 0;
+  const close = () => history.go(-depth());
+
+  function open(id: string, push: boolean, anchorY?: number) {
+    // Open first so the dialog has layout to measure against.
+    if (!dialog.open) {
+      lockPage(true);
+      dialog.showModal();
+      scroller.focus({ preventScroll: true });
+    }
+    render(id, anchorY);
+    if (push) history.pushState({ note: id, depth: depth() + 1 }, "");
+  }
+
+  const topOf = (el: Element) =>
+    el.querySelector("article")!.getBoundingClientRect().top;
+
+  // While the overlay is open the page underneath shouldn't scroll — not
+  // from the wheel over the backdrop, nor by chaining off the overlay's
+  // ends (overscroll-contain covers that). scrollbar-gutter keeps the space
+  // the scrollbar used, so the page doesn't shift sideways under the
+  // overlay and break the clicked note's alignment.
+  function lockPage(locked: boolean) {
+    const root = document.documentElement.style;
+    root.scrollbarGutter = locked ? "stable" : "";
+    root.overflow = locked ? "hidden" : "";
+  }
+  dialog.addEventListener("close", () => lockPage(false));
+
+  document.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement;
+    // Links navigate, and a photo the lightbox handles (it marks them
+    // role=button) opens the lightbox — neither also opens the thread.
+    if (target.closest("a, img[role=button]")) return;
+
+    // "↳ replying to N of M": re-focus on that parent.
+    const goto = target.closest<HTMLElement>("#conversation [data-goto]");
+    if (goto) {
+      const inFocus = list.querySelector<HTMLElement>("[aria-current]");
+      if (inFocus?.dataset.member !== goto.dataset.goto) {
+        open(goto.dataset.goto!, true);
+      }
+      return;
+    }
+    // Inside the overlay: re-focus on the clicked note.
+    const member = target.closest<HTMLElement>("#conversation [data-member]");
+    if (member) {
+      if (!member.hasAttribute("aria-current")) {
+        open(member.dataset.member!, true, topOf(member));
+      }
+      return;
+    }
+    // ✕, or a click on the backdrop (the dialog element itself).
+    if (target.closest("[data-close]") || target === dialog) {
+      close();
+      return;
+    }
+
+    const note = target.closest<HTMLElement>("[data-thread]");
+    if (note && !dialog.open) {
+      placeDialog(note.querySelector(":scope > article")!);
+      open(note.dataset.note!, true, topOf(note));
+    }
+  });
+
+  // Esc closes the dialog natively; keep history in step.
+  dialog.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    close();
+  });
+
+  // Back/Forward walk through the notes focused in this overlay session.
+  window.addEventListener("popstate", (event) => {
+    const id = (event.state as { note?: string } | null)?.note;
+    if (id) open(id, false);
+    else if (dialog.open) dialog.close();
+  });
+</script>

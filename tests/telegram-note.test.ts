@@ -29,6 +29,12 @@ describe("buildNote", () => {
     );
   });
 
+  test("a reply names its parent note in the frontmatter", () => {
+    expect(buildNote(msg({}), TZ, undefined, "2026-06-20-0900")?.content).toBe(
+      "---\npublishedOn: 2026-06-21T12:00:00\ninReplyTo: 2026-06-20-0900\n---\n\nhello\n",
+    );
+  });
+
   test("body is entity-converted markdown", () => {
     const note = buildNote(
       msg({

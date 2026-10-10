@@ -1,7 +1,14 @@
 import { createGitHub } from "../../src/utils/github-commit";
 import { toSiteWebp } from "../../src/utils/image-profile";
 import { planPhotoNote } from "../../src/utils/photo-note";
-import { noteSlugFromListing } from "../../src/utils/note-slug";
+import {
+  filenameForSlug,
+  noteSlugFromListing,
+} from "../../src/utils/note-slug";
+import {
+  parentCandidates,
+  parentIdFromBotReply,
+} from "../../src/utils/note-reply";
 import { downloadTelegramFile } from "../../src/utils/telegram-api";
 import {
   buildNote,
@@ -27,6 +34,9 @@ export const config = { path: "/api/telegram-webhook" };
  *   (Git Data API); album photos accumulate in one note. See
  *   docs/plans/2026-10-05-telegram-photo-notes-design.md.
  * - Anything else → skipped, with a reply saying so.
+ * - A reply to an earlier message → the new note's `inReplyTo` names that
+ *   message's note, so the site threads them. If that note can't be found,
+ *   the reply still publishes, standalone, and the confirmation says so.
  *
  * Commits go to NOTES_BRANCH (default main). Deploy previews set it to the
  * PR branch, so the bot can be pointed at a preview for an end-to-end test
@@ -55,7 +65,10 @@ export default async (req: Request): Promise<Response> => {
   }
 
   const image = messageImage(message);
-  const note = image ? null : buildNote(message, timeZone(), ownerId());
+  const parent = await resolveParent(message);
+  const note = image
+    ? null
+    : buildNote(message, timeZone(), ownerId(), parent ?? undefined);
   if (!image && !note) {
     await reply(message, "Skipped: only text and images become notes.");
     return skip("unsupported message");
@@ -67,12 +80,9 @@ export default async (req: Request): Promise<Response> => {
   // resent. Telling the sender and letting them resend keeps one message
   // ↔ one note.
   try {
-    if (image) return await publishPhoto(message, image);
+    if (image) return await publishPhoto(message, image, parent);
     const path = await commitTextNote(note!, message.message_id);
-    await reply(
-      message,
-      `Published ${await noteLink(path)} — live once the rebuild finishes (~2 min).`,
-    );
+    await reply(message, await published(path, message, parent));
     return Response.json({ ok: true, path });
   } catch (error) {
     console.error("telegram-webhook publish failed:", error);
@@ -104,10 +114,15 @@ const github = () =>
 async function publishPhoto(
   message: TelegramMessage,
   image: MessageImage,
+  parent: string | null,
 ): Promise<Response> {
   const gh = github();
-  const plan = await planPhotoNote(message, timeZone(), ownerId(), (path) =>
-    gh.readFile(path, branch()),
+  const plan = await planPhotoNote(
+    message,
+    timeZone(),
+    ownerId(),
+    (path) => gh.readFile(path, branch()),
+    parent ?? undefined,
   );
   if (plan.kind === "duplicate") return skip("already published");
 
@@ -132,10 +147,7 @@ async function publishPhoto(
     branch(),
   );
   if (plan.kind === "create") {
-    await reply(
-      message,
-      `Published ${await noteLink(plan.notePath)} — live once the rebuild finishes (~2 min).`,
-    );
+    await reply(message, await published(plan.notePath, message, parent));
   }
   return Response.json({ ok: true, path: plan.notePath, kind: plan.kind });
 }
@@ -170,6 +182,53 @@ async function commitTextNote(
     }
   }
   return path;
+}
+
+/**
+ * The parent note's file id when `message` replies to a note, else null.
+ * Replying to the bot's "Published <link>" confirmation counts as replying
+ * to the note it announced. Best-effort: a lookup failure publishes the
+ * note standalone rather than not at all.
+ */
+async function resolveParent(message: TelegramMessage): Promise<string | null> {
+  const replied = message.reply_to_message;
+  if (!replied) return null;
+  try {
+    const gh = github();
+    const exists = async (path: string) =>
+      (await gh.readFile(path, branch())) !== null;
+    const fromBot = parentIdFromBotReply(replied);
+    if (fromBot && "slug" in fromBot) {
+      const listing = await gh.listDir("posts/notes", branch());
+      return (
+        filenameForSlug(listing, fromBot.slug)?.replace(/\.md$/, "") ?? null
+      );
+    }
+    const paths = fromBot
+      ? [`posts/notes/${fromBot.id}.md`]
+      : parentCandidates(replied, timeZone(), ownerId());
+    for (const path of paths) {
+      if (await exists(path))
+        return path.split("/").pop()!.replace(/\.md$/, "");
+    }
+  } catch (error) {
+    console.error("telegram-webhook parent lookup failed:", error);
+  }
+  return null;
+}
+
+// The confirmation for a published note, flagging a reply whose parent
+// couldn't be found (it published standalone).
+async function published(
+  path: string,
+  message: TelegramMessage,
+  parent: string | null,
+): Promise<string> {
+  const orphan =
+    message.reply_to_message && !parent
+      ? " Couldn't find the note you replied to, so it's standalone."
+      : "";
+  return `Published ${await noteLink(path)} — live once the rebuild finishes (~2 min).${orphan}`;
 }
 
 /**

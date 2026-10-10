@@ -1,0 +1,45 @@
+---
+// A thread note's margin line in the feed: it runs the height of the note,
+// out in the left margin so the note's text stays aligned with every other
+// note. Place inside a `relative py-4` wrapper.
+//
+// No marks to learn: the line bridges the gap to a neighbouring thread note
+// ("solid"), stops at the thread's first and latest notes (null), and
+// trails off as a short dashed tail where the thread continues further away
+// in the feed ("stub"). Position in words ("3 of 11") lives in the footer,
+// which is also what screen readers get.
+//
+// stone-300: a light line, chosen by eye over the stone-500 that would
+// clear WCAG 1.4.11's 3:1 (stone-300 is 1.37:1). The "3 of 11" text carries
+// the same information, so the line is a visual aid, not the only cue.
+import type { Link } from "../utils/note-threads";
+
+interface Props {
+  up: Link;
+  down: Link;
+}
+const { up, down } = Astro.props;
+
+const line =
+  "absolute left-1/2 -translate-x-1/2 w-0 border-l-[1.5px] border-stone-300";
+---
+
+<span aria-hidden="true" class="absolute -left-6 top-0 bottom-0 w-3">
+  <span
+    class={line}
+    style={`top: ${up === "solid" ? "0" : "1rem"}; bottom: ${down === "solid" ? "0" : "1rem"}`}
+  ></span>
+  {
+    up === "stub" && (
+      <span class:list={[line, "border-dashed"]} style="top: 0; height: 1rem" />
+    )
+  }
+  {
+    down === "stub" && (
+      <span
+        class:list={[line, "border-dashed"]}
+        style="bottom: 0; height: 1rem"
+      />
+    )
+  }
+</span>

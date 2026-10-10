@@ -79,3 +79,26 @@ export function noteSlugFromListing(
   const day = noteDayKey(new Date(`${date}T00:00:00Z`));
   return `${day}-${pad2(sameDay.indexOf(stem) + 1)}`;
 }
+
+const MONTHS = "jan feb mar apr may jun jul aug sep oct nov dec".split(" ");
+
+/**
+ * The filename in posts/notes/ that a slug points at — the inverse of
+ * noteSlugFromListing, with the same stem-sorting approximation. Null when
+ * the slug isn't a note slug or that day has no such position.
+ */
+export function filenameForSlug(
+  filenames: string[],
+  slug: string,
+): string | null {
+  const match = /^(\d{4})([a-z]{3})(\d{2})-(\d{2,})$/.exec(slug);
+  const month = match ? MONTHS.indexOf(match[2]) : -1;
+  if (!match || month === -1) return null;
+  const date = `${match[1]}-${pad2(month + 1)}-${match[3]}`;
+  const sameDay = filenames
+    .filter((name) => name.endsWith(".md") && name.startsWith(date))
+    .map((name) => name.slice(0, -3))
+    .sort();
+  const stem = sameDay[Number(match[4]) - 1];
+  return stem ? `${stem}.md` : null;
+}
