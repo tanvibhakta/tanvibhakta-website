@@ -1,0 +1,183 @@
+---
+// SCRATCH (issue #133) — not for committing. Design iterations for a thread
+// note's own page, served at /permalink-lab/<variant>/<note-id>.
+//
+//   a  Conversation: ancestors, the note (larger), replies — the overlay's
+//      contents as a static page.
+//   b  Note first: the note alone, with the chain as links — "replying to"
+//      above, replies below.
+//   c  Whole thread: every note in the thread in time order, the note
+//      highlighted in place.
+import { render } from "astro:content";
+import NotesLayout from "../../../layouts/NotesLayout.astro";
+import Note from "../../../components/Note.astro";
+import { getThreadedNotes } from "../../../utils/notes";
+
+export async function getStaticPaths() {
+  const threaded = await getThreadedNotes();
+  return ["a", "b", "c"].flatMap((variant) =>
+    threaded
+      .filter((t) => t.position)
+      .map((t) => ({ params: { variant, note: t.note.id } })),
+  );
+}
+
+const { variant, note: focalId } = Astro.params;
+const threaded = await getThreadedNotes();
+const byId = new Map(threaded.map((t) => [t.note.id, t]));
+const focal = byId.get(focalId!)!;
+const threadId = focal.position!.threadId;
+const members = threaded.filter((t) => t.position?.threadId === threadId);
+const parentOf = (id: string) => {
+  const t = byId.get(id)!;
+  return t.position?.missingParent ? null : (t.note.data.inReplyTo ?? null);
+};
+const childrenOf = (id: string) =>
+  members.filter((m) => parentOf(m.note.id) === id);
+
+const ancestors: typeof members = [];
+for (let p = parentOf(focalId!); p; p = parentOf(p))
+  ancestors.unshift(byId.get(p)!);
+const descendants: typeof members = [];
+const walk = (id: string) =>
+  childrenOf(id).forEach((c) => {
+    descendants.push(c);
+    walk(c.note.id);
+  });
+walk(focalId!);
+
+const label = (t: (typeof members)[number]) =>
+  `${t.position!.index + 1} of ${t.position!.size}`;
+const rendered = new Map(
+  await Promise.all(
+    members.map(
+      async (m) => [m.note.id, (await render(m.note)).Content] as const,
+    ),
+  ),
+);
+const firstLine = (t: (typeof members)[number]) =>
+  (t.note.body ?? "")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .trim()
+    .split("\n")[0]
+    .slice(0, 90);
+
+const chain =
+  variant === "a"
+    ? [...ancestors, focal, ...descendants]
+    : variant === "c"
+      ? members
+      : [focal];
+const others = (v: string) => `/permalink-lab/${v}/${focalId}`;
+---
+
+<NotesLayout title={`Permalink lab ${variant}`}>
+  <p class="not-prose text-sm opacity-60">
+    permalink lab · {focalId} ·
+    {
+      ["a", "b", "c"].map((v) => (
+        <a
+          href={others(v)}
+          class:list={["mx-1 px-1", v === variant && "font-bold underline"]}
+        >
+          {v === "a"
+            ? "a: conversation"
+            : v === "b"
+              ? "b: note first"
+              : "c: whole thread"}
+        </a>
+      ))
+    }
+  </p>
+
+  {
+    variant === "b" && ancestors.length > 0 && (
+      <a
+        href={`/permalink-lab/b/${ancestors.at(-1)!.note.id}`}
+        class="not-prose mt-6 block text-sm tracking-wide text-inherit! no-underline opacity-75 hover:underline [font-variant:small-caps]"
+      >
+        ↑ replying to {label(ancestors.at(-1)!)}:{" "}
+        <span class="[font-variant:normal]">
+          {firstLine(ancestors.at(-1)!)}
+        </span>
+      </a>
+    )
+  }
+  {
+    focal.position!.missingParent && (
+      <p class="not-prose mt-6 text-sm tracking-wide opacity-75 [font-variant:small-caps]">
+        ↳ replying to a note that no longer exists
+      </p>
+    )
+  }
+
+  {
+    chain.map((t, i) => {
+      const Content = rendered.get(t.note.id)!;
+      const isFocal = t.note.id === focalId;
+      const prev = chain[i - 1];
+      const joinsUp = prev && parentOf(t.note.id) === prev.note.id;
+      const joinsDown =
+        chain[i + 1] && parentOf(chain[i + 1].note.id) === t.note.id;
+      const parent = parentOf(t.note.id);
+      const branch = variant !== "b" && i > 0 && !joinsUp && parent;
+      return (
+        <div
+          id={t.note.id}
+          class:list={[
+            "relative flow-root py-4 [&>article]:my-0 [&>article>:first-child]:mt-0",
+            isFocal && variant === "a" && "[&_article_p]:text-[1.2em]",
+            isFocal &&
+              variant === "c" &&
+              "-mx-6 rounded-lg bg-stone-200/70 px-6",
+            variant === "b" && "[&_article_p]:text-[1.2em] mt-4",
+          ]}
+        >
+          {variant !== "b" && (
+            <span
+              aria-hidden="true"
+              class:list={[
+                "absolute w-0 border-l-[1.5px] border-stone-300",
+                isFocal && variant === "c"
+                  ? "left-[0.375rem]"
+                  : "-left-[1.125rem]",
+              ]}
+              style={`top: ${joinsUp ? "0" : "1rem"}; bottom: ${joinsDown ? "0" : "1rem"}`}
+            />
+          )}
+          {branch && (
+            <p class="not-prose mb-2 text-sm tracking-wide opacity-75 [font-variant:small-caps]">
+              ↳ replying to {label(byId.get(parent)!)}
+            </p>
+          )}
+          <Note
+            publishedOn={t.note.data.publishedOn}
+            href={
+              isFocal ? undefined : `/permalink-lab/${variant}/${t.note.id}`
+            }
+            tags={t.note.data.tags}
+          >
+            <Content />
+            <span slot="meta">{label(t)}</span>
+          </Note>
+        </div>
+      );
+    })
+  }
+
+  {
+    variant === "b" && descendants.length > 0 && (
+      <div class="not-prose mt-6 flex flex-col gap-2 text-sm tracking-wide opacity-75">
+        {childrenOf(focalId!).map((c) => (
+          <a
+            href={`/permalink-lab/b/${c.note.id}`}
+            class="text-inherit! no-underline hover:underline [font-variant:small-caps]"
+          >
+            ↓ reply · {label(c)}:{" "}
+            <span class="[font-variant:normal]">{firstLine(c)}</span>
+          </a>
+        ))}
+      </div>
+    )
+  }
+</NotesLayout>
