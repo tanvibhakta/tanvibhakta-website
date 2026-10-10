@@ -17,11 +17,6 @@ const machineTime = publishedOn.toISOString();
 
 <article class="my-8 first:mt-0">
   <slot />
-  <!-- A dot between footer items. It hangs off each later item's ::before
-       into the gap, so an absent item leaves no stray dot. Positioned
-       absolutely, it ignores the item's own leading whitespace (Astro keeps a
-       space from the line breaks) and a link's hover underline; the empty alt
-       text keeps screen readers quiet. -->
   <footer
     class="not-prose mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm tracking-wide opacity-75 [font-variant:small-caps] [&>*+*]:relative [&>*+*]:before:absolute [&>*+*]:before:-left-3 [&>*+*]:before:w-3 [&>*+*]:before:text-center [&>*+*]:before:content-['·'/'']"
   >
