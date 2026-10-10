@@ -117,7 +117,7 @@ aligned with every other note; nothing is indented.
 
 ### Note footer
 
-`time · permalink · 3 of 11`
+`time · 3 of 11 · permalink` (permalink always last, 2026-10-10)
 
 - "3 of 11" is a `<button>` that opens the overlay. Clicking anywhere on a
   thread note (except links) also opens it.
@@ -137,8 +137,15 @@ The order is Mastodon's (checked in its source,
 1. **Ancestors:** the direct reply chain up to the root, root first. Never
    sibling branches.
 2. **The note you clicked.**
-3. **Descendants:** depth-first, siblings oldest first, so each branch's
-   chain stays together.
+3. **Descendants:** depth-first, so each branch's chain stays together.
+   Among siblings, the reply with the longest unbroken chain below it comes
+   first; a reply with nothing below it waits until the longer chains end.
+   Equal chains read oldest first. (Changed 2026-10-10 from "oldest first":
+   in the LHTL thread, a one-off quote tweet led and the main chain was
+   pushed down.)
+
+Quote tweets of a thread note are imported as replies to it. The
+longest-chain rule keeps a stand-alone quote out of the main chain.
 
 How lines and branches are drawn:
 

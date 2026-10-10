@@ -18,16 +18,9 @@ const machineTime = publishedOn.toISOString();
 <article class="my-8 first:mt-0">
   <slot />
   <footer
-    class="not-prose mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm tracking-wide opacity-75 [font-variant:small-caps]"
+    class="not-prose mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm tracking-wide opacity-75 [font-variant:small-caps] [&>*+*]:relative [&>*+*]:before:absolute [&>*+*]:before:-left-3 [&>*+*]:before:w-3 [&>*+*]:before:text-center [&>*+*]:before:content-['·'/'']"
   >
     <time datetime={machineTime}>{timestamp}</time>
-    {
-      href && (
-        <a href={href} class="text-inherit! no-underline hover:underline">
-          permalink
-        </a>
-      )
-    }
     {
       tags.length > 0 && (
         <span class="flex flex-wrap gap-2 opacity-80">
@@ -44,5 +37,12 @@ const machineTime = publishedOn.toISOString();
     }
     <!-- Extra footer items, e.g. a thread note's "3 of 11". -->
     <slot name="meta" />
+    {
+      href && (
+        <a href={href} class="text-inherit! no-underline hover:underline">
+          permalink
+        </a>
+      )
+    }
   </footer>
 </article>
