@@ -26,6 +26,15 @@ a {
   color: oklch(50.5% 0.213 27.518); /*red-800*/
 }
 
+/* Let a long unbroken string (a bare URL, a long word) break anywhere rather
+   than widen the page. The layouts' <main> is sized by its content (a flex
+   item with no width on phones), so one URL with no break opportunities set
+   the whole page's width and pushed everything off-screen. `anywhere`, unlike
+   `break-word`, also lowers the min-content width that sizing reads. */
+.prose {
+  overflow-wrap: anywhere;
+}
+
 a:hover {
   filter: brightness(0.8);
   transition: filter 0.12s ease-in-out;
