@@ -2,26 +2,132 @@
 import { render } from "astro:content";
 import NotesLayout from "../layouts/NotesLayout.astro";
 import Note from "../components/Note.astro";
-import { getSluggedNotes } from "../utils/notes";
+import NoteSpine from "../components/NoteSpine.astro";
+import NoteFocusLine from "../components/NoteFocusLine.astro";
+import { getThreadedNotes } from "../utils/notes";
+import { conversation } from "../utils/note-threads";
 import { formatNoteTimestamp } from "../utils/date-helpers";
 
 // Notes live at the site root (/2026oct05-02) alongside markdown pages, which
 // [...slug].astro serves. Astro prefers this single-segment route over the
 // rest route, so a page must never be named like a note slug.
+//
+// A note's page shows its conversation: the notes it replies to above it,
+// the note itself (larger, with room around it), then its replies. The page
+// opens with the note centred on screen. Design:
+// docs/plans/2026-10-05-notes-threading-design.md.
 export async function getStaticPaths() {
-  const slugged = await getSluggedNotes();
-  return slugged.map(({ note, slug }) => ({
+  const threaded = await getThreadedNotes();
+  return threaded.map(({ note, slug }) => ({
     params: { note: slug },
-    props: { note },
+    props: { id: note.id },
   }));
 }
 
-const { note } = Astro.props;
-const { Content } = await render(note);
+const { id } = Astro.props;
+const threaded = await getThreadedNotes();
+const byId = new Map(threaded.map((t) => [t.note.id, t]));
+// threaded is oldest-first, so its index is the time order.
+const rank = new Map(threaded.map((t, i) => [t.note.id, i]));
+const parentOf = Object.fromEntries(
+  threaded.flatMap(({ note, position }) =>
+    position && !position.missingParent && note.data.inReplyTo
+      ? [[note.id, note.data.inReplyTo]]
+      : [],
+  ),
+);
+const items = await Promise.all(
+  conversation(id, parentOf, (a, b) => rank.get(a)! - rank.get(b)!).map(
+    async (item) => {
+      const entry = byId.get(item.id)!;
+      return { ...item, ...entry, Content: (await render(entry.note)).Content };
+    },
+  ),
+);
+const focal = byId.get(id)!;
+const label = (noteId: string) => {
+  const position = byId.get(noteId)?.position;
+  return position ? `${position.index + 1} of ${position.size}` : null;
+};
+const lineUp = (joins: boolean) => (joins ? "solid" : null);
 ---
 
-<NotesLayout title={`${formatNoteTimestamp(note.data.publishedOn)} | Notes`}>
-  <Note publishedOn={note.data.publishedOn} tags={note.data.tags}>
-    <Content />
-  </Note>
+<NotesLayout
+  title={`${formatNoteTimestamp(focal.note.data.publishedOn)} | Notes`}
+>
+  {
+    focal.position?.missingParent && (
+      <p class="not-prose text-sm tracking-wide opacity-75 [font-variant:small-caps]">
+        ↳ replying to a note that no longer exists
+      </p>
+    )
+  }
+  {
+    items.map(
+      ({
+        id: noteId,
+        joinsUp,
+        joinsDown,
+        branchFrom,
+        note,
+        slug,
+        position,
+        Content,
+      }) => {
+        const isFocal = noteId === id;
+        return (
+          <div
+            id={isFocal ? "focal-note" : undefined}
+            data-href={isFocal ? undefined : `/${slug}`}
+            class:list={[
+              "relative flow-root py-4 [&>article]:my-0 [&>article>:first-child]:mt-0",
+              isFocal
+                ? "py-[18vh] [&_article_p]:text-[1.25em]"
+                : "cursor-pointer",
+            ]}
+          >
+            {position &&
+              (isFocal ? (
+                <NoteFocusLine joinsUp={joinsUp} joinsDown={joinsDown} />
+              ) : (
+                <NoteSpine up={lineUp(joinsUp)} down={lineUp(joinsDown)} />
+              ))}
+            {branchFrom && (
+              <p class="not-prose mb-2 text-sm tracking-wide opacity-75 [font-variant:small-caps]">
+                ↳ replying to{" "}
+                <a
+                  href={`/${byId.get(branchFrom)!.slug}`}
+                  class="text-inherit! no-underline hover:underline"
+                >
+                  {label(branchFrom)}
+                </a>
+              </p>
+            )}
+            <Note
+              publishedOn={note.data.publishedOn}
+              href={isFocal ? undefined : `/${slug}`}
+              tags={note.data.tags}
+            >
+              <Content />
+              {position && <span slot="meta">{label(noteId)}</span>}
+            </Note>
+          </div>
+        );
+      },
+    )
+  }
+  {
+    // Room below, so a note late in its thread can still reach the centre.
+    items.length > 1 && <div aria-hidden="true" class="h-[40vh]" />
+  }
 </NotesLayout>
+
+<script is:inline>
+  // Before first paint, so the page opens on the note rather than jumping.
+  document
+    .getElementById("focal-note")
+    .scrollIntoView({ block: "center", behavior: "instant" });
+</script>
+<script>
+  import "../scripts/open-note-on-click";
+</script>
