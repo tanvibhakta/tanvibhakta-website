@@ -79,6 +79,11 @@ export default defineConfig({
       status: 301,
       destination: "https://github.com/tanvibhakta",
     },
+    // Short link to the Learning How to Learn thread's first note.
+    "/lhtl": {
+      status: 301,
+      destination: "/2018nov12-01",
+    },
   },
 
   integrations: [

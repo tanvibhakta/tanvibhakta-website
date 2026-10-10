@@ -31,6 +31,12 @@
   force = true
 
 [[redirects]]
+  from = "/lhtl/"
+  to = "/2018nov12-01"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/api/subscribe"
   to = "https://epi.stic.earth/api/public/subscription"
   status = 200
