@@ -110,3 +110,47 @@ export function feedLinks(
   });
   return links;
 }
+
+/**
+ * The replies below `id`, in the overlay's reading order: depth-first, so
+ * each branch's chain stays together. Among siblings, the reply with the
+ * longest unbroken chain below it comes first; a reply with nothing below
+ * it waits until the longer chains have ended. Equal chains read oldest
+ * first.
+ *
+ * `parentOf` maps a reply's id to its parent's; `byTime` orders two ids.
+ */
+export function replyOrder(
+  id: string,
+  parentOf: Record<string, string>,
+  byTime: (a: string, b: string) => number,
+): string[] {
+  const children = new Map<string, string[]>();
+  for (const [child, parent] of Object.entries(parentOf)) {
+    children.set(parent, [...(children.get(parent) ?? []), child]);
+  }
+
+  // Notes in the longest chain below a note, the note excluded: 0 for a
+  // note with no replies.
+  const chain = new Map<string, number>();
+  const chainBelow = (note: string): number => {
+    if (!chain.has(note)) {
+      const below = (children.get(note) ?? []).map((c) => 1 + chainBelow(c));
+      chain.set(note, Math.max(0, ...below));
+    }
+    return chain.get(note)!;
+  };
+
+  const out: string[] = [];
+  const walk = (parent: string) => {
+    const replies = [...(children.get(parent) ?? [])].sort(
+      (a, b) => chainBelow(b) - chainBelow(a) || byTime(a, b),
+    );
+    for (const reply of replies) {
+      out.push(reply);
+      walk(reply);
+    }
+  };
+  walk(id);
+  return out;
+}

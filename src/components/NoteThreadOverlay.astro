@@ -130,6 +130,8 @@ const graph = {
 />
 
 <script>
+  import { replyOrder } from "../utils/note-threads";
+
   const graph: { parentOf: Record<string, string | null>; missing: string[] } =
     JSON.parse(document.getElementById("thread-graph")!.textContent!);
   const { parentOf } = graph;
@@ -162,23 +164,13 @@ const graph = {
     return out.sort(byTime);
   }
 
-  // Replies depth-first, siblings oldest first, so a branch's chain stays
-  // together instead of interleaving by time.
-  function descendants(id: string): string[] {
-    const children = (parent: string) =>
-      Object.keys(parentOf)
-        .filter((c) => parentOf[c] === parent)
-        .sort(byTime);
-    const out: string[] = [];
-    const walk = (parent: string) => {
-      for (const child of children(parent)) {
-        out.push(child);
-        walk(child);
-      }
-    };
-    walk(id);
-    return out;
-  }
+  // Roots map to null in the graph; replyOrder wants only real links.
+  const replyLinks = Object.fromEntries(
+    Object.entries(parentOf).filter(
+      (link): link is [string, string] => link[1] !== null,
+    ),
+  );
+  const descendants = (id: string) => replyOrder(id, replyLinks, byTime);
 
   // Render the conversation around `id`: ancestors, the note, its replies.
   // `anchorY` is where (viewport px) the note was when clicked; the focal

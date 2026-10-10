@@ -1,5 +1,9 @@
 import { describe, expect, test } from "vitest";
-import { feedLinks, threadPositions } from "../src/utils/note-threads";
+import {
+  feedLinks,
+  replyOrder,
+  threadPositions,
+} from "../src/utils/note-threads";
 
 // Notes store naive wall clocks that parse as UTC; fixtures use Z to match.
 const at = (iso: string) => new Date(`${iso}Z`);
@@ -131,5 +135,62 @@ describe("feedLinks", () => {
 
   test("non-thread notes get no line", () => {
     expect(links.has("x")).toBe(false);
+  });
+});
+
+describe("replyOrder", () => {
+  // Ids sort by time here, so the time order is alphabetical.
+  const byTime = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+
+  test("a single chain reads straight down", () => {
+    expect(replyOrder("a", { b: "a", c: "b" }, byTime)).toEqual(["b", "c"]);
+  });
+
+  test("the reply with the longest chain below it comes first", () => {
+    // a → b (leaf), a → c → d → e: c's chain is longer, so it leads and b
+    // follows once that chain ends.
+    const parentOf = { b: "a", c: "a", d: "c", e: "d" };
+    expect(replyOrder("a", parentOf, byTime)).toEqual(["c", "d", "e", "b"]);
+  });
+
+  test("chain length, not reply count, decides", () => {
+    // b has three leaf replies; c has one reply that itself continues.
+    const parentOf = {
+      b: "a",
+      c: "a",
+      d: "b",
+      e: "b",
+      f: "b",
+      g: "c",
+      h: "g",
+      i: "h",
+    };
+    expect(replyOrder("a", parentOf, byTime)).toEqual([
+      "c",
+      "g",
+      "h",
+      "i",
+      "b",
+      "d",
+      "e",
+      "f",
+    ]);
+  });
+
+  test("equal chains fall back to oldest first", () => {
+    const parentOf = { c: "a", b: "a", d: "c", e: "b" };
+    expect(replyOrder("a", parentOf, byTime)).toEqual(["b", "e", "c", "d"]);
+  });
+
+  test("the rule applies at every level, not just under the root", () => {
+    // Under c: d is a leaf, e continues to f.
+    const parentOf = { b: "a", c: "b", d: "c", e: "c", f: "e" };
+    expect(replyOrder("a", parentOf, byTime)).toEqual([
+      "b",
+      "c",
+      "e",
+      "f",
+      "d",
+    ]);
   });
 });
