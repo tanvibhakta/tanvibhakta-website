@@ -3,15 +3,13 @@ import { render } from "astro:content";
 import NotesLayout from "../../layouts/NotesLayout.astro";
 import Note from "../../components/Note.astro";
 import NoteSpine from "../../components/NoteSpine.astro";
-import NoteThreadOverlay, {
-  type OverlayNote,
-} from "../../components/NoteThreadOverlay.astro";
 import { getThreadedNotes } from "../../utils/notes";
 import { feedLinks } from "../../utils/note-threads";
 
 // Sorted oldest-first, displayed newest-first. Threads never reorder the
 // feed: a thread note sits at its own date, and a margin line plus "N of M"
-// say it belongs to a thread. Design:
+// say it belongs to a thread. Clicking a note opens its own page, which
+// shows its conversation. Design:
 // docs/plans/2026-10-05-notes-threading-design.md.
 const threaded = await getThreadedNotes();
 const rendered = await Promise.all(
@@ -31,26 +29,6 @@ const links = feedLinks(
 );
 
 const label = (index: number, size: number) => `${index + 1} of ${size}`;
-
-const overlayNotes: OverlayNote[] = rendered.flatMap(
-  ({ note, slug, position, Content }) =>
-    position
-      ? [
-          {
-            id: note.id,
-            slug,
-            publishedOn: note.data.publishedOn,
-            tags: note.data.tags,
-            Content,
-            label: label(position.index, position.size),
-            parent: position.missingParent
-              ? null
-              : (note.data.inReplyTo ?? null),
-            missingParent: position.missingParent,
-          },
-        ]
-      : [],
-);
 ---
 
 <NotesLayout title="Notes">
@@ -58,12 +36,8 @@ const overlayNotes: OverlayNote[] = rendered.flatMap(
   {
     feed.map(({ note, slug, position, Content }) => (
       <div
-        data-note={note.id}
-        data-thread={position?.threadId}
-        class:list={[
-          "relative flow-root py-4 first:pt-0 [&>article]:my-0 [&>article>:first-child]:mt-0",
-          position && "cursor-pointer",
-        ]}
+        data-href={`/${slug}`}
+        class="relative flow-root cursor-pointer py-4 first:pt-0 [&>article]:my-0 [&>article>:first-child]:mt-0"
       >
         {position && <NoteSpine {...links.get(note.id)!} />}
         <Note
@@ -73,18 +47,14 @@ const overlayNotes: OverlayNote[] = rendered.flatMap(
         >
           <Content />
           {position && (
-            <button
-              slot="meta"
-              type="button"
-              aria-haspopup="dialog"
-              class="cursor-pointer tracking-wide hover:underline [font-variant:small-caps]"
-            >
-              {label(position.index, position.size)}
-            </button>
+            <span slot="meta">{label(position.index, position.size)}</span>
           )}
         </Note>
       </div>
     ))
   }
-  {overlayNotes.length > 0 && <NoteThreadOverlay notes={overlayNotes} />}
 </NotesLayout>
+
+<script>
+  import "../../scripts/open-note-on-click";
+</script>
