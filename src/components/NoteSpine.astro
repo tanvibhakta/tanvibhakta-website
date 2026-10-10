@@ -9,8 +9,9 @@
 // in the feed ("stub"). Position in words ("3 of 11") lives in the footer,
 // which is also what screen readers get.
 //
-// stone-500 on the stone-100 page is 4.39:1, clearing WCAG 1.4.11's 3:1 for
-// graphics needed to understand content.
+// stone-300: a light line, chosen by eye over the stone-500 that would
+// clear WCAG 1.4.11's 3:1 (stone-300 is 1.37:1). The "3 of 11" text carries
+// the same information, so the line is a visual aid, not the only cue.
 import type { Link } from "../utils/note-threads";
 
 interface Props {
@@ -19,7 +20,8 @@ interface Props {
 }
 const { up, down } = Astro.props;
 
-const line = "absolute left-1/2 -translate-x-1/2 w-0 border-l border-stone-500";
+const line =
+  "absolute left-1/2 -translate-x-1/2 w-0 border-l-[1.5px] border-stone-300";
 ---
 
 <span aria-hidden="true" class="absolute -left-6 top-0 bottom-0 w-3">

@@ -107,10 +107,11 @@ aligned with every other note; nothing is indented.
 - **No dots, no legend.** Role marks (ring for first, filled dot for latest,
   small dot between) needed a legend, so they were dropped, and then the
   dot too, since it carried no information.
-- **Colour stone-500, 1px.** That is 4.39:1 against the stone-100 page,
-  which clears WCAG 1.4.11's 3:1 for graphics needed to understand content.
-  stone-300 was 1.37:1 and stone-400 is 2.37:1; a thicker line doesn't
-  change the ratio.
+- **stone-300, 1.5px, square ends.** A light line, chosen by eye
+  (2026-10-10). stone-500 (4.39:1 against the stone-100 page) would clear
+  WCAG 1.4.11's 3:1 for graphics, but read too heavy; stone-300 is 1.37:1. The line isn't
+  the only cue: "N of M" says the same thing in text, which is also what
+  screen readers get.
 - `aria-hidden`: the "N of M" text carries the same information for screen
   readers.
 
