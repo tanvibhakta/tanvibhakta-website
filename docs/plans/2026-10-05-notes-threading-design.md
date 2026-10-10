@@ -5,6 +5,8 @@
 `thread-ui-lab` (`src/pages/thread-lab/`, served at `/thread-lab/spine`).
 That page is a reference, not code to merge, and is deleted once the
 implementation lands. Open questions answered 2026-10-06 (see the end).
+The feed overlay was replaced by each note's own page on 2026-10-10 (issue
+#133); see "A note's page".
 
 ## Goal
 
@@ -55,8 +57,8 @@ If `inReplyTo` names a note that doesn't exist (deleted, or never
 published), the reply still builds. Following X's convention rather than
 Mastodon's silent cut:
 
-- **Overlay:** a placeholder sits where the parent would be, at the top of
-  the ancestors: "↳ replying to a note that no longer exists". It has no
+- **The note's page:** a placeholder sits where the parent would be, at the
+  top of the ancestors: "↳ replying to a note that no longer exists". It has no
   link and no "N of M".
 - **Thread maths:** the chain stops at the gap. The reply becomes the root of
   its own thread for the line and for "N of M"; a missing note is never
@@ -67,10 +69,10 @@ Mastodon's silent cut:
 
 Each thread note shows its position as plain text, e.g. "3 of 11".
 
-- **Counted by time.** In the feed, a thread always counts down cleanly. In
-  the overlay, which follows the reply chain, the numbers jump only at a
+- **Counted by time.** In the feed, a thread always counts down cleanly. On
+  a note's page, which follows the reply chain, the numbers jump only at a
   branch, and the branch marker (below) explains the jump. Numbering by
-  reply chain was tried: the overlay read 1…M, but the feed showed
+  reply chain was tried: the conversation read 1…M, but the feed showed
   unexplained jumps such as 9, 11, 8, … 4, 10, 3.
 - **Ties need milliseconds.** Tweets in a self-thread are often posted in
   the same second, so `created_at` alone puts them in the wrong order. The
@@ -119,24 +121,30 @@ aligned with every other note; nothing is indented.
 
 `time · 3 of 11 · permalink` (permalink always last, 2026-10-10)
 
-- "3 of 11" is a `<button>` that opens the overlay. Clicking anywhere on a
-  thread note (except links) also opens it.
+- "3 of 11" is plain text.
+- Clicking anywhere on any note, threaded or not, opens its own page
+  (`src/scripts/open-note-on-click.ts`). Links, photos (the lightbox) and
+  selecting text keep their own behaviour; the permalink link stays the
+  keyboard and no-JavaScript route.
 - The permalink is no longer in the link colour (`text-inherit!` in
   `Note.astro`). Tags in the same footer still use the link colour; this is
   undecided.
 
-## The overlay
+## A note's page
 
-Clicking a thread note opens its conversation in a native `<dialog>`.
+Every note's page (`/2026oct05-02`, `src/pages/[note].astro`) shows its
+conversation. Settled 2026-10-10 by prototyping on branch `permalink-lab`
+(issue #133); the experiments stay on that branch, unmerged.
 
 ### Contents and order
 
 The order is Mastodon's (checked in its source,
-`app/javascript/mastodon/features/status/`):
+`app/javascript/mastodon/features/status/`), worked out by `conversation()`
+in `src/utils/note-threads.ts`:
 
 1. **Ancestors:** the direct reply chain up to the root, root first. Never
    sibling branches.
-2. **The note you clicked.**
+2. **The note itself.**
 3. **Descendants:** depth-first, so each branch's chain stays together.
    Among siblings, the reply with the longest unbroken chain below it comes
    first; a reply with nothing below it waits until the longer chains end.
@@ -147,72 +155,52 @@ The order is Mastodon's (checked in its source,
 Quote tweets of a thread note are imported as replies to it. The
 longest-chain rule keeps a stand-alone quote out of the main chain.
 
+A standalone note is a conversation of one: just the note, with no line.
+
 How lines and branches are drawn:
 
 - A line joins two notes only if one is the other's parent and they are
   adjacent. At a branch the line breaks.
 - Where a reply's parent isn't directly above it, the reply shows
-  "↳ replying to 2 of 11" above its text. "2 of 11" is a button that
-  re-focuses the overlay on that parent.
-- Every note in the overlay shows its "N of M".
+  "↳ replying to 2 of 11" above its text, linking to the parent's page.
+- Every thread note shows its "N of M".
+
+### The note in focus
+
+- **Larger:** the note's text is 1.25×.
+- **Room around it:** 18vh of whitespace above and below, much more than
+  between notes, but not a whole empty screen. A screen of its own
+  (`alone` on the lab branch) was tried and rejected: too empty.
+- **Centred on arrival:** the page opens with the note in the vertical
+  centre of the screen, scrolled before first paint. 40vh of room below
+  the conversation lets a note late in its thread still reach the centre.
+- **The line swells:** beside the note, the thread line thickens (3.5px)
+  and darkens (stone-500), fading in and out (`NoteFocusLine.astro`). It
+  stays where the line runs, so it needs no margin to move into and holds
+  up on phones. Tried and rejected: the line bowing or stepping out into
+  the margin, and a darker bracket with ticks.
+- **No permalink** in its footer; the page is the permalink.
 
 ### Navigation
 
-- Clicking any other note in the overlay re-focuses it: that note's own
-  ancestors above and replies below.
-- Each focus is a history entry (`pushState`), so Back steps through the
-  notes visited. Closing (✕, Esc, or clicking outside the box) unwinds all
-  of them at once with `history.go(-depth)`.
+- Clicking any other note in the conversation opens that note's page, as
+  in the feed. Back returns to where you were.
+- **Plain page changes, no animation.** A cross-document view transition
+  (the note gliding from the feed to its place on the page, 200ms,
+  decelerating) was tried and rejected: the plain jump felt better, and
+  Firefox doesn't support it anyway.
+- Rejected, also from the lab: one note per screen with scroll-snapping
+  (`snap`), and stepping through the thread by links one note at a time.
 
-### The clicked note doesn't move
+### The overlay (retired 2026-10-10)
 
-A different note appearing where you clicked was jarring. The overlay keeps
-the clicked note at exactly the same screen position:
-
-- **Horizontal:** the box is positioned so its text column matches the
-  feed's column (`left = article.left − 48px`, width `article.width + 96px`).
-- **Vertical:** the overlay scrolls so the focal note's top lands at the
-  y-position it was clicked at. If there isn't enough content above, the
-  list gets top padding instead.
-- **Edges:** a note clicked very near the top or bottom of the screen is
-  placed as close as the box allows (measured: up to about 25px off).
-- **Size:** the focal note is not enlarged; a size change also reads as a
-  different note.
-- **Box height:** the box is always full height, with 60vh of bottom
-  padding so a note near the end of its thread can still scroll to the
-  anchor. Shrinking the box to fit the content was tried and rejected; a
-  box that changes shape per note felt worse.
-- Re-focusing inside the overlay uses the same rule: the note you click
-  stays put while its context changes.
-- Implementation notes: turn off the browser's own scroll anchoring
-  (`overflow-anchor: none`), and use `behavior: "instant"` because the
-  site's CSS scrolls smoothly. Otherwise the position is adjusted twice, or
-  animated.
-
-### Look
-
-The aim was "not stark":
-
-- **No header and no text in the chrome.** Only an icon ✕
-  (`aria-label="Close thread"`), kept for touch screens.
-- **Box:** the page colour (stone-100), a hairline stone-300 border,
-  rounded-xl, and a soft diffuse shadow.
-- **Backdrop:** a light wash of the page colour (stone-100/60) with a 2px
-  blur, so the feed stays faintly visible. Not a dark scrim.
-- **Edges:** content fades over 2rem at the top and 3rem at the bottom
-  (`mask-image`), instead of being cut off.
-- **No box at all** was trialled and rejected as uncanny. The blurred feed
-  text sits directly behind the identical text column.
-
-### Behaviour
-
-- **Page scroll:** locked while open (`overflow: hidden` on `<html>`, with
-  `scrollbar-gutter: stable` so the page doesn't shift sideways and break
-  the alignment). The scroll area has `overscroll-behavior: contain`, so
-  reaching its ends doesn't scroll the page.
-- **Focus:** goes to the scroll area on open, not the ✕. There's no focus
-  ring on open, and the arrow keys scroll the thread straight away.
-- **Focal note:** marked with `aria-current="true"`.
+Until 2026-10-10, clicking a thread note in the feed opened its
+conversation in a `<dialog>` over the feed, kept the clicked note at its
+exact screen position, and pushed a history entry per re-focus. The note's
+page replaced it: it shows the same conversation, works without
+JavaScript, and needs none of the overlay's scroll locking, positioning or
+history handling. Its design and code are in git history (PR #134,
+`src/components/NoteThreadOverlay.astro`).
 
 ## Telegram reply-to
 
@@ -277,19 +265,12 @@ parent is missing).
 
 ## Mobile
 
-A browser check at 390px (2026-10-06): the overlay holds up. The ✕ is a
-32px touch target clear of the text, and the clicked note keeps its height
-on screen. The page did overflow, but only because of long raw tweet URLs in
-the prototype's rough text; the real import won't carry those, so no
-wrapping change is needed. A real-phone check happens on the PR's deploy
-preview.
+The swelling line was chosen partly because it works on phones, where
+there's little margin for the line to move into (2026-10-10). A real-phone
+check of the note's page happens on the PR's deploy preview.
 
 ## Decided later
 
-- **A thread note's own page** (`/2026oct05-02`) needs its own design
-  iteration, tracked in issue #133. For now it renders the note as it
-  does today. Once threading ships, a couple of iterations go on a scratch
-  page for Tanvi to compare in the browser.
 - **Ignored for now:** tag colour in the footer, tweets after Nov 2022, and
   how other collections moving to root slugs share the per-day count.
 

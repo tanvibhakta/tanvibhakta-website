@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
   feedLinks,
+  conversation,
   replyOrder,
   threadPositions,
 } from "../src/utils/note-threads";
@@ -83,7 +84,8 @@ describe("threadPositions", () => {
   });
 
   test("a lone reply to a missing note still gets a position", () => {
-    // It has to: the overlay is how the "no longer exists" placeholder shows.
+    // It has to: the note's page is where the "no longer exists" placeholder
+    // shows.
     const positions = threadPositions([
       note("b", "2026-10-01T10:01:00", "gone"),
     ]);
@@ -191,6 +193,54 @@ describe("replyOrder", () => {
       "e",
       "f",
       "d",
+    ]);
+  });
+});
+
+describe("conversation", () => {
+  const byTime = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+  const ids = (items: { id: string }[]) => items.map((i) => i.id);
+
+  test("ancestors root first, then the note, then its replies", () => {
+    const parentOf = { b: "a", c: "b", d: "c" };
+    expect(ids(conversation("b", parentOf, byTime))).toEqual([
+      "a",
+      "b",
+      "c",
+      "d",
+    ]);
+  });
+
+  test("leaves out sibling branches of the note's ancestors", () => {
+    // a → b → c (the note), and a → x: x is someone else's reply.
+    const parentOf = { b: "a", c: "b", x: "a" };
+    expect(ids(conversation("c", parentOf, byTime))).toEqual(["a", "b", "c"]);
+  });
+
+  test("replies read in replyOrder", () => {
+    const parentOf = { b: "a", c: "a", d: "c", e: "d" };
+    expect(ids(conversation("a", parentOf, byTime))).toEqual([
+      "a",
+      ...replyOrder("a", parentOf, byTime),
+    ]);
+  });
+
+  test("the line joins a note to the one above only if it's the parent", () => {
+    // a → c → d → e, then a → b once that chain ends: b's parent isn't
+    // directly above it.
+    const parentOf = { b: "a", c: "a", d: "c", e: "d" };
+    expect(conversation("a", parentOf, byTime)).toEqual([
+      { id: "a", joinsUp: false, joinsDown: true, branchFrom: null },
+      { id: "c", joinsUp: true, joinsDown: true, branchFrom: null },
+      { id: "d", joinsUp: true, joinsDown: true, branchFrom: null },
+      { id: "e", joinsUp: true, joinsDown: false, branchFrom: null },
+      { id: "b", joinsUp: false, joinsDown: false, branchFrom: "a" },
+    ]);
+  });
+
+  test("a note with no thread is the whole conversation", () => {
+    expect(conversation("x", {}, byTime)).toEqual([
+      { id: "x", joinsUp: false, joinsDown: false, branchFrom: null },
     ]);
   });
 });

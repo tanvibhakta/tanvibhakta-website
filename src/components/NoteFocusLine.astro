@@ -1,0 +1,64 @@
+---
+// The thread line beside the note a page is about. It stays where the
+// feed's line runs (NoteSpine), but thickens and darkens beside the note,
+// fading in and out, so it marks the note without needing margin to move
+// into, which holds up on phones. Place inside a `relative` wrapper, in
+// place of NoteSpine.
+//
+// An SVG whose right edge sits on NoteSpine's centre line, so it meets the
+// neighbouring notes' lines exactly. The viewBox stretches vertically with
+// the note (preserveAspectRatio none); non-scaling-stroke keeps strokes
+// their width. Design: docs/plans/2026-10-05-notes-threading-design.md.
+interface Props {
+  /** The note above is this note's parent. */
+  joinsUp: boolean;
+  /** The note below replies to this one. */
+  joinsDown: boolean;
+}
+const { joinsUp, joinsDown } = Astro.props;
+
+// Without a neighbour to join, the line starts or ends inset, like
+// NoteSpine's 1rem (here in viewBox units: ~4% of the note's height).
+const top = joinsUp ? 0 : 4;
+const bottom = joinsDown ? 100 : 96;
+const x = 48; // the right edge of the 48-unit-wide viewBox
+// Gradient ids are document-global; one focal note per page, but keep it
+// unique anyway.
+const gradient = `note-focus-${Math.random().toString(36).slice(2)}`;
+---
+
+<svg
+  aria-hidden="true"
+  class="absolute top-0 -left-[4.125rem] h-full w-12 overflow-visible"
+  viewBox="0 0 48 100"
+  preserveAspectRatio="none"
+>
+  <path
+    d={`M${x} ${top} V${bottom}`}
+    fill="none"
+    stroke="var(--color-stone-300)"
+    stroke-width="1.5"
+    vector-effect="non-scaling-stroke"></path>
+  <defs>
+    <linearGradient
+      id={gradient}
+      gradientUnits="userSpaceOnUse"
+      x1="0"
+      y1="0"
+      x2="0"
+      y2="100"
+    >
+      <stop offset="0.15" stop-color="var(--color-stone-500)" stop-opacity="0"
+      ></stop>
+      <stop offset="0.4" stop-color="var(--color-stone-500)"></stop>
+      <stop offset="0.6" stop-color="var(--color-stone-500)"></stop>
+      <stop offset="0.85" stop-color="var(--color-stone-500)" stop-opacity="0"
+      ></stop>
+    </linearGradient>
+  </defs>
+  <path
+    d={`M${x} 15 V85`}
+    stroke={`url(#${gradient})`}
+    stroke-width="3.5"
+    vector-effect="non-scaling-stroke"></path>
+</svg>

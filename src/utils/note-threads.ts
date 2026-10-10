@@ -32,8 +32,9 @@ const byTime = (a: ThreadInput, b: ThreadInput) =>
 
 /**
  * Every threaded note's position. A note is threaded when its thread has
- * two or more notes, or when its parent is missing — the overlay is where
- * the "no longer exists" placeholder shows, so it needs a position too.
+ * two or more notes, or when its parent is missing — the note's own
+ * page is where the "no longer exists" placeholder shows, so it needs a
+ * position too.
  *
  * A parent is accepted only if it exists and comes earlier in time. That
  * rules out self-replies and cycles (one side of a cycle is always the
@@ -112,7 +113,7 @@ export function feedLinks(
 }
 
 /**
- * The replies below `id`, in the overlay's reading order: depth-first, so
+ * The replies below `id`, in reading order: depth-first, so
  * each branch's chain stays together. Among siblings, the reply with the
  * longest unbroken chain below it comes first; a reply with nothing below
  * it waits until the longer chains have ended. Equal chains read oldest
@@ -153,4 +154,42 @@ export function replyOrder(
   };
   walk(id);
   return out;
+}
+
+export interface ConversationItem {
+  id: string;
+  /** The note directly above is this note's parent: the line joins them. */
+  joinsUp: boolean;
+  /** The note directly below replies to this one. */
+  joinsDown: boolean;
+  /** The parent's id when it isn't directly above ("↳ replying to"). */
+  branchFrom: string | null;
+}
+
+/**
+ * The conversation on a note's own page: its ancestors (root first, never
+ * their other branches), the note, then its replies in `replyOrder`. A note
+ * outside any thread is a conversation of one.
+ *
+ * `parentOf` holds accepted parents only (see `threadPositions`).
+ */
+export function conversation(
+  id: string,
+  parentOf: Record<string, string>,
+  byTime: (a: string, b: string) => number,
+): ConversationItem[] {
+  const ancestors: string[] = [];
+  for (let p = parentOf[id]; p; p = parentOf[p]) ancestors.unshift(p);
+  const chain = [...ancestors, id, ...replyOrder(id, parentOf, byTime)];
+
+  return chain.map((note, i) => {
+    const parent = parentOf[note] ?? null;
+    const joinsUp = i > 0 && parent === chain[i - 1];
+    return {
+      id: note,
+      joinsUp,
+      joinsDown: i < chain.length - 1 && parentOf[chain[i + 1]] === note,
+      branchFrom: i > 0 && !joinsUp ? parent : null,
+    };
+  });
 }
