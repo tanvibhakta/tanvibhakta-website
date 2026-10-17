@@ -1,5 +1,5 @@
 ---
-title: 'Week of October 17th, 2026: Learning, todoist overwhelm, and'
+title: 'Week of October 17th, 2026: Learning while working, todoist overwhelm, and annotated novels'
 publishedOn: 2026-10-17T06:35:00+05:30
 draft: true
 tags: []
@@ -11,9 +11,9 @@ I am simply declaring bankruptcy on the weeks before this.
 
 A few weeks ago I finally figured out how to get the llm to teach me things in a style in which I can learn. Working with llms has been much better since then. 
 
-I also hope that I have figured out the balance of using llms without outsourcing my thinking to them. I am doing at least 5 times the output of the work I used to do. But I've found that I can _care_ about at most 3 things a day, before my brain gets very, very tired.
+I also hope that I have figured out the balance of using llms without outsourcing my thinking to them. I am doing at least 5 times the output of the work I used to do (pre llm). But I've found that I can _care_ about at most 3 things a day, before my brain gets very, very tired.
 
-I'll have a post up soon about how we're doing evals what I learnt from it! 
+I'll have a post up soon about how we're doing evals and what I learnt from it! 
 
 ## Life
 
