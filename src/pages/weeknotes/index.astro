@@ -13,7 +13,7 @@ const { Content } = latestWeeknote
   : { Content: null };
 ---
 
-<ProseLayout frontmatter={SECTIONS.weeknotes}>
+<ProseLayout frontmatter={SECTIONS.weeknotes} hideTitle>
   {
     latestWeeknote && (
       <article>

@@ -7,8 +7,14 @@ import { shortenWeeknoteTitles, formatLongDate } from "../utils/date-helpers";
 import type { SectionNav } from "../utils/collections";
 import { titleHtml, titleText } from "../utils/title-markdown";
 
-const { frontmatter, category, readingTimeMinutes, hidePublishedOn, noindex } =
-  Astro.props;
+const {
+  frontmatter,
+  category,
+  readingTimeMinutes,
+  hidePublishedOn,
+  hideTitle,
+  noindex,
+} = Astro.props;
 const sectionNav: SectionNav | undefined = Astro.props.sectionNav || undefined;
 
 const publishedOn: Date | undefined = frontmatter?.publishedOn;
@@ -50,7 +56,7 @@ if (plainTitle) {
     class="mx-8 md:w-1/2 leading-6 pb-8 mt-6 md:mt-8 prose md:prose-lg ld:prose-xl prose-stone prose-headings:font-literata prose-headings:font-bold"
   >
     {
-      frontmatter?.title && (
+      frontmatter?.title && !hideTitle && (
         <header class="title-block">
           <h1 set:html={titleHtml(frontmatter.title)} />
           {(publishedOnFormatted || readingTimeMinutes) && (
