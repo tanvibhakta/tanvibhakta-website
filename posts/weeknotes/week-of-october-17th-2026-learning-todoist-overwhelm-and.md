@@ -27,7 +27,7 @@ The rest of the week has been quiet. Didn't even leave the house except for Tues
 
 ## Health
 
-Still in the flare that started mid August. Getting a little tired of it now. Go away. The last week especially I have wanted to move more, but have been afraid. (Iykyk) Would not wish chronic debilitation on my worst enemy. 
+Still in the flare that started mid August. Getting a little tired of it now. Go away. The last week especially I have wanted to move more, but have been afraid. (Iykyk) Would not wish chronic illness on my worst enemy. Okay wait, i have thought about who my worst enemies are (hint: people have been marching against them!) and maybe I would.
 
 A friend has offered to spend quality time with a bottle of oil and my back. I also hope to play some football this week. Let's see. 
 
