@@ -59,6 +59,13 @@ it.** Typing markdown in a plain-text editor works.
 - `escapeText` escapes `\ * _ [ ] < `` ` everywhere, and `>`, `#`, `-`, `+`,
   `1.` at line starts — by design, since entity-less text is "meant literally".
 - Spoilers, custom emoji and text mentions degrade to plain text.
+- **Quotes: use Telegram's Format → Quote, not a typed `>`.** A typed `>` is
+  escaped to `\>`. Four notes had this (`2026-10-02-0044`, `2026-10-08-1615`,
+  `2026-10-08-1616`, `2026-10-14-0103`), fixed by hand.
+- **Monospace is not for poems.** Telegram's monospace becomes an inline
+  code span, and code spans collapse newlines, so a multi-line poem renders
+  as one run-on line in code font (`2026-10-02-0044`, fixed by hand into a
+  blockquote). Use Quote for poems too; line breaks inside it survive.
 - Some Telegram clients turn typed `**x**` into a bold entity before sending;
   others send it as literal text, which then gets escaped. Unverified per
   client.
