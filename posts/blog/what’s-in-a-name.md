@@ -26,7 +26,7 @@ For a long time, I went by the handle _padawanjack._ When people see it, they in
 
 I also have another handle based on the characters but I’m not going to doxx myself with that one :grin:
 
-Nominative determinism is the theory that what something is named can predict what it becomes. I think names are indicative of a wish that the name-giver has for the named, and that can often be an indicator of the environment that the named grows up in as well. Names are often used as a tool for meaning making in the relationships they we come across later in life. Indian names are especially fun because some meanings are very on-the-surface and can be used in all sorts of puns. 
+Nominative determinism is the theory that what someone is named predicts what they become. I think names are indicative of a wish that the name-giver has for the named, and that can often be an indicator of the environment that the named grows up in as well. Names are often used as a tool for meaning making in the relationships they we come across later in life. Indian names are especially fun because some meanings are very on-the-surface and can be used in all sorts of puns. 
 
 I think I’m pretty bad at coming up with names, and it’s a skill I would like to get better at without thinking too much about the consequences. 
 
