@@ -259,6 +259,27 @@ collections:
           default: true,
           required: false,
         }
+      # Date-only: pages show "Published · Updated" by day. Bump Last Updated
+      # by hand for content edits; it's hidden when it matches Published.
+      - {
+          label: Published,
+          name: publishedOn,
+          widget: datetime,
+          date_format: YYYY-MM-DD,
+          time_format: false,
+          format: YYYY-MM-DD,
+          default: "{{now}}",
+          required: false,
+        }
+      - {
+          label: Last Updated,
+          name: lastUpdatedOn,
+          widget: datetime,
+          date_format: YYYY-MM-DD,
+          time_format: false,
+          format: YYYY-MM-DD,
+          required: false,
+        }
       - { label: Body, name: body, widget: markdown }
 
 media_libraries:
