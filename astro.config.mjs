@@ -79,6 +79,10 @@ export default defineConfig({
       status: 301,
       destination: "https://github.com/tanvibhakta",
     },
+    "/ai": {
+      status: 301,
+      destination: "/ai-policy",
+    },
   },
 
   integrations: [
