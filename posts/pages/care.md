@@ -1,6 +1,8 @@
 ---
 title: Care for Tanvi toolkit
 description: guide to taking care of me
+publishedOn: 2025-10-18
+lastUpdatedOn: 2026-04-26
 ---
 
 Generally speaking, if I am ill and you are physically in my space,
