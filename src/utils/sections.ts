@@ -21,10 +21,17 @@ export const NAV_ITEMS: readonly Section[] = NAV_HREFS.flatMap(
   (href) => KNOWN_SECTIONS.find((s) => s.href === href) ?? [],
 );
 
+// Slug words that title-casing would get wrong ("ai" → "Ai").
+const ACRONYMS = new Set(["ai"]);
+
 function titleCase(slug: string): string {
   return slug
     .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word) =>
+      ACRONYMS.has(word)
+        ? word.toUpperCase()
+        : word.charAt(0).toUpperCase() + word.slice(1),
+    )
     .join(" ");
 }
 

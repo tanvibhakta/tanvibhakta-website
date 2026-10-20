@@ -20,3 +20,10 @@ test("a root-level note slug belongs to the Notes section", () => {
 test("other unknown paths still fall back to their first segment", () => {
   expect(getCurrentSection("/care")).toEqual({ href: "/care", label: "Care" });
 });
+
+test("acronyms in a fallback slug keep their capitals", () => {
+  expect(getCurrentSection("/ai-policy")).toEqual({
+    href: "/ai-policy",
+    label: "AI Policy",
+  });
+});
