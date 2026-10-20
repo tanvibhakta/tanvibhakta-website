@@ -48,7 +48,8 @@ it.** Typing markdown in a plain-text editor works.
 - Serializer style observed: `_italic_`, curly quotes preserved, trailing
   spaces at line ends preserved.
 - Entry filenames come from `{{slug}}` of the title and keep curly
-  apostrophes (`what’s-in-a-name.md` → URL contains `%E2%80%99`).
+  apostrophes (`what’s-in-a-name.md`). The site's slug strips them, so the
+  URL is clean (`/blog/whats-in-a-name`); only the repo filename is odd.
 - Open question: does it serialize bold as `**` or `__`, lists as `-` or `*`?
 
 ### Telegram notes bot (`src/utils/telegram-entities.ts`)
@@ -140,4 +141,5 @@ the image upload button.
    agents. Sveltia and the Telegram bot commit via the GitHub API and skip
    every pre-commit hook, so normalising them needs a CI step or a check
    in their own code.
-5. Slugify away curly quotes in Sveltia filenames.
+5. Slugify away curly quotes in Sveltia filenames (cosmetic; URLs are
+   already clean).
