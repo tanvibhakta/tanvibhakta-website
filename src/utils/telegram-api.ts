@@ -37,3 +37,33 @@ export async function downloadTelegramFile(
     throw new Error(`Telegram file download failed: ${file.status}`);
   return Buffer.from(await file.arrayBuffer());
 }
+
+/**
+ * Reacts to a message with one emoji. Bots may only use Telegram's standard
+ * reaction set — 👍 is in it, ✅ is not. Throws with Telegram's reason on refusal.
+ */
+export async function reactToMessage(
+  token: string,
+  target: { chatId: number; messageId: number },
+  emoji: string,
+  fetchImpl: typeof fetch = fetch,
+): Promise<void> {
+  const res = await fetchImpl(
+    `https://api.telegram.org/bot${token}/setMessageReaction`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: target.chatId,
+        message_id: target.messageId,
+        reaction: [{ type: "emoji", emoji }],
+      }),
+    },
+  );
+  const body = (await res.json()) as { ok: boolean; description?: string };
+  if (!body.ok) {
+    throw new Error(
+      `Telegram setMessageReaction failed: ${body.description ?? res.status}`,
+    );
+  }
+}

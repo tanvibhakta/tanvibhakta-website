@@ -1,15 +1,15 @@
 import { createGitHub } from "../../src/utils/github-commit";
 import { toSiteWebp } from "../../src/utils/image-profile";
 import { planPhotoNote } from "../../src/utils/photo-note";
-import {
-  filenameForSlug,
-  noteSlugFromListing,
-} from "../../src/utils/note-slug";
+import { filenameForSlug } from "../../src/utils/note-slug";
 import {
   parentCandidates,
   parentIdFromBotReply,
 } from "../../src/utils/note-reply";
-import { downloadTelegramFile } from "../../src/utils/telegram-api";
+import {
+  downloadTelegramFile,
+  reactToMessage,
+} from "../../src/utils/telegram-api";
 import {
   buildNote,
   messageImage,
@@ -36,7 +36,10 @@ export const config = { path: "/api/telegram-webhook" };
  * - Anything else → skipped, with a reply saying so.
  * - A reply to an earlier message → the new note's `inReplyTo` names that
  *   message's note, so the site threads them. If that note can't be found,
- *   the reply still publishes, standalone, and the confirmation says so.
+ *   the reply still publishes, standalone, and a text reply says so.
+ *
+ * A published message gets a 👍 reaction as its confirmation; skips and
+ * failures get a text reply, since only words can say why.
  *
  * Commits go to NOTES_BRANCH (default main). Deploy previews set it to the
  * PR branch, so the bot can be pointed at a preview for an end-to-end test
@@ -82,7 +85,7 @@ export default async (req: Request): Promise<Response> => {
   try {
     if (image) return await publishPhoto(message, image, parent);
     const path = await commitTextNote(note!, message.message_id);
-    await reply(message, await published(path, message, parent));
+    await confirm(message, parent);
     return Response.json({ ok: true, path });
   } catch (error) {
     console.error("telegram-webhook publish failed:", error);
@@ -107,9 +110,8 @@ const github = () =>
 
 /**
  * Photo → note: download, convert to the site's image profile, then commit
- * the note and image together. Only the photo that creates a note replies;
- * later album photos (and Telegram redeliveries) stay silent, so an album
- * gets one confirmation.
+ * the note and image together. Every committed photo gets its own reaction,
+ * so each album photo confirms it landed; Telegram redeliveries stay silent.
  */
 async function publishPhoto(
   message: TelegramMessage,
@@ -146,9 +148,7 @@ async function publishPhoto(
       : "note: add album photo from telegram",
     branch(),
   );
-  if (plan.kind === "create") {
-    await reply(message, await published(plan.notePath, message, parent));
-  }
+  await confirm(message, plan.kind === "create" ? parent : undefined);
   return Response.json({ ok: true, path: plan.notePath, kind: plan.kind });
 }
 
@@ -186,8 +186,9 @@ async function commitTextNote(
 
 /**
  * The parent note's file id when `message` replies to a note, else null.
- * Replying to the bot's "Published <link>" confirmation counts as replying
- * to the note it announced. Best-effort: a lookup failure publishes the
+ * Replying to one of the bot's "Published <link>" confirmations (sent
+ * before it switched to reactions) counts as replying to the note it
+ * announced. Best-effort: a lookup failure publishes the
  * note standalone rather than not at all.
  */
 async function resolveParent(message: TelegramMessage): Promise<string | null> {
@@ -217,39 +218,38 @@ async function resolveParent(message: TelegramMessage): Promise<string | null> {
   return null;
 }
 
-// The confirmation for a published note, flagging a reply whose parent
-// couldn't be found (it published standalone).
-async function published(
-  path: string,
-  message: TelegramMessage,
-  parent: string | null,
-): Promise<string> {
-  const orphan =
-    message.reply_to_message && !parent
-      ? " Couldn't find the note you replied to, so it's standalone."
-      : "";
-  return `Published ${await noteLink(path)} — live once the rebuild finishes (~2 min).${orphan}`;
-}
-
 /**
- * The public URL of a note that was just committed: its slug is its date
- * plus its position among that day's posts/notes/ — one directory listing
- * away. Falls back to the repo path if the listing fails: the
- * publish already succeeded, and a worse link must not turn it into an
- * error reply.
+ * Confirms a publish with a reaction on the sender's message. A reply whose
+ * parent couldn't be found published standalone, which a reaction can't
+ * convey, so that also gets a text reply. Pass `parent` undefined to skip
+ * the orphan check (album photos after the first share the first's parent).
  */
-async function noteLink(path: string): Promise<string> {
-  try {
-    const listing = await github().listDir("posts/notes", branch());
-    const slug = noteSlugFromListing(listing, path.split("/").pop()!);
-    return `${process.env.SITE_URL ?? "https://tanvibhakta.in"}/${slug}`;
-  } catch (error) {
-    console.error("telegram-webhook note slug failed:", error);
-    return path;
+async function confirm(
+  message: TelegramMessage,
+  parent: string | null | undefined,
+): Promise<void> {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  if (token && message.chat) {
+    try {
+      await reactToMessage(
+        token,
+        { chatId: message.chat.id, messageId: message.message_id },
+        "👍",
+      );
+    } catch (error) {
+      // Publishing succeeded; a lost confirmation is not worth a retry loop.
+      console.error("telegram-webhook reaction failed:", error);
+    }
+  }
+  if (message.reply_to_message && parent === null) {
+    await reply(
+      message,
+      "Couldn't find the note you replied to, so it published standalone.",
+    );
   }
 }
 
-// Confirmation back to the sender; best-effort, never fails the publish.
+// Text reply to the sender; best-effort, never fails the publish.
 async function reply(message: TelegramMessage, text: string): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token || !message.chat) return;
