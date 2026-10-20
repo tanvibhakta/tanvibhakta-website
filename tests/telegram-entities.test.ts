@@ -18,18 +18,29 @@ describe("plain text", () => {
     expect(entitiesToMarkdown("hello world")).toBe("hello world");
   });
 
-  test("escapes markdown specials even when there are no entities", () => {
-    // @telegraf/entity issue #13: their zero-entity path skips escaping.
-    expect(entitiesToMarkdown("5 * 3 = *15*")).toBe("5 \\* 3 = \\*15\\*");
+  // Typed text is markdown source: the only sender writes in markdown, so
+  // "*x*" or "> quote" typed by hand must render, not show as symbols.
+  test("typed inline markdown passes through unescaped", () => {
+    expect(entitiesToMarkdown("a *b* _c_ **d** `e`")).toBe(
+      "a *b* _c_ **d** `e`",
+    );
   });
 
-  test("escapes link-like brackets", () => {
-    expect(entitiesToMarkdown("[not](a-link)")).toBe("\\[not\\](a-link)");
+  test("typed block markers pass through unescaped", () => {
+    expect(
+      entitiesToMarkdown("> quoted\n- item\n1. numbered\n# heading\n---"),
+    ).toBe("> quoted\n- item\n1. numbered\n# heading\n---");
   });
 
-  test("escapes block-level markers at line starts", () => {
-    expect(entitiesToMarkdown("> quoted\n- item\n1. numbered\n# heading")).toBe(
-      "\\> quoted\n\\- item\n1\\. numbered\n\\# heading",
+  test("typed markdown link survives Telegram's url entity on the href", () => {
+    // Telegram detects the URL inside the parens and marks it as a url entity.
+    const text = "see [docs](https://a_b.com) now";
+    expect(entitiesToMarkdown(text, [e("url", 11, 15)])).toBe(text);
+  });
+
+  test("typed markdown and Telegram formatting combine", () => {
+    expect(entitiesToMarkdown("> quote with bold", [e("bold", 13, 4)])).toBe(
+      "> quote with **bold**",
     );
   });
 });
