@@ -8,8 +8,8 @@ standardise. Update it whenever a new path appears or a quirk is found.
 ## The failure that started this
 
 `posts/blog/what’s-in-a-name.md` (2026-10-17, commits `b99e30b`, `7fb56a4`)
-was written in iA Writer and pasted into Sveltia. The published file contains
-escaped syntax, so it renders as literal characters:
+was written in iA Writer and pasted into Sveltia. The published file contained
+escaped syntax (since fixed by hand), so it rendered as literal characters:
 
 ```md
 \> What’s the story behind your domain name? ...
@@ -43,8 +43,8 @@ it.** Typing markdown in a plain-text editor works.
 
 ### Sveltia CMS (`public/admin/config.yml`)
 
-- Body fields use `widget: markdown` with no `modes` option, so rich text is
-  the default.
+- Body fields use `widget: markdown`. Until the fix below they had no
+  `modes` option, so rich text was the default.
 - Serializer style observed: `_italic_`, curly quotes preserved, trailing
   spaces at line ends preserved.
 - Entry filenames come from `{{slug}}` of the title and keep curly
@@ -111,10 +111,26 @@ The same file is rendered by different parsers with different settings:
 - **Feeds get no galleries.** Grouped images come through as separate `<img>`.
 - **Emoji shortcodes** (`:grin:`) aren't rendered anywhere — no plugin.
 
+## Sveltia editor fixes
+
+Options for the editor itself, from Sveltia's config schema
+(`https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json`):
+
+| Option | Effect | Status |
+| --- | --- | --- |
+| `modes: [raw, rich_text]` | Editor opens on markdown source; rich text is one toggle away. Pasting markdown works. | **Done** — every body field |
+| `modes: [raw]` | Rich text removed entirely; no way to hit the bug. | Fallback if raw-first still gets toggled by habit |
+| `editor_components: [..., hr, table]` | Rich text has no horizontal-rule or table button by default, which is why `---` could only be typed (and got escaped). Setting this replaces the default list, so every built-in component must be listed too. | Not done; only matters if rich text stays in use |
+| `publish_mode: preview` | Each save opens a PR with a deploy preview instead of committing to `main`, so broken formatting is visible before it's live. | Not done; changes the publishing workflow |
+
+Raw mode doesn't escape anything, so pastes from iA Writer, VS Code or
+anywhere else arrive as written. Things to recheck after the change:
+whether the toggle remembers rich text per entry, and how raw mode handles
+the image upload button.
+
 ## Standardisation options (not yet decided)
 
-1. Sveltia: set `modes: [raw, rich_text]` on body fields so raw markdown is
-   the default and pasting markdown works. Verify Sveltia honours `modes`.
+1. ~~Sveltia raw-first editing~~ — done, see above.
 2. A lint/pre-commit check that flags `\*`, `\>`, `\---`, `\_` in `posts/`
    — almost always an escaping accident outside Telegram.
 3. Make the feed renderer match the site (`breaks: true`, or render via the

@@ -45,7 +45,15 @@ collections:
           default: true,
           required: false,
         }
-      - { label: Body, name: body, widget: markdown }
+      # Raw mode first, so the editor opens on markdown source. In rich text
+      # mode, pasted markdown is treated as literal prose and saved escaped
+      # (\*x\*, \>, \---), which renders as visible symbols. See
+      # docs/markdown-pipelines.md.
+      - &bodyField
+        label: Body
+        name: body
+        widget: markdown
+        modes: [raw, rich_text]
       - label: Audio
         name: audio
         widget: file
@@ -104,7 +112,7 @@ collections:
           default: true,
           required: false,
         }
-      - { label: Body, name: body, widget: markdown }
+      - *bodyField
       - label: Audio
         name: audio
         widget: file
@@ -159,6 +167,7 @@ collections:
       - label: Body
         name: body
         widget: markdown
+        modes: [raw, rich_text]
         default: "## Work\n\n## Life\n\n## Health\n\n## Learning\n\n## Media Diet\n\n### Reading\n\n### Watching\n\n### Listening\n\n### Around the web\n"
 
   - name: digitalGarden
@@ -213,7 +222,7 @@ collections:
           required: false,
         }
       - *tagsField
-      - { label: Body, name: body, widget: markdown }
+      - *bodyField
 
   - name: notes
     label: Notes
@@ -237,7 +246,7 @@ collections:
           default: "{{now}}",
         }
       - *tagsField
-      - { label: Body, name: body, widget: markdown }
+      - *bodyField
 
   - name: pages
     label: Pages
@@ -259,7 +268,7 @@ collections:
           default: true,
           required: false,
         }
-      - { label: Body, name: body, widget: markdown }
+      - *bodyField
 
 media_libraries:
   default:
