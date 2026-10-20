@@ -152,6 +152,10 @@ const pages = defineCollection({
     draft: z.boolean().optional(),
     // Blurb shown on /sitemap and used for the page's share-card description.
     description: z.string().optional(),
+    // Optional so undated pages (fixtures, drafts) render as before.
+    // lastUpdatedOn is bumped by hand for content edits, not reformatting.
+    publishedOn: z.date().optional(),
+    lastUpdatedOn: z.date().optional(),
   }),
 });
 

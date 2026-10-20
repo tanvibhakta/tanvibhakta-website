@@ -7,8 +7,14 @@ import { shortenWeeknoteTitles, formatLongDate } from "../utils/date-helpers";
 import type { SectionNav } from "../utils/collections";
 import { titleHtml, titleText } from "../utils/title-markdown";
 
-const { frontmatter, category, readingTimeMinutes, hidePublishedOn, noindex } =
-  Astro.props;
+const {
+  frontmatter,
+  category,
+  readingTimeMinutes,
+  hidePublishedOn,
+  showLastUpdatedOn,
+  noindex,
+} = Astro.props;
 const sectionNav: SectionNav | undefined = Astro.props.sectionNav || undefined;
 
 const publishedOn: Date | undefined = frontmatter?.publishedOn;
@@ -17,6 +23,19 @@ const publishedOnFormatted = showPublishedOn
   ? formatLongDate(publishedOn)
   : null;
 const publishedOnIso = showPublishedOn ? publishedOn.toISOString() : undefined;
+
+// Shown only when it names a different day than the published date.
+const lastUpdatedOn: Date | undefined = frontmatter?.lastUpdatedOn;
+const lastUpdatedOnFormatted =
+  showLastUpdatedOn && lastUpdatedOn instanceof Date
+    ? formatLongDate(lastUpdatedOn)
+    : null;
+const showLastUpdated =
+  lastUpdatedOnFormatted !== null &&
+  lastUpdatedOnFormatted !== publishedOnFormatted;
+const lastUpdatedOnIso = showLastUpdated
+  ? lastUpdatedOn?.toISOString()
+  : undefined;
 
 let pageTitle = "";
 const plainTitle = frontmatter?.title ? titleText(frontmatter.title) : "";
@@ -53,15 +72,27 @@ if (plainTitle) {
       frontmatter?.title && (
         <header class="title-block">
           <h1 set:html={titleHtml(frontmatter.title)} />
-          {(publishedOnFormatted || readingTimeMinutes) && (
+          {(publishedOnFormatted || showLastUpdated || readingTimeMinutes) && (
             <p class="post-meta">
               {publishedOnFormatted && (
-                <time datetime={publishedOnIso}>{publishedOnFormatted}</time>
+                <span>
+                  {/* Label the first date only when a second one follows. */}
+                  {showLastUpdated && "Published "}
+                  <time datetime={publishedOnIso}>{publishedOnFormatted}</time>
+                </span>
               )}
               {publishedOnFormatted && readingTimeMinutes && (
                 <span aria-hidden="true"> · </span>
               )}
               {readingTimeMinutes && <span>{readingTimeMinutes} min read</span>}
+              {showLastUpdated && (
+                <span class="block">
+                  Updated{" "}
+                  <time datetime={lastUpdatedOnIso}>
+                    {lastUpdatedOnFormatted}
+                  </time>
+                </span>
+              )}
             </p>
           )}
         </header>
@@ -122,7 +153,11 @@ if (plainTitle) {
     font-variant: small-caps;
     letter-spacing: 0.03em;
     color: var(--tw-prose-body, rgba(0, 0, 0, 0.75));
-    margin: 0;
+    /* Prose's body line-height splits a two-line published/updated block.
+       Tightening it also trims the half-leading above the first line, so
+       margin-top restores that gap under the h1's descenders. */
+    margin: 0.2em 0 0;
+    line-height: 1.4;
   }
 
   .tags {
