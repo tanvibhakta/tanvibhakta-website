@@ -1,6 +1,7 @@
 ---
 title: "AI Policy"
 description: "disclosure on how I use llms (tldr: not for writing)"
+publishedOn: 2026-10-20
 ---
 
 I am an AI engineer - that is, I work at an organisation where we build products that take advantage of LLM capabilities. At work, I exclusively write code via LLMs.
