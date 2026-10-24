@@ -1,8 +1,8 @@
 ---
 title: Care for Tanvi toolkit
-draft: true
+draft: false
 publishedOn: 2025-10-18
-lastUpdatedOn: 2026-04-26
+lastUpdatedOn: 2026-10-24
 description: guide to taking care of me
 ---
 
