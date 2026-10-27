@@ -1,0 +1,91 @@
+---
+import ProseLayout from "../layouts/ProseLayout.astro";
+import { STANDALONE_PAGES } from "../content.config";
+import { getAllTaggedPosts, getPublishedEntries } from "../utils/collections";
+import { buildLinkCensus } from "../utils/link-census";
+
+// Counts links in the markdown source of every published post and markdown
+// page (underscore-prefixed fixtures excluded). Hand-built .astro/.mdx routes
+// aren't scanned — their links are mostly nav, not writing.
+const posts = await getAllTaggedPosts();
+const pages = (await getPublishedEntries("pages"))
+  .filter((page) => !page.id.startsWith("_"))
+  .map((page) => ({ ...page, href: `/${page.id}` }));
+
+const census = buildLinkCensus(
+  [...posts, ...pages].map(({ href, body }) => ({ href, body: body ?? "" })),
+);
+const internalTotal = census.internal.reduce((n, t) => n + t.count, 0);
+const outgoingTotal = census.total - internalTotal;
+
+const frontmatter = STANDALONE_PAGES.links;
+---
+
+<ProseLayout frontmatter={frontmatter}>
+  <p>
+    {census.total} links across {posts.length + pages.length} pages:
+    {outgoingTotal} going out to {census.outgoing.length} sites, and {
+      internalTotal
+    } pointing back at {census.internal.length} places on this one.
+  </p>
+
+  <section>
+    <h2>Outgoing</h2>
+    <p class="text-sm opacity-70">
+      Ranked by site. Open one to see which pages on it I link to.
+    </p>
+    <ol class="list-none pl-0">
+      {
+        census.outgoing.map((domain) => (
+          <li class="my-1">
+            <details>
+              <summary class="cursor-pointer">
+                {domain.target}
+                <span class="count">
+                  {domain.count} links · {domain.sources} pages
+                </span>
+              </summary>
+              <ol class="mt-1 mb-3 text-sm">
+                {domain.urls.map((url) => (
+                  <li class="break-all">
+                    <a href={url.target}>
+                      {url.target.replace(/^https?:\/\/(www\.)?/, "")}
+                    </a>
+                    <span class="count">{url.count}</span>
+                  </li>
+                ))}
+              </ol>
+            </details>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section>
+    <h2>Internal</h2>
+    <ol>
+      {
+        census.internal.map((target) => (
+          <li class="break-all">
+            <a href={target.target}>{target.target}</a>
+            <span class="count">
+              {target.count} links · {target.sources} pages
+            </span>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</ProseLayout>
+
+<style>
+  /* Counts sit inside <summary>/<li> built from data; one class keeps the
+     small-caps treatment in step with /tags and /sitemap. */
+  .count {
+    font-size: 0.85rem;
+    font-variant: small-caps;
+    margin-left: 0.5rem;
+    opacity: 0.6;
+  }
+</style>
