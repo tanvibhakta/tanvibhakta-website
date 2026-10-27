@@ -25,9 +25,9 @@ It's because I can't stomach the idea of food. The trick is to get me excited ab
 Sometimes I don't like the idea of anything from outside, or want to avoid the expense.
 
 - present various taste options to me. For example
-    - spicy and fatty, like chilli oil?
-    - how about spicy and nutty and a little sour, like sumac?
-    - earthy and sour and nutty, like zaatar?
+  - spicy and fatty, like chilli oil?
+  - how about spicy and nutty and a little sour, like sumac?
+  - earthy and sour and nutty, like zaatar?
 - If I'm at home, getting me to go up to my pantry and suggesting easy things I can make with the things that catch my eye is a great idea.
 
 I might not want a big meal. Some snack options
@@ -53,10 +53,10 @@ June 2025 edit: I am off of gluten and dairy for the next two months to observe 
 - cold compress with cotton wrapped around it, pressed to area of pain
 - hot water pack pressed to place
 - ~~dynamic stretches~~
-    - ~~If I have time and haven't showered yet,~~ ~~[my full calisthenics](<>)~~ ~~warm up routine - just to get the blood flowing~~
-    - ~~neck rotations, direction stretches~~
-    - ~~loose jumps, arm swings, shoulder cars~~
-    - ~~Yuri's shoulder stretches~~
+  - ~~If I have time and haven't showered yet,~~ ~~[my full calisthenics](<>)~~ ~~warm up routine - just to get the blood flowing~~
+  - ~~neck rotations, direction stretches~~
+  - ~~loose jumps, arm swings, shoulder cars~~
+  - ~~Yuri's shoulder stretches~~
 
 If you know how to identify knots and can offer to remove them for me, that is very helpful during this time. I will not ask for you to do this unless I'm in a large amount of pain, but if you notice me massaging myself and offer - even if it's just a thirty-second quick rub - know that it goes a long way.
 
@@ -92,13 +92,13 @@ Perform these steps in the following order:
 3. Vicks vaporrub on your throat + chest and a scarf to trap the heat in
 4. Strepsils (orange or sugarfree flavours only) to keep your throat hydrated when you want to lock in to a task
 5. Take your allergy meds. Allergy inflammation will be an additional thing for your body to fight off and we don't want it.
-6. Betadine gargle every 4 hours. No the salt water thing is annoying and water temp hard to get just right. Betadine best. 
-7. Make a large batch of something very soothing for your throat. Pongal with pepper and garlic is best. Soupy stuff. At least 1 cup of rice, ideally 2, because illness is hungry business. 
+6. Betadine gargle every 4 hours. No the salt water thing is annoying and water temp hard to get just right. Betadine best.
+7. Make a large batch of something very soothing for your throat. Pongal with pepper and garlic is best. Soupy stuff. At least 1 cup of rice, ideally 2, because illness is hungry business.
 8. Rest your voice. Please don't talk unless you have to.
-9. Rest yourself!! No going out, no strenuous activity, no losing yourself in something. Please, all of these things deplete from your meager stores and you really do need to get better as fast as possible. 
+9. Rest yourself!! No going out, no strenuous activity, no losing yourself in something. Please, all of these things deplete from your meager stores and you really do need to get better as fast as possible.
 10. A spoon of honey (preferably wild) is useful once a day to soothe throat.
-11. Eat every 4 hours even if you are not hungry at all. You WILL have low bp otherwise. 
-12. Sleep at an elevation. And do try and nap where you can. Brainrot not the best but a book you can lose yourself into is perfect. 
+11. Eat every 4 hours even if you are not hungry at all. You WILL have low bp otherwise.
+12. Sleep at an elevation. And do try and nap where you can. Brainrot not the best but a book you can lose yourself into is perfect.
 
 ## Laryngitis
 

@@ -4,9 +4,13 @@
  *
  * Tree construction adapted from @telegraf/entity (MIT © 2023 Feathers
  * Studio). The serializer deliberately targets standard markdown, NOT
- * Telegram's MarkdownV2 dialect: minimal escaping, `**bold**`, GFM
- * strikethrough, fenced code blocks, and inline HTML where CommonMark has
- * no equivalent (underline).
+ * Telegram's MarkdownV2 dialect: `**bold**`, GFM strikethrough, fenced code
+ * blocks, and inline HTML where CommonMark has no equivalent (underline).
+ *
+ * Text outside entities is NOT escaped: it is treated as markdown source, so
+ * a typed "> quote" or "*italic*" renders just like Telegram's own Quote or
+ * Italic formatting. The bot has one sender, who writes in markdown; a
+ * literal "*" needs a typed "\*". See docs/markdown-pipelines.md.
  *
  * Entity offsets/lengths are UTF-16 code units — which is exactly how
  * JavaScript strings are indexed, so plain .slice() is correct even for
@@ -30,8 +34,8 @@ interface EntityNode extends TelegramMessageEntity {
 
 type TreeNode = string | EntityNode;
 
-// Entity types whose visible text already renders correctly and must not be
-// escaped (a backslash inside a URL or @mention would corrupt it).
+// Entity types whose visible text is emitted verbatim rather than wrapped in
+// markdown syntax.
 const RAW_TYPES = new Set([
   "url",
   "mention",
@@ -127,7 +131,7 @@ function mergeAdjacent(nodes: TreeNode[]): TreeNode[] {
 function serialize(nodes: TreeNode[]): string {
   let out = "";
   for (const node of nodes) {
-    out += typeof node === "string" ? escapeText(node) : serializeNode(node);
+    out += typeof node === "string" ? node : serializeNode(node);
   }
   return out;
 }
@@ -186,16 +190,4 @@ function preBlock(content: string, language: string): string {
   );
   const fence = "`".repeat(longestRun + 1);
   return `${fence}${language}\n${content.replace(/\n$/, "")}\n${fence}`;
-}
-
-// Escape only what CommonMark actually assigns meaning to. Inline specials
-// are escaped everywhere; block markers (headings, lists, quotes) only
-// where they'd trigger: at the start of a line, followed by the syntax
-// they need. Telegram messages are plain text plus entities, so any such
-// character the author typed was meant literally.
-function escapeText(text: string): string {
-  return text
-    .replace(/[\\*_[\]<`]/g, (ch) => `\\${ch}`)
-    .replace(/^(\s*)(>|#{1,6}(?= )|[-+](?= ))/gm, "$1\\$2")
-    .replace(/^(\s*\d+)\.(?= )/gm, "$1\\.");
 }
