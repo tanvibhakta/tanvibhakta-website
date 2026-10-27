@@ -39,7 +39,8 @@ export function parentCandidates(
 
 /**
  * Replying to the bot's "Published <link>" confirmation replies to the note
- * it announced. The link is usually the note's slug; if the slug lookup
+ * it announced. The bot now confirms with a reaction instead, but its
+ * earlier confirmations are still in the chat to reply to. The link is usually the note's slug; if the slug lookup
  * failed at publish time, the bot printed the repo path instead, which
  * names the file directly.
  */

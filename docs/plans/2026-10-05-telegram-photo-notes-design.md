@@ -115,8 +115,9 @@ updates are delivered in parallel (up to 40 connections).
   name. The first creates it; later items fetch it and append their image
   line after the last one (and the caption below the images, if they carry
   it). Filenames aren't public; URLs stay `/notes/N`.
-- **Replies:** the first item replies "Published …/notes/N"; later items
-  are silent unless they fail.
+- **Confirmation:** each committed item gets a 👍 reaction (originally the
+  first item replied "Published …/notes/N" and later items were silent).
+  Failures still reply with text.
 
 **Accepted trade-off:** an N-photo album is N commits. Netlify builds the
 first and last queued build for a branch and skips the ones in between, so

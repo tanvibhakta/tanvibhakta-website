@@ -1,5 +1,8 @@
 ---
 title: Care for Tanvi toolkit
+draft: false
+publishedOn: 2025-10-18
+lastUpdatedOn: 2026-10-24
 description: guide to taking care of me
 ---
 
@@ -50,7 +53,7 @@ June 2025 edit: I am off of gluten and dairy for the next two months to observe 
 - cold compress with cotton wrapped around it, pressed to area of pain
 - hot water pack pressed to place
 - ~~dynamic stretches~~
-  - ~~If I have time and haven't showered yet, [my full calisthenics](<>) warm up routine - just to get the blood flowing~~
+  - ~~If I have time and haven't showered yet,~~ ~~[my full calisthenics](<>)~~ ~~warm up routine - just to get the blood flowing~~
   - ~~neck rotations, direction stretches~~
   - ~~loose jumps, arm swings, shoulder cars~~
   - ~~Yuri's shoulder stretches~~
@@ -80,6 +83,23 @@ Standing IYTW isometrics help a surprising amount. A short note on why is in the
 
 ## General advice
 
+### On onset of a bad throat
+
+Perform these steps in the following order:
+
+1. Ingest 2g of vitamin C (if available, ideally liposomal) or as many chewies as you can tolerate, to give your immune system a boost fighting it off[^5].
+2. Switch to hot water[^4] immediately. Sip every few minutes. Keep your throat hydrated. You have multiple flasks! Use them - one gets regular hot water and one gets hot water with lemon and pepper.
+3. Vicks vaporrub on your throat + chest and a scarf to trap the heat in
+4. Strepsils (orange or sugarfree flavours only) to keep your throat hydrated when you want to lock in to a task
+5. Take your allergy meds. Allergy inflammation will be an additional thing for your body to fight off and we don't want it.
+6. Betadine gargle every 4 hours. No the salt water thing is annoying and water temp hard to get just right. Betadine best.
+7. Make a large batch of something very soothing for your throat. Pongal with pepper and garlic is best. Soupy stuff. At least 1 cup of rice, ideally 2, because illness is hungry business.
+8. Rest your voice. Please don't talk unless you have to.
+9. Rest yourself!! No going out, no strenuous activity, no losing yourself in something. Please, all of these things deplete from your meager stores and you really do need to get better as fast as possible.
+10. A spoon of honey (preferably wild) is useful once a day to soothe throat.
+11. Eat every 4 hours even if you are not hungry at all. You WILL have low bp otherwise.
+12. Sleep at an elevation. And do try and nap where you can. Brainrot not the best but a book you can lose yourself into is perfect.
+
 ## Laryngitis
 
 This is unfortunately a recurring issue. In 2024, I had Laryngitis 4 times, and was on voice rest for a cumulative 10 weeks. I had acute laryngitis without realising it for two months at the beginning of the year for over two months. In 2025 I managed to stay away from the throat infections but unfortunately got hit in the first week of February in 2026, and that infection followed me the whole month.
@@ -87,7 +107,7 @@ This is unfortunately a recurring issue. In 2024, I had Laryngitis 4 times, and 
 - no ginger in my food (it is good for a fever or a cold but actually hurts a sore throat).
 - avoid hot spices
 - avoid oily food and cold food (this one is a no-brainer)
-- avoid alcohol, actually (again, a throat irritant).
+- avoid alcohol, actually (again, a throat irritant. Yes, that means hot toddy also).
 - need to constantly keep my throat moist (which means I need to constantly sip on lukewarm water)
 
 I know some (very little) ISL, and it would mean the world to me if you make an effort to learn it during this time. I will also aim to minimise my talking as much as reasonable, so keep an eye on your phone - I will text you even if I'm right next to you. During voice rest I will often have long coversations with friends where they are talking to me and I am responding via text.
@@ -105,4 +125,6 @@ Ice packs are best wrapped in a bit of cotton cloth - one of my slips from the l
 
 [^3]: High usage days are when I'm typing/gaming/using my phone for long hours.
 
-[^4]: The correct temperature to drink hot water is 55C (this is why I own a temperature controlled kettle)
+[^4]: The correct temperature to drink hot water is 55C. If you want to take your time with it and to treat a sore throat, 60C. No exceptions. (This is why I own a temperature controlled kettle.)
+
+[^5]: [https://claude.ai/share/19772377-4ed3-4f06-8c89-e2962a248d75](https://claude.ai/share/19772377-4ed3-4f06-8c89-e2962a248d75) yes this is a claude link, but the narrative built here is helpful - one, that animals that produce vitamin C naturally increase the production during periods of stress, suggesting that it helps regulate it, and two, that attempts to mimic this by overloading vitamin C has had real life good things to happen

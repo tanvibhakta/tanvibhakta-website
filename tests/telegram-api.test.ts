@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   downloadTelegramFile,
   MAX_DOWNLOAD_BYTES,
+  reactToMessage,
 } from "../src/utils/telegram-api";
 
 function fakeTelegram(
@@ -56,5 +57,42 @@ describe("downloadTelegramFile", () => {
     await expect(
       downloadTelegramFile("T", { fileId: "abc" }, tg.fetch),
     ).rejects.toThrow(/file is too big/);
+  });
+});
+
+describe("reactToMessage", () => {
+  test("sets one emoji reaction on the message", async () => {
+    const calls: { url: string; body: unknown }[] = [];
+    const fakeFetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+      calls.push({ url: String(input), body: JSON.parse(String(init?.body)) });
+      return Response.json({ ok: true, result: true });
+    }) as typeof fetch;
+    await reactToMessage(
+      "TOKEN",
+      { chatId: 42, messageId: 7 },
+      "👍",
+      fakeFetch,
+    );
+    expect(calls).toEqual([
+      {
+        url: "https://api.telegram.org/botTOKEN/setMessageReaction",
+        body: {
+          chat_id: 42,
+          message_id: 7,
+          reaction: [{ type: "emoji", emoji: "👍" }],
+        },
+      },
+    ]);
+  });
+
+  test("surfaces a refused reaction", async () => {
+    const fakeFetch = (async () =>
+      Response.json({
+        ok: false,
+        description: "Bad Request: REACTION_INVALID",
+      })) as typeof fetch;
+    await expect(
+      reactToMessage("T", { chatId: 1, messageId: 2 }, "👍", fakeFetch),
+    ).rejects.toThrow(/REACTION_INVALID/);
   });
 });

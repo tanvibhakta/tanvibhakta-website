@@ -20,6 +20,7 @@ const PRESENTATION: Record<
     category?: string;
     readingTime?: boolean;
     hidePublishedOn?: boolean;
+    showLastUpdatedOn?: boolean;
     audioFallbackTitle?: string;
     // Enables the prev/next section footer; the noun names the links,
     // e.g. "weeknote" → "← previous weeknote" / "next weeknote →".
@@ -47,7 +48,7 @@ const PRESENTATION: Record<
   // Notes render through NotesLayout, not EntryPage; this entry keeps the
   // Record total over CollectionName and safe if notes ever gain drafts.
   notes: {},
-  pages: {},
+  pages: { showLastUpdatedOn: true },
 };
 
 const { entry, collection, noindex } = Astro.props;
@@ -92,6 +93,7 @@ if (presentation.navNoun) {
   category={presentation.category}
   readingTimeMinutes={readingTimeMinutes}
   hidePublishedOn={presentation.hidePublishedOn}
+  showLastUpdatedOn={presentation.showLastUpdatedOn}
   noindex={noindex}
   sectionNav={presentation.navNoun && {
     noun: presentation.navNoun,
