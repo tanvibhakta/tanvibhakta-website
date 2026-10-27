@@ -1,0 +1,42 @@
+---
+import { render } from "astro:content";
+import ProseLayout from "../layouts/ProseLayout.astro";
+import { STANDALONE_PAGES } from "../content.config";
+import { getPublishedEntriesSorted } from "../utils/collections";
+import { formatLongDate } from "../utils/date-helpers";
+
+// Every update to /now is its own file in posts/now/. The newest renders
+// untitled at the top, dated by the page's "Last updated on" line; the rest
+// follow newest-first, each headed by the day it was published.
+const [latest, ...previous] = await Promise.all(
+  (await getPublishedEntriesSorted("now")).map(async (entry) => ({
+    entry,
+    Content: (await render(entry)).Content,
+  })),
+);
+
+const frontmatter = {
+  title: STANDALONE_PAGES.now.title,
+  description: STANDALONE_PAGES.now.description,
+  publishedOn: latest?.entry.data.publishedOn,
+};
+---
+
+<ProseLayout frontmatter={frontmatter} publishedOnLabel="Last updated on">
+  {latest && <latest.Content />}
+  <p>
+    For more granular updates read my <a href="/weeknotes">week notes</a>.
+  </p>
+  {
+    previous.map(({ entry, Content }) => (
+      <section>
+        <h2 id={entry.id}>
+          <time datetime={entry.data.publishedOn.toISOString()}>
+            {formatLongDate(entry.data.publishedOn)}
+          </time>
+        </h2>
+        <Content />
+      </section>
+    ))
+  }
+</ProseLayout>
