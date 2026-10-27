@@ -85,6 +85,16 @@ rehype plugins (`.anchor-link`) belong in `src/styles/global.css`.
   `posts/notes/images/` (albums → one gallery note). Design:
   `docs/plans/2026-10-05-telegram-photo-notes-design.md`.
 
+### Archive links
+
+- External links in markdown get a "[archive]" link to a Wayback Machine
+  snapshot, rendered by `src/plugins/rehype-external-links.mjs` from
+  `src/data/archive-links.json`. The build makes no network calls.
+- `pnpm archive` (`scripts/archive-links.ts`) fills that JSON; the Archive
+  links GitHub Action runs it on content pushes and weekly. Skipped domains
+  (social media, Goodreads, Spotify, login-walled) are `SKIP_DOMAINS` in
+  `src/utils/archive-links.ts`.
+
 ### Code Quality
 
 - ESLint with TypeScript support configured in `eslint.config.js`

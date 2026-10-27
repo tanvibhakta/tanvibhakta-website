@@ -132,3 +132,55 @@ describe("rehypeExternalLinks", () => {
     expect(icons[0]).not.toBe(icons[1]);
   });
 });
+
+describe("rehypeExternalLinks archive links", () => {
+  const SNAPSHOT = "https://web.archive.org/web/20240101000000/https://a.com/";
+
+  /** Runs the plugin over `<p>see <a href=…>…</a>.</p>`, returns the <p>. */
+  function para(
+    href: string,
+    children: HastNode[] = [text("a page")],
+    archives: Record<string, string> = { "https://a.com/": SNAPSHOT },
+  ) {
+    const p = elem("p", {}, [
+      text("see "),
+      elem("a", { href }, children),
+      text("."),
+    ]);
+    rehypeExternalLinks({ site: "https://tanvibhakta.in", archives })({
+      type: "root",
+      children: [p],
+    });
+    return p;
+  }
+
+  test("adds a bracketed archive link after a link with a snapshot", () => {
+    const p = para("https://a.com/");
+    expect(p.children.slice(2).map(show).join("")).toBe(
+      " <span.archive-link>[<a>archive<span.sr-only> copy (opens in a new tab)</span></a>]</span>.",
+    );
+    const archive = (p.children[3] as HastElement).children[1] as HastElement;
+    expect(archive.properties).toEqual({
+      href: SNAPSHOT,
+      target: "_blank",
+      rel: ["noopener"],
+    });
+  });
+
+  test("the archive link itself gets no external-link icon", () => {
+    const p = para("https://a.com/");
+    expect(show(p.children[3])).not.toContain("[icon]");
+  });
+
+  test("matches regardless of fragment and host case", () => {
+    expect(para("https://A.com/#section").children).toHaveLength(5);
+  });
+
+  test("links without a snapshot are left alone", () => {
+    expect(para("https://b.com/").children).toHaveLength(3);
+  });
+
+  test("image-only links get no archive link", () => {
+    expect(para("https://a.com/", [elem("img")]).children).toHaveLength(3);
+  });
+});

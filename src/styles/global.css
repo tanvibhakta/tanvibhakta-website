@@ -74,6 +74,11 @@ a:visited {
   margin-left: 0.15em;
   vertical-align: baseline;
 }
+/* The "[archive]" link after an off-site link with a Wayback snapshot. */
+.archive-link {
+  white-space: nowrap;
+  font-size: 0.8em;
+}
 
 /* Galleries emitted by rehype-gallery (src/plugins/rehype-gallery.mjs). */
 .prose figure.gallery {

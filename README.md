@@ -16,6 +16,7 @@ All commands are run from the root of the project, from a terminal:
 | `pnpm preview`      | Preview your build locally, before deploying            |
 | `pnpm test`         | Run tests with Vitest                                   |
 | `pnpm img <file>`   | Optimize an image for posts (≤3000px WebP, no metadata) |
+| `pnpm archive`      | Record Wayback Machine snapshots for links in posts     |
 | `pnpm astro ...`    | Run CLI commands like `astro add`, `astro check`        |
 | `pnpm astro --help` | Get help using the Astro CLI                            |
 
@@ -48,6 +49,15 @@ Pre-commit hook runs automatically:
 ```
 
 Relative paths work in both dev and production. The link checker validates them on every commit.
+
+**Archive links:** external links get a small "[archive]" link to a Wayback
+Machine snapshot, except social media, Goodreads and Spotify (the list is
+`SKIP_DOMAINS` in `src/utils/archive-links.ts`). Nothing to do by hand: the
+Archive links GitHub Action runs `pnpm archive` after each content push and
+weekly, and commits `src/data/archive-links.json`. Creating snapshots that
+don't exist yet needs the `ARCHIVE_ORG_ACCESS_KEY` / `ARCHIVE_ORG_SECRET_KEY`
+repository secrets (archive.org → account → S3 API keys); without them only
+existing snapshots are used.
 
 ## 📜 Custom Scripts
 

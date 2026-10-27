@@ -12,6 +12,7 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { rehypeAnchors } from "./src/plugins/rehype-anchors.mjs";
 import { rehypeGallery } from "./src/plugins/rehype-gallery.mjs";
 import { rehypeExternalLinks } from "./src/plugins/rehype-external-links.mjs";
+import archives from "./src/data/archive-links.json" with { type: "json" };
 
 const site = "https://tanvibhakta.in";
 
@@ -66,8 +67,9 @@ export default defineConfig({
             /[\\/]posts[\\/](poetry|notes)[\\/]/.test(file?.path ?? ""),
         },
       ],
-      // Off-site links open in a new tab and carry an icon saying so.
-      [rehypeExternalLinks, { site }],
+      // Off-site links open in a new tab and carry an icon saying so, plus an
+      // "[archive]" link when `pnpm archive` recorded a snapshot.
+      [rehypeExternalLinks, { site, archives }],
     ],
   },
 

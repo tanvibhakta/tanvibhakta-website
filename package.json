@@ -13,6 +13,7 @@
     "check": "prettier --check --ignore-unknown . && pnpm lint && pnpm typecheck && vitest run",
     "prepare": "husky",
     "img": "node scripts/optimize-image.ts",
+    "archive": "node scripts/archive-links.ts",
     "weeknotes:new": "node scripts/new-content.ts weeknotes",
     "blog:new": "node scripts/new-content.ts blog",
     "poetry:new": "node scripts/new-content.ts poetry",
@@ -54,7 +55,10 @@
     "prettier": "3.9.6",
     "prettier-plugin-astro": "0.14.1",
     "remark-breaks": "^4.0.0",
+    "remark-gfm": "4.0.1",
+    "remark-parse": "11.0.0",
     "typescript-eslint": "^8.69.0",
+    "unified": "11.0.5",
     "unist-util-visit": "^5.1.0",
     "vitest": "^3.2.7",
     "yaml": "^2.9.0"
