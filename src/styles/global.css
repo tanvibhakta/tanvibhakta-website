@@ -87,3 +87,16 @@ a:visited {
 .prose figure.gallery figcaption {
   grid-column: 1 / -1;
 }
+
+/* Changes between /now updates, emitted by src/utils/now-diff.ts. */
+.now-del {
+  text-decoration-thickness: 1px;
+  opacity: 0.6;
+}
+.now-ins {
+  text-decoration: none;
+  background: oklch(93.6% 0.032 17.717); /*red-100*/
+}
+.now-del + .now-ins {
+  margin-left: 0.25em;
+}

@@ -21,7 +21,7 @@ The site uses Astro's content collections defined in `src/content.config.ts`:
 - **blog**: Blog posts in `/posts/blog/` with title and publishedOn frontmatter
 - **poetry**: Poetry posts in `/posts/poetry/` with title and publishedOn frontmatter
 - **weeknotes**: Weekly notes in `/posts/weeknotes/` with title and publishedOn frontmatter
-- **now**: One file per update to `/now` in `/posts/now/` (publishedOn only). `src/pages/now.astro` stacks them newest-first: the latest untitled under a "Last updated on" date, older ones headed by their date
+- **now**: One file per update to `/now` in `/posts/now/` (publishedOn only). `src/pages/now.astro` stacks them newest-first: the latest untitled under a "Last updated on" date, older ones headed by their date and shown as a word-level diff against the update before them (`src/utils/now-diff.ts`), fading with age
 
 Each collection uses glob loaders to automatically discover markdown files in their respective directories.
 
