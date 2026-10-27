@@ -18,22 +18,36 @@ const census = buildLinkCensus(
 const internalTotal = census.internal.reduce((n, t) => n + t.count, 0);
 const outgoingTotal = census.total - internalTotal;
 
-const frontmatter = STANDALONE_PAGES.links;
+const frontmatter = STANDALONE_PAGES.stats;
 ---
 
 <ProseLayout frontmatter={frontmatter}>
   <p>
-    {census.total} links across {posts.length + pages.length} pages:
-    {outgoingTotal} going out to {census.outgoing.length} sites, and {
+    {census.total} links across {posts.length + pages.length} pages: {
       internalTotal
-    } pointing back at {census.internal.length} places on this one.
+    } pointing at {census.internal.length} places on this site, and {
+      outgoingTotal
+    } going out to {census.outgoing.length} other sites.
   </p>
 
   <section>
-    <h2>Outgoing</h2>
-    <p class="text-sm opacity-70">
-      Ranked by site. Open one to see which pages on it I link to.
-    </p>
+    <h2>Internal Links</h2>
+    <ol>
+      {
+        census.internal.map((target) => (
+          <li class="break-all">
+            <a href={target.target}>{target.target}</a>
+            <span class="count">
+              {target.count} links · {target.sources} pages
+            </span>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section>
+    <h2>External Links</h2>
     <ol class="list-none pl-0">
       {
         census.outgoing.map((domain) => (
@@ -56,22 +70,6 @@ const frontmatter = STANDALONE_PAGES.links;
                 ))}
               </ol>
             </details>
-          </li>
-        ))
-      }
-    </ol>
-  </section>
-
-  <section>
-    <h2>Internal</h2>
-    <ol>
-      {
-        census.internal.map((target) => (
-          <li class="break-all">
-            <a href={target.target}>{target.target}</a>
-            <span class="count">
-              {target.count} links · {target.sources} pages
-            </span>
           </li>
         ))
       }
