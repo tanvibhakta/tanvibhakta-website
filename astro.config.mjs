@@ -12,6 +12,7 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { rehypeAnchors } from "./src/plugins/rehype-anchors.mjs";
 import { rehypeGallery } from "./src/plugins/rehype-gallery.mjs";
 import { rehypeExternalLinks } from "./src/plugins/rehype-external-links.mjs";
+import rehypeWayback from "rehype-wayback";
 import archives from "./src/data/archive-links.json" with { type: "json" };
 
 const site = "https://tanvibhakta.in";
@@ -67,9 +68,18 @@ export default defineConfig({
             /[\\/]posts[\\/](poetry|notes)[\\/]/.test(file?.path ?? ""),
         },
       ],
-      // Off-site links open in a new tab and carry an icon saying so, plus an
-      // "[archive]" link when `pnpm archive` recorded a snapshot.
-      [rehypeExternalLinks, { site, archives }],
+      // Off-site links open in a new tab and carry an icon saying so.
+      [rehypeExternalLinks, { site }],
+      // "[archive]" after links with a Wayback snapshot recorded by
+      // `pnpm archive`. After rehypeExternalLinks, so its links get no icon.
+      [
+        rehypeWayback,
+        {
+          archives,
+          properties: { target: "_blank", rel: ["noopener"] },
+          screenReaderText: " copy (opens in a new tab)",
+        },
+      ],
     ],
   },
 

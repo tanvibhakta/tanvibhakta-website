@@ -1,5 +1,3 @@
-import { archiveKey } from "../utils/archive-links.ts";
-
 /**
  * Makes links that leave the site open in a new tab, and says so: a trailing
  * "external link" icon for sighted readers and visually-hidden "(opens in a
@@ -13,23 +11,16 @@ import { archiveKey } from "../utils/archive-links.ts";
  * the icon are wrapped together in a no-wrap span. Links with no text (an
  * image link) get no icon, only the screen-reader text.
  *
- * A link with a Wayback Machine snapshot in `archives` (recorded by
- * `pnpm archive`, scripts/archive-links.ts) is followed by a bracketed
- * "[archive]" link to that snapshot. It also opens in a new tab but carries
- * no icon: one per link is enough.
- *
  * Why not the `rehype-external-links` package: it can add target/rel and
  * append content to a link, but can't wrap the last word with the icon, so
- * its icon can wrap onto a line alone — nor add a sibling after the link.
+ * its icon can wrap onto a line alone.
  *
  * Styling for the emitted classes lives in src/styles/global.css.
  *
- * @param {{ site?: string, archives?: Record<string, string> }} [options]
- *   `site` is the site's own origin, e.g. "https://tanvibhakta.in";
- *   `archives` maps archiveKey(href) to a snapshot URL.
+ * @param {{ site?: string }} [options] the site's own origin, e.g.
+ *   "https://tanvibhakta.in"
  */
 export function rehypeExternalLinks(options = {}) {
-  const archives = options.archives ?? {};
   const siteHost = options.site ? bareHost(new URL(options.site).host) : null;
 
   /** @param {unknown} href */
@@ -47,10 +38,7 @@ export function rehypeExternalLinks(options = {}) {
   }
 
   return (tree) => {
-    // Archive links are spliced in after the walk, so it never visits them.
-    /** @type {[any, any, string][]} */
-    const pending = [];
-    walk(tree, (node, parent) => {
+    walk(tree, (node) => {
       if (node.tagName !== "a" || !isExternal(node.properties?.href)) return;
 
       const rel = new Set(asList(node.properties.rel));
@@ -61,62 +49,15 @@ export function rehypeExternalLinks(options = {}) {
         rel: [...rel],
       };
 
-      const text = hasText(node);
-      if (text) appendToLastWord(node, structuredClone(ICON));
+      if (hasText(node)) appendToLastWord(node, structuredClone(ICON));
       node.children.push({
         type: "element",
         tagName: "span",
         properties: { className: ["sr-only"] },
         children: [{ type: "text", value: " (opens in a new tab)" }],
       });
-
-      const key = archiveKey(String(node.properties.href));
-      const archive = key && Object.hasOwn(archives, key) && archives[key];
-      // An image link has no text for "[archive]" to sit after.
-      if (archive && parent && text) {
-        pending.push([parent, node, archive]);
-      }
     });
-    for (const [parent, node, archive] of pending) {
-      const i = parent.children.indexOf(node);
-      parent.children.splice(i + 1, 0, ...archiveLink(archive));
-    }
   };
-}
-
-/**
- * ` [archive]`: the space stays outside the no-wrap span so the bracket can
- * move to the next line, but never splits from itself.
- *
- * @param {string} href the snapshot URL
- */
-function archiveLink(href) {
-  return [
-    { type: "text", value: " " },
-    {
-      type: "element",
-      tagName: "span",
-      properties: { className: ["archive-link"] },
-      children: [
-        { type: "text", value: "[" },
-        {
-          type: "element",
-          tagName: "a",
-          properties: { href, target: "_blank", rel: ["noopener"] },
-          children: [
-            { type: "text", value: "archive" },
-            {
-              type: "element",
-              tagName: "span",
-              properties: { className: ["sr-only"] },
-              children: [{ type: "text", value: " copy (opens in a new tab)" }],
-            },
-          ],
-        },
-        { type: "text", value: "]" },
-      ],
-    },
-  ];
 }
 
 // Lucide "external-link" (ISC), stroked in currentColor so it follows the
@@ -162,12 +103,12 @@ function asList(value) {
   return [];
 }
 
-function walk(node, fn, parent) {
-  if (node.type === "element") fn(node, parent);
+function walk(node, fn) {
+  if (node.type === "element") fn(node);
   // A link never contains another link, so there's no need to look inside
   // one — which also keeps us from re-visiting the icon we just added.
   if (node.tagName === "a") return;
-  for (const child of node.children ?? []) walk(child, fn, node);
+  for (const child of node.children ?? []) walk(child, fn);
 }
 
 function hasText(node) {
