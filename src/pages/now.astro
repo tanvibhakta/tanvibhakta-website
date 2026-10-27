@@ -1,0 +1,62 @@
+---
+import { render } from "astro:content";
+import MarkdownIt from "markdown-it";
+import ProseLayout from "../layouts/ProseLayout.astro";
+import { STANDALONE_PAGES } from "../content.config";
+import { getPublishedEntriesSorted } from "../utils/collections";
+import { formatLongDate } from "../utils/date-helpers";
+import { diffMarkdown } from "../utils/now-diff";
+
+// Every update to /now is its own file in posts/now/, a full copy of the
+// page. The newest renders untitled at the top, dated by the page's "Last
+// updated on" line. The rest follow newest-first, each headed by the day it
+// was published and shown as what it changed from the update before it
+// (the first update ever has nothing to diff against, so it shows in full).
+// Each step back in time is fainter.
+const [latest, ...previous] = await getPublishedEntriesSorted("now");
+const { Content: LatestContent } = latest
+  ? await render(latest)
+  : { Content: null };
+
+// breaks: true matches remark-breaks in astro.config; html: true lets the
+// diff's <del>/<ins> marks through. The input is the site's own posts.
+const markdown = new MarkdownIt({ html: true, breaks: true });
+const history = await Promise.all(
+  previous.map(async (entry, index) => {
+    const before = previous[index + 1];
+    return {
+      entry,
+      opacity: Math.max(0.5, 0.85 - index * 0.15),
+      diffHtml: before
+        ? markdown.render(diffMarkdown(before.body ?? "", entry.body ?? ""))
+        : undefined,
+      Content: before ? undefined : (await render(entry)).Content,
+    };
+  }),
+);
+
+const frontmatter = {
+  title: STANDALONE_PAGES.now.title,
+  description: STANDALONE_PAGES.now.description,
+  publishedOn: latest?.data.publishedOn,
+};
+---
+
+<ProseLayout frontmatter={frontmatter} publishedOnLabel="Last updated on">
+  {LatestContent && <LatestContent />}
+  <p>
+    For more granular updates read my <a href="/weeknotes">week notes</a>.
+  </p>
+  {
+    history.map(({ entry, opacity, diffHtml, Content }) => (
+      <section style={`opacity: ${opacity}`}>
+        <h2 id={entry.id}>
+          <time datetime={entry.data.publishedOn.toISOString()}>
+            {formatLongDate(entry.data.publishedOn)}
+          </time>
+        </h2>
+        {diffHtml ? <Fragment set:html={diffHtml} /> : Content && <Content />}
+      </section>
+    ))
+  }
+</ProseLayout>

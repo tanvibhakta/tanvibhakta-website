@@ -13,6 +13,8 @@ const {
   readingTimeMinutes,
   hidePublishedOn,
   showLastUpdatedOn,
+  // Prefixes the published date, e.g. "Last updated on" for /now.
+  publishedOnLabel,
   noindex,
 } = Astro.props;
 const sectionNav: SectionNav | undefined = Astro.props.sectionNav || undefined;
@@ -76,8 +78,11 @@ if (plainTitle) {
             <p class="post-meta">
               {publishedOnFormatted && (
                 <span>
-                  {/* Label the first date only when a second one follows. */}
-                  {showLastUpdated && "Published "}
+                  {/* Label the first date only when a second one follows,
+                      unless the page names its own label. */}
+                  {publishedOnLabel
+                    ? `${publishedOnLabel} `
+                    : showLastUpdated && "Published "}
                   <time datetime={publishedOnIso}>{publishedOnFormatted}</time>
                 </span>
               )}
