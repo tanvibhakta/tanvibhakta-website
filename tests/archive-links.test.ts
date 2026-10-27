@@ -27,11 +27,14 @@ describe("EXCLUDE", () => {
     "https://tanvibhakta.in/blog/",
     "https://www.tanvibhakta.in/",
     "https://docs.google.com/document/d/1",
+    "https://letterboxd.com/film/aftersun/",
+    "https://www.imdb.com/title/tt0111161/",
+    "https://m.imdb.com/title/tt0111161/",
   ])("%s is never archived", (href) =>
     expect(shouldArchive(href, EXCLUDE)).toBe(false),
   );
 
-  test.each(["https://en.wikipedia.org/wiki/X", "https://letterboxd.com/f/"])(
+  test.each(["https://en.wikipedia.org/wiki/X", "https://github.com/a/b"])(
     "%s is archived",
     (href) => expect(shouldArchive(href, EXCLUDE)).toBe(true),
   );

@@ -69,6 +69,14 @@ describe("rehypeWayback", () => {
     expect(archive.properties).toEqual({ href: SNAPSHOT, target: "_blank" });
   });
 
+  test("a superscript without brackets", () => {
+    const p = run("https://a.com/", undefined, {
+      tagName: "sup",
+      brackets: false,
+    });
+    expect(show(p.children[3])).toBe("<sup.archive-link><a>archive</a></sup>");
+  });
+
   test("matches regardless of fragment and host case", () => {
     expect(run("https://A.com/#section").children).toHaveLength(5);
   });

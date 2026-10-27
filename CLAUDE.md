@@ -87,7 +87,7 @@ rehype plugins (`.anchor-link`) belong in `src/styles/global.css`.
 
 ### Archive links
 
-- External links in markdown get a "[archive]" link to a Wayback Machine
+- External links in markdown get a superscript "archive" link to a Wayback Machine
   snapshot, rendered from `src/data/archive-links.json`. The build makes no
   network calls.
 - The generic code is a workspace package, `packages/rehype-wayback` (rehype
@@ -97,7 +97,7 @@ rehype plugins (`.anchor-link`) belong in `src/styles/global.css`.
   `scripts/archive-links.ts`.
 - `pnpm archive` (`scripts/archive-links.ts`) is the site's wiring: post
   locations, frontmatter dates, and the `EXCLUDE` domain list (social media,
-  Goodreads, Spotify, login-walled). The Archive links GitHub Action runs it
+  Goodreads, Spotify, Letterboxd, IMDb, login-walled). The Archive links GitHub Action runs it
   on content pushes and weekly.
 
 ### Code Quality

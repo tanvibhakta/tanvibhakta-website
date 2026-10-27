@@ -82,8 +82,10 @@ Options:
 
 - `archives` (required): the map from `rehype-wayback/sync`.
 - `label`: link text, default `"archive"`.
-- `className`: class on the wrapping span, default `"archive-link"`. Style it
-  `white-space: nowrap` so the brackets never split.
+- `tagName`: wrapping element, default `"span"`; `"sup"` for a superscript.
+- `className`: class on the wrapping element, default `"archive-link"`. Style
+  it `white-space: nowrap` so the brackets never split.
+- `brackets`: text around the link, default `["[", "]"]`; `false` for none.
 - `properties`: extra properties for the archive `<a>`.
 - `screenReaderText`: appended in a `.sr-only` span.
 - `test(link)`: which links get one; default: links with visible text, so

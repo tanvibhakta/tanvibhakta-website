@@ -1,6 +1,7 @@
 /**
  * rehype plugin: after each link with a recorded Wayback Machine snapshot,
- * adds a bracketed link to it — `<a href=…>page</a> [archive]`.
+ * adds a link to it — by default bracketed, `<a href=…>page</a> [archive]`,
+ * or e.g. superscript with `{ tagName: "sup", brackets: false }`.
  *
  * Snapshots come from a plain `{ url: snapshotUrl }` map (see
  * `rehype-wayback/sync` for building one), so rendering never touches the
@@ -26,8 +27,11 @@ export { archiveKey };
  * @typedef {object} Options
  * @property {Record<string, string>} archives archiveKey(href) → snapshot URL
  * @property {string} [label] link text, default "archive"
- * @property {string} [className] class on the wrapping span, default
+ * @property {string} [tagName] wrapping element, default "span"
+ * @property {string} [className] class on the wrapping element, default
  *   "archive-link"
+ * @property {[string, string] | false} [brackets] text around the link
+ *   inside the wrapper, default ["[", "]"]; false for none
  * @property {Record<string, unknown>} [properties] extra properties for the
  *   archive `<a>`, e.g. `{ target: "_blank", rel: ["noopener"] }`
  * @property {string} [screenReaderText] appended to the link in a
@@ -41,7 +45,9 @@ export default function rehypeWayback(options) {
   const {
     archives,
     label = "archive",
+    tagName = "span",
     className = "archive-link",
+    brackets = ["[", "]"],
     properties = {},
     screenReaderText,
     test = hasVisibleText,
@@ -58,14 +64,15 @@ export default function rehypeWayback(options) {
         ]),
       );
     }
-    // The space stays outside the span so the bracket can wrap to the next
-    // line; the span is styled no-wrap so "[archive]" never splits.
+    const [open, close] = brackets || ["", ""];
+    // The space stays outside the wrapper so it can wrap to the next line;
+    // style the wrapper no-wrap so "[archive]" never splits.
     return [
       { type: "text", value: " " },
-      element("span", { className: [className] }, [
-        { type: "text", value: "[" },
+      element(tagName, { className: [className] }, [
+        ...(open ? [{ type: "text", value: open }] : []),
         element("a", { href, ...properties }, children),
-        { type: "text", value: "]" },
+        ...(close ? [{ type: "text", value: close }] : []),
       ]),
     ];
   }

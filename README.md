@@ -50,8 +50,8 @@ Pre-commit hook runs automatically:
 
 Relative paths work in both dev and production. The link checker validates them on every commit.
 
-**Archive links:** external links get a small "[archive]" link to a Wayback
-Machine snapshot, except social media, Goodreads and Spotify (the list is
+**Archive links:** external links get a small superscript "archive" link to a Wayback
+Machine snapshot, except social media, Goodreads, Spotify, Letterboxd and IMDb (the list is
 `EXCLUDE` in `scripts/archive-links.ts`). Nothing to do by hand: the
 Archive links GitHub Action runs `pnpm archive` after each content push and
 weekly, and commits `src/data/archive-links.json`. Creating snapshots that

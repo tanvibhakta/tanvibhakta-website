@@ -35,6 +35,8 @@ export const EXCLUDE = [
   // Excluded by choice.
   "goodreads.com",
   "spotify.com",
+  "letterboxd.com",
+  "imdb.com",
   // Behind a login, or not a page a snapshot can hold.
   "docs.google.com",
   "drive.google.com",

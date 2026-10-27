@@ -70,12 +70,14 @@ export default defineConfig({
       ],
       // Off-site links open in a new tab and carry an icon saying so.
       [rehypeExternalLinks, { site }],
-      // "[archive]" after links with a Wayback snapshot recorded by
-      // `pnpm archive`. After rehypeExternalLinks, so its links get no icon.
+      // A superscript "archive" after links with a Wayback snapshot recorded
+      // by `pnpm archive`. After rehypeExternalLinks, so it gets no icon.
       [
         rehypeWayback,
         {
           archives,
+          tagName: "sup",
+          brackets: false,
           properties: { target: "_blank", rel: ["noopener"] },
           screenReaderText: " copy (opens in a new tab)",
         },
