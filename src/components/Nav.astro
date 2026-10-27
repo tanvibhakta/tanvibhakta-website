@@ -27,7 +27,13 @@ const items: Section[] =
     >
       {
         items.map((item) => (
-          <li>
+          <li
+            class:list={[
+              // The off-nav section leads on wider screens; on phones, push
+              // it last so it's the item that wraps onto its own line.
+              item === current && !inMainNav && "max-sm:order-last",
+            ]}
+          >
             <a
               href={item.href}
               aria-current={current?.href === item.href ? "page" : undefined}
