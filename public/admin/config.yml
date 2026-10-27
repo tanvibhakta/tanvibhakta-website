@@ -272,7 +272,7 @@ collections:
           format: YYYY-MM-DD,
           default: "{{now}}",
         }
-      - { label: Body, name: body, widget: markdown }
+      - *bodyField
 
   - name: pages
     label: Pages
