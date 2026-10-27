@@ -11,6 +11,10 @@
  * the icon are wrapped together in a no-wrap span. Links with no text (an
  * image link) get no icon, only the screen-reader text.
  *
+ * Why not the `rehype-external-links` package: it can add target/rel and
+ * append content to a link, but can't wrap the last word with the icon, so
+ * its icon can wrap onto a line alone.
+ *
  * Styling for the emitted classes lives in src/styles/global.css.
  *
  * @param {{ site?: string }} [options] the site's own origin, e.g.
