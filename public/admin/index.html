@@ -38,5 +38,34 @@
   </head>
   <body>
     <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+    <!-- Sveltia commits through the GitHub API, so the Prettier pre-commit
+         hook never sees its saves. This formats the markdown body before each
+         save so CI's `prettier --check` passes. Keep the version in step with
+         package.json's prettier. Frontmatter is serialized by Sveltia after
+         this hook, so it stays out of reach: a title containing ": " still
+         comes out single-quoted, which Prettier rewrites to double quotes. If
+         Prettier fails to load, saves go through unformatted and CI flags them. -->
+    <script type="module">
+      import * as prettier from "https://unpkg.com/prettier@3.9.6/standalone.mjs";
+      import * as markdown from "https://unpkg.com/prettier@3.9.6/plugins/markdown.mjs";
+
+      CMS.registerEventListener({
+        name: "preSave",
+        handler: async ({ entry }) => {
+          const data = entry.get("data");
+          const body = data.get("body");
+          if (typeof body !== "string") return;
+          try {
+            const formatted = await prettier.format(body, {
+              parser: "markdown",
+              plugins: [markdown],
+            });
+            return data.set("body", formatted);
+          } catch (error) {
+            console.warn("Prettier could not format the body:", error);
+          }
+        },
+      });
+    </script>
   </body>
 </html>
