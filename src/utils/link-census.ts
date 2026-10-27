@@ -70,12 +70,7 @@ export function classifyLink(
 /** A page on the site: where it's served and its markdown source. */
 export type LinkSource = { href: string; body: string };
 
-export type TargetCount = {
-  target: string;
-  count: number;
-  /** Distinct pages the target is linked from. */
-  sources: number;
-};
+export type TargetCount = { target: string; count: number };
 export type DomainCount = TargetCount & { urls: TargetCount[] };
 
 export type LinkCensus = {
@@ -88,60 +83,38 @@ export type LinkCensus = {
 const byCount = (a: TargetCount, b: TargetCount) =>
   b.count - a.count || a.target.localeCompare(b.target);
 
-function tally(
-  links: { target: string; source: string }[],
-): Map<string, TargetCount> {
-  const counts = new Map<string, TargetCount & { from: Set<string> }>();
-  for (const { target, source } of links) {
-    const entry = counts.get(target) ?? {
-      target,
-      count: 0,
-      sources: 0,
-      from: new Set<string>(),
-    };
-    entry.count++;
-    entry.from.add(source);
-    entry.sources = entry.from.size;
-    counts.set(target, entry);
+function tally(targets: string[]): TargetCount[] {
+  const counts = new Map<string, number>();
+  for (const target of targets) {
+    counts.set(target, (counts.get(target) ?? 0) + 1);
   }
-  return new Map(
-    [...counts].map(([k, { target, count, sources }]) => [
-      k,
-      { target, count, sources },
-    ]),
-  );
+  return [...counts]
+    .map(([target, count]) => ({ target, count }))
+    .sort(byCount);
 }
 
 /** Count and rank every link across a set of pages. */
 export function buildLinkCensus(pages: LinkSource[]): LinkCensus {
-  const internal: { target: string; source: string }[] = [];
-  const outgoing: { target: string; source: string; domain: string }[] = [];
+  const internal: string[] = [];
+  const outgoing: { target: string; domain: string }[] = [];
 
   for (const page of pages) {
     for (const href of extractLinks(page.body)) {
       const link = classifyLink(href, page.href);
       if (!link) continue;
-      if (link.kind === "internal") {
-        internal.push({ target: link.target, source: page.href });
-      } else {
-        outgoing.push({ ...link, source: page.href });
-      }
+      if (link.kind === "internal") internal.push(link.target);
+      else outgoing.push(link);
     }
   }
 
-  const domains = tally(
-    outgoing.map(({ domain, source }) => ({ target: domain, source })),
-  );
   return {
     total: internal.length + outgoing.length,
-    internal: [...tally(internal).values()].sort(byCount),
-    outgoing: [...domains.values()]
-      .map((domain) => ({
-        ...domain,
-        urls: [
-          ...tally(outgoing.filter((l) => l.domain === domain.target)).values(),
-        ].sort(byCount),
-      }))
-      .sort(byCount),
+    internal: tally(internal),
+    outgoing: tally(outgoing.map((l) => l.domain)).map((domain) => ({
+      ...domain,
+      urls: tally(
+        outgoing.filter((l) => l.domain === domain.target).map((l) => l.target),
+      ),
+    })),
   };
 }

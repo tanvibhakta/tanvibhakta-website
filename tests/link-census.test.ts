@@ -49,7 +49,7 @@ describe("classifyLink", () => {
 });
 
 describe("buildLinkCensus", () => {
-  test("ranks targets by count and tracks distinct source pages", () => {
+  test("ranks targets and domains by link count", () => {
     const census = buildLinkCensus([
       {
         href: "/blog/a",
@@ -61,17 +61,14 @@ describe("buildLinkCensus", () => {
       },
     ]);
     expect(census.total).toBe(6);
-    expect(census.internal).toEqual([
-      { target: "/blog/b", count: 2, sources: 2 },
-    ]);
-    expect(census.outgoing.map((d) => [d.target, d.count, d.sources])).toEqual([
-      ["en.wikipedia.org", 3, 2],
-      ["github.com", 1, 1],
+    expect(census.internal).toEqual([{ target: "/blog/b", count: 2 }]);
+    expect(census.outgoing.map((d) => [d.target, d.count])).toEqual([
+      ["en.wikipedia.org", 3],
+      ["github.com", 1],
     ]);
     expect(census.outgoing[0].urls[0]).toEqual({
       target: "https://en.wikipedia.org/wiki/X",
       count: 2,
-      sources: 1,
     });
   });
 });

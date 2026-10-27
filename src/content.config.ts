@@ -81,7 +81,7 @@ export const STANDALONE_PAGES = {
   stats: {
     href: "/stats",
     title: "Stats",
-    description: "every link on the site, counted and ranked",
+    description: "fun metadata about the site",
   },
   tags: {
     href: "/tags",

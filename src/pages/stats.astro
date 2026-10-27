@@ -18,16 +18,21 @@ const census = buildLinkCensus(
 const internalTotal = census.internal.reduce((n, t) => n + t.count, 0);
 const outgoingTotal = census.total - internalTotal;
 
+// Domains are listed bare (www. dropped, as in the census), so the visible
+// URL drops its scheme and www. too; a lone link shows only what follows
+// its domain, which is rendered separately.
+const stripScheme = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "");
+const urlPath = (url: string) => stripScheme(url).replace(/^[^/?#]+/, "");
+
+const mentions = (n: number) => `${n} ${n === 1 ? "mention" : "mentions"}`;
+
 const frontmatter = STANDALONE_PAGES.stats;
 ---
 
 <ProseLayout frontmatter={frontmatter}>
   <p>
-    {census.total} links across {posts.length + pages.length} pages: {
-      internalTotal
-    } pointing at {census.internal.length} places on this site, and {
-      outgoingTotal
-    } going out to {census.outgoing.length} other sites.
+    {census.total} links: {internalTotal} to {census.internal.length} places on this
+    site, and {outgoingTotal} to {census.outgoing.length} other sites.
   </p>
 
   <section>
@@ -37,9 +42,7 @@ const frontmatter = STANDALONE_PAGES.stats;
         census.internal.map((target) => (
           <li class="break-all">
             <a href={target.target}>{target.target}</a>
-            <span class="count">
-              {target.count} links · {target.sources} pages
-            </span>
+            <span class="count">{mentions(target.count)}</span>
           </li>
         ))
       }
@@ -50,36 +53,46 @@ const frontmatter = STANDALONE_PAGES.stats;
     <h2>External Links</h2>
     <ol class="list-none pl-0">
       {
-        census.outgoing.map((domain) => (
-          <li class="my-1">
-            <details>
-              <summary class="cursor-pointer">
-                {domain.target}
-                <span class="count">
-                  {domain.count} links · {domain.sources} pages
-                </span>
-              </summary>
-              <ol class="mt-1 mb-3 text-sm">
-                {domain.urls.map((url) => (
-                  <li class="break-all">
-                    <a href={url.target}>
-                      {url.target.replace(/^https?:\/\/(www\.)?/, "")}
-                    </a>
-                    <span class="count">{url.count}</span>
-                  </li>
-                ))}
-              </ol>
-            </details>
-          </li>
-        ))
+        census.outgoing.map((domain) =>
+          domain.urls.length === 1 ? (
+            <li class="my-1 pl-[1.5em]! break-all">
+              {/* inline-flex drops the whitespace between the two spans */}
+              <a
+                href={domain.urls[0].target}
+                class="inline-flex flex-wrap items-baseline"
+              >
+                <span class="text-neutral-800">{domain.target}</span>
+                <span class="text-sm">{urlPath(domain.urls[0].target)}</span>
+              </a>
+              <span class="count">{mentions(domain.count)}</span>
+            </li>
+          ) : (
+            <li class="my-1">
+              <details open={domain.urls.length === 2}>
+                <summary class="cursor-pointer">
+                  {domain.target}
+                  <span class="count">{mentions(domain.count)}</span>
+                </summary>
+                <ol class="mt-1 mb-3 text-sm">
+                  {domain.urls.map((url) => (
+                    <li class="break-all">
+                      <a href={url.target}>{stripScheme(url.target)}</a>
+                      <span class="count">{mentions(url.count)}</span>
+                    </li>
+                  ))}
+                </ol>
+              </details>
+            </li>
+          ),
+        )
       }
     </ol>
   </section>
 </ProseLayout>
 
 <style>
-  /* Counts sit inside <summary>/<li> built from data; one class keeps the
-     small-caps treatment in step with /tags and /sitemap. */
+  /* One class keeps the small-caps count treatment in step with /tags and
+     /sitemap across the three row shapes. */
   .count {
     font-size: 0.85rem;
     font-variant: small-caps;
