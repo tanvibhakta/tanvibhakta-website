@@ -21,7 +21,11 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Run tests (link checker + feeds)
+      # tests/horizontal-scroll.integration.test.ts measures layout in a real
+      # browser; only the headless shell is needed.
+      - run: pnpm exec playwright install --with-deps --only-shell chromium
+
+      - name: Run tests (link checker, feeds, horizontal scroll)
         run: pnpm test
 
       - name: Image metadata / size backstop (detects, does not block deploys)
