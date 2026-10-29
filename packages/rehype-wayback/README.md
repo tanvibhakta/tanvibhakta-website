@@ -7,7 +7,8 @@ about it, or ask Save Page Now to create one. The results are kept in a
 can show archive links without touching the network. Run it from a script or
 a scheduled CI job.
 
-Rendering is not included yet: `rehype-wayback/sync` is the only entry point.
+The rehype plugin then attaches each snapshot to its link as an invisible
+`data-archive` attribute, for your CSS or scripts to use however you like.
 
 ## Install
 
@@ -59,6 +60,26 @@ longer in any document (or is now excluded) are pruned.
 - `capture(url, keys)`: Save Page Now capture, polled to completion.
 - `collectLinks(markdown)`, `shouldArchive(href, exclude)`,
   `archiveKey(href)`, `serializeArchives(archives)`, `SOCIAL_DOMAINS`.
+
+## Attaching snapshots to links
+
+```js
+import rehypeWayback from "rehype-wayback";
+import archives from "./archive-links.json" with { type: "json" };
+
+unified().use(rehypeWayback, { archives });
+```
+
+```html
+<a
+  href="https://example.com/post"
+  data-archive="https://web.archive.org/web/20240101000000/https://example.com/post"
+  >a post</a
+>
+```
+
+Nothing visible is added. Links are matched by `archiveKey` (fragment
+dropped, host lowercased).
 
 ## Why not an existing package
 

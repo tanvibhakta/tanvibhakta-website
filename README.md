@@ -58,7 +58,8 @@ social media, Goodreads, Spotify, Letterboxd and IMDb (the list is `EXCLUDE`
 in `scripts/archive-links.ts`). Creating snapshots that don't exist yet needs
 the `ARCHIVE_ORG_ACCESS_KEY` / `ARCHIVE_ORG_SECRET_KEY` repository secrets
 (archive.org → account → S3 API keys); without them only existing snapshots
-are recorded. The site doesn't display them yet.
+are recorded. The build adds each snapshot to its link as an invisible
+`data-archive` attribute; nothing displays them yet.
 
 ## 📜 Custom Scripts
 

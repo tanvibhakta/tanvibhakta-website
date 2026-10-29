@@ -12,6 +12,8 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { rehypeAnchors } from "./src/plugins/rehype-anchors.mjs";
 import { rehypeGallery } from "./src/plugins/rehype-gallery.mjs";
 import { rehypeExternalLinks } from "./src/plugins/rehype-external-links.mjs";
+import rehypeWayback from "rehype-wayback";
+import archives from "./src/data/archive-links.json" with { type: "json" };
 
 const site = "https://tanvibhakta.in";
 
@@ -68,6 +70,9 @@ export default defineConfig({
       ],
       // Off-site links open in a new tab and carry an icon saying so.
       [rehypeExternalLinks, { site }],
+      // data-archive="<Wayback snapshot>" on links `pnpm archive` recorded.
+      // Invisible; nothing displays it yet.
+      [rehypeWayback, { archives }],
     ],
   },
 
