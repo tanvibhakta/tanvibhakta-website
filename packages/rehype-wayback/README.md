@@ -42,12 +42,12 @@ const result = await updateArchives(archives, links, {
   // Optional: archive.org → account → S3 API keys. Without them, only
   // existing snapshots are recorded.
   keys: { access: process.env.IA_ACCESS, secret: process.env.IA_SECRET },
-  deadline: Date.now() + 60 * 60 * 1000,
   onChange: async (a, t) => {
     await writeFile("archive-links.json", serializeArchives(a));
     await writeFile("archive-attempts.json", serializeArchives(t));
   },
   log: console.log,
+  warn: (url, reason) => console.warn(`${url}: ${reason}`),
 });
 if (result.authFailed) throw new Error("archive.org rejected the keys");
 ```
@@ -65,12 +65,12 @@ entry is removed as soon as a snapshot exists.
 ### API
 
 - `gatherLinks(documents, { exclude })` → `Map<url, date>` of archivable
-  links: every absolute http(s) link that renders as one (inline, used
-  reference, autolink, GFM bare URL; not unused reference definitions) and is
-  not on an excluded domain (subdomains included) or an archive site.
+  links: every absolute http(s) link (inline, reference definition — used or
+  not, since an orphan definition is likely a mistake worth keeping a
+  snapshot of — autolink, GFM bare URL) not on an excluded domain
+  (subdomains included) or an archive site.
 - `updateArchives(archives, links, options)` → `{ added, pruned, missing,
-deferred, requests, requestErrors, authFailed }`. `deferred` lists links
-  left unvisited when `deadline` passed; `requestErrors` counts requests that
+requests, requestErrors, authFailed }`. `requestErrors` counts requests that
   failed outright (network, timeout, HTTP error) as opposed to finding no
   snapshot, and `authFailed` is set by any 401/403, so a caller can tell an
   outage or bad keys from ordinary misses. Options:
@@ -78,18 +78,27 @@ deferred, requests, requestErrors, authFailed }`. `deferred` lists links
   - `keys`: archive.org S3 keys; without them nothing is captured.
   - `maxCaptures` (default 25): capture attempts per run, failures included.
   - `slowAfter` (default 5), `slowIntervalDays` (default 30).
-  - `deadline` (epoch ms): no new link is started after it.
+  - `prune` (default true): `false` keeps entries for links not in `links`,
+    for a run over a sample of them.
   - `paceMs` (default 1000): pause between links.
   - `requestTimeoutMs` (default 30000): abort a request after this long.
   - `retryAfterMs` (default 60000): wait before retrying a 429 once.
   - `pollMs` (default 5000), `captureTimeoutMs` (default 180000): how often
     and how long to wait for a capture.
+  - `onRequest(info)`: called after every HTTP request with
+    `{ kind, url, ms, status?, error? }`, where `kind` is `"lookup"`
+    (availability API), `"capture"` (the Save Page Now POST) or `"status"`
+    (one status poll); and once per finished capture with kind
+    `"capture-total"`, timed from the POST to the outcome, with `error` set
+    if it failed or timed out. For measuring how long archive.org takes.
+  - `warn(url, reason)`: called for each link whose lookup or capture failed
+    (default: a `✗ url: reason` line through `log`).
   - `onChange(archives, attempts)`, `log(line)`, `fetch`, `now`.
 - `findSnapshot(url, date?, options?)`: closest snapshot via the availability
   API. `capture(url, keys, options?)`: Save Page Now capture, polled to
   completion; `null` if it doesn't finish in time. Both take `fetch`,
-  `requestTimeoutMs`, `retryAfterMs`, and throw `RequestError` (with the HTTP
-  `status`, if any) when a request fails.
+  `requestTimeoutMs`, `retryAfterMs`, `onRequest`, and throw `RequestError`
+  (with the HTTP `status`, if any) when a request fails.
 - `collectLinks(markdown)`, `shouldArchive(href, exclude)`,
   `archiveKey(href)`, `serializeArchives(map)`, `SOCIAL_DOMAINS`.
 

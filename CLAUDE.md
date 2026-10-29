@@ -98,11 +98,11 @@ rehype plugins (`.anchor-link`) belong in `src/styles/global.css`.
 - `pnpm archive` (`scripts/archive-links.ts`) is the site's wiring: post
   locations, frontmatter dates, drafts skipped, the `EXCLUDE` domain list
   (social media, Goodreads, Spotify, Letterboxd, IMDb, login-walled), and the
-  tuning constants (retry slow-down, run budget, outage threshold). The
-  Archive links GitHub Action runs it on content pushes and weekly, and
-  commits the JSON plus `src/data/archive-attempts.json` (failed captures,
-  retried less often). The run fails when archive.org looks down or rejects
-  the keys, after committing what it got.
+  retry slow-down constants. The Archive links GitHub Action runs it on
+  content pushes and weekly, and commits the JSON plus
+  `src/data/archive-attempts.json` (failed captures, retried less often). In
+  the Action, missing keys fail the run up front and rejected keys fail it
+  after committing what it got; other failed requests are warnings.
 
 ### Code Quality
 

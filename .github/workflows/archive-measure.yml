@@ -1,0 +1,72 @@
+# TEMPORARY — delete before merging #148.
+#
+# Gathers real archive.org timing data before timeouts are chosen, and seeds
+# the data files: runs `pnpm archive` on a random sample of links (sampling
+# never prunes entries outside the sample) and prints its per-request timing
+# summary (lookup, capture POST, status poll, whole capture) at the end of
+# the log. Whatever it records is committed back to the #148 branch. Runs on
+# every push to that branch, and by hand.
+#
+# No loop: commits pushed with the workflow's GITHUB_TOKEN don't trigger
+# workflow runs, so the commit below doesn't start this workflow again.
+name: Archive links (timing sample)
+
+on:
+  push:
+    branches: [ccr-5a071c1c-gelc81]
+  workflow_dispatch:
+
+# One run at a time, so two sample runs never race on the JSON.
+concurrency:
+  group: archive-measure
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    # husky doesn't skip in CI on its own; without this the bot's commit runs
+    # the pre-commit hook (full test suite, browser not installed here).
+    env:
+      HUSKY: "0"
+    steps:
+      # The branch tip, so a queued run starts from the previous run's
+      # committed snapshots.
+      - uses: actions/checkout@v4
+        with:
+          ref: ccr-5a071c1c-gelc81
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      # A generous 5-minute per-request limit so slow requests show up in the
+      # timings instead of being cut off.
+      - run: pnpm archive --sample 25 --max-captures 5 --request-timeout-ms 300000
+        env:
+          ARCHIVE_ORG_ACCESS_KEY: ${{ secrets.ARCHIVE_ORG_ACCESS_KEY }}
+          ARCHIVE_ORG_SECRET_KEY: ${{ secrets.ARCHIVE_ORG_SECRET_KEY }}
+
+      - name: Commit sample snapshots
+        # Also after the archive step fails, so finished work is kept; not
+        # when the run is cancelled.
+        if: ${{ !cancelled() }}
+        run: |
+          if git diff --quiet -- src/data/archive-links.json src/data/archive-attempts.json; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/archive-links.json src/data/archive-attempts.json
+          git commit -m "chore: record sample archive links"
+          git pull --rebase origin ccr-5a071c1c-gelc81
+          git push origin HEAD:ccr-5a071c1c-gelc81

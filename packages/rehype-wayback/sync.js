@@ -57,34 +57,23 @@ const sleep = (/** @type {number} */ ms) =>
 
 /**
  * Every absolute http(s) URL a markdown document links to — inline links,
- * used reference links, `<autolinks>` and GFM bare URLs. Images, and
- * reference definitions nothing refers to, are excluded: neither renders as
- * a link.
+ * reference definitions, `<autolinks>` and GFM bare URLs. Images excluded.
+ * A definition nothing refers to still counts: it's likely a mistake in the
+ * text, and its link is still worth a snapshot.
  *
  * @param {string} markdown
  * @returns {string[]}
  */
 export function collectLinks(markdown) {
   const tree = unified().use(remarkParse).use(remarkGfm).parse(markdown);
-  /** @type {Map<string, string>} */
-  const definitions = new Map();
-  /** @type {string[]} */
-  const used = [];
   /** @type {string[]} */
   const urls = [];
   visit(tree, (node) => {
-    if (node.type === "link") urls.push(node.url);
-    else if (node.type === "linkReference") used.push(node.identifier);
-    // As in markdown, the first definition of an identifier wins.
-    else if (node.type === "definition" && !definitions.has(node.identifier)) {
-      definitions.set(node.identifier, node.url);
+    if (node.type === "link" || node.type === "definition") {
+      if (/^https?:\/\//i.test(node.url)) urls.push(node.url);
     }
   });
-  for (const identifier of used) {
-    const url = definitions.get(identifier);
-    if (url !== undefined) urls.push(url);
-  }
-  return urls.filter((url) => /^https?:\/\//i.test(url));
+  return urls;
 }
 
 /**
@@ -160,25 +149,71 @@ export class RequestError extends Error {
  * @property {number} [retryAfterMs] wait before the one retry of a
  *   rate-limited (429) request, default 60000
  * @property {Stats} [stats] counters to update
+ * @property {(info: RequestInfo) => void} [onRequest] called after every
+ *   HTTP request, and once per finished capture, with its timing
+ */
+
+/**
+ * One timed request. `kind` is "lookup" (availability API), "capture" (the
+ * Save Page Now POST), "status" (one capture status poll) or
+ * "capture-total" (a whole capture, POST to outcome). `status` is the HTTP
+ * status when a response arrived; `error` is set when none did (network
+ * error, timeout) or, for "capture-total", when the capture failed.
+ *
+ * @typedef {{
+ *   kind: "lookup" | "capture" | "status" | "capture-total",
+ *   url: string,
+ *   ms: number,
+ *   status?: number,
+ *   error?: string,
+ * }} RequestInfo
  */
 
 /** @returns {Stats} */
 const newStats = () => ({ requests: 0, requestErrors: 0, authFailed: false });
 
+const errorMessage = (/** @type {unknown} */ error) =>
+  error instanceof Error ? error.message : String(error);
+
 /**
+ * @param {RequestInfo["kind"]} kind
  * @param {string} url
  * @param {RequestInit} [init]
  * @param {RequestOptions} [options]
  */
-async function fetchJson(url, init = {}, options = {}) {
+async function fetchJson(kind, url, init = {}, options = {}) {
   const {
     fetch: f = fetch,
     requestTimeoutMs = 30_000,
     retryAfterMs = 60_000,
     stats = newStats(),
+    onRequest = () => {},
   } = options;
-  const attempt = () =>
-    f(url, { ...init, signal: AbortSignal.timeout(requestTimeoutMs) });
+  // Each HTTP request (a 429 retry included) is timed on its own.
+  const attempt = async () => {
+    const start = performance.now();
+    try {
+      const res = await f(url, {
+        ...init,
+        signal: AbortSignal.timeout(requestTimeoutMs),
+      });
+      onRequest({
+        kind,
+        url,
+        ms: performance.now() - start,
+        status: res.status,
+      });
+      return res;
+    } catch (error) {
+      onRequest({
+        kind,
+        url,
+        ms: performance.now() - start,
+        error: errorMessage(error),
+      });
+      throw error;
+    }
+  };
   stats.requests++;
   try {
     let res = await attempt();
@@ -195,8 +230,7 @@ async function fetchJson(url, init = {}, options = {}) {
   } catch (error) {
     stats.requestErrors++;
     if (error instanceof RequestError) throw error;
-    const message = error instanceof Error ? error.message : String(error);
-    throw new RequestError(`${message} (${url})`);
+    throw new RequestError(`${errorMessage(error)} (${url})`);
   }
 }
 
@@ -212,7 +246,7 @@ async function fetchJson(url, init = {}, options = {}) {
 export async function findSnapshot(url, date = "", options = {}) {
   const query = new URLSearchParams({ url });
   if (date) query.set("timestamp", date);
-  const data = await fetchJson(`${AVAILABLE}?${query}`, {}, options);
+  const data = await fetchJson("lookup", `${AVAILABLE}?${query}`, {}, options);
   const closest = data?.archived_snapshots?.closest;
   // Redirect captures (3xx) replay fine; 4xx/5xx captures are error pages.
   if (!closest?.available || !/^[23]/.test(String(closest.status))) {
@@ -233,12 +267,40 @@ export async function findSnapshot(url, date = "", options = {}) {
  *   Now refuses the capture
  */
 export async function capture(url, keys, options = {}) {
+  const { onRequest = () => {} } = options;
+  const start = performance.now();
+  /** @param {string} [error] */
+  const done = (error) =>
+    onRequest({
+      kind: "capture-total",
+      url,
+      ms: performance.now() - start,
+      ...(error && { error }),
+    });
+  try {
+    const snapshot = await runCapture(url, keys, options);
+    done(snapshot ? undefined : "timed out");
+    return snapshot;
+  } catch (error) {
+    done(errorMessage(error));
+    throw error;
+  }
+}
+
+/**
+ * @param {string} url
+ * @param {Keys} keys
+ * @param {RequestOptions & { pollMs?: number, timeoutMs?: number }} options
+ * @returns {Promise<string | null>}
+ */
+async function runCapture(url, keys, options) {
   const { pollMs = 5000, timeoutMs = 3 * 60_000 } = options;
   const headers = {
     Accept: "application/json",
     Authorization: `LOW ${keys.access}:${keys.secret}`,
   };
   const job = await fetchJson(
+    "capture",
     SAVE,
     {
       method: "POST",
@@ -256,6 +318,7 @@ export async function capture(url, keys, options = {}) {
   for (let waited = 0; waited < timeoutMs; waited += pollMs) {
     await sleep(pollMs);
     const status = await fetchJson(
+      "status",
       `${SAVE}/status/${job.job_id}`,
       { headers },
       options,
@@ -307,26 +370,28 @@ const DAY_MS = 24 * 60 * 60 * 1000;
  *   slowIntervalDays?: number,
  *   pollMs?: number,
  *   captureTimeoutMs?: number,
- *   deadline?: number,
+ *   prune?: boolean,
  *   now?: () => number,
  *   onChange?: (archives: ArchiveMap, attempts: AttemptMap) => Promise<void>,
  *   log?: (line: string) => void,
+ *   warn?: (url: string, reason: string) => void,
  * }} [options] `paceMs` (default 1000) spaces links to stay under the rate
  *   limit; `maxCaptures` (default 25) caps a run's capture attempts;
- *   `slowAfter` defaults to 5 and `slowIntervalDays` to 30; no link is
- *   started after `deadline` (epoch ms); `onChange` runs after every change
- *   to either map, so an interrupted run keeps its progress.
+ *   `slowAfter` defaults to 5 and `slowIntervalDays` to 30; `prune: false`
+ *   (default true) keeps entries for links not in `links`, for a run over a
+ *   sample of them; `onChange` runs after every change to either map, so an
+ *   interrupted run keeps its progress; `warn` reports each link whose
+ *   lookup or capture failed (default: a `✗ url: reason` log line).
  * @returns {Promise<{
  *   added: number,
  *   pruned: number,
  *   missing: string[],
- *   deferred: string[],
  *   requests: number,
  *   requestErrors: number,
  *   authFailed: boolean,
- * }>} `missing`: links visited without getting a snapshot; `deferred`: links
- *   not visited because the deadline passed; the request counters tell an
- *   outage (many errors, or rejected keys) from ordinary misses.
+ * }>} `missing`: links visited without getting a snapshot; `requestErrors`
+ *   counts requests that failed outright, and `authFailed` is set by any
+ *   401/403 (rejected keys).
  */
 export async function updateArchives(archives, links, options = {}) {
   const {
@@ -338,24 +403,27 @@ export async function updateArchives(archives, links, options = {}) {
     slowIntervalDays = 30,
     pollMs,
     captureTimeoutMs,
-    deadline = Infinity,
+    prune = true,
     now = Date.now,
     onChange = async () => {},
     log = () => {},
+    warn = (url, reason) => log(`✗ ${url}: ${reason}`),
   } = options;
   const stats = newStats();
   /** @type {RequestOptions} */
   const request = { ...options, stats };
 
   let pruned = 0;
-  for (const key of Object.keys(archives)) {
-    if (!links.has(key)) {
-      delete archives[key];
-      pruned++;
+  if (prune) {
+    for (const key of Object.keys(archives)) {
+      if (!links.has(key)) {
+        delete archives[key];
+        pruned++;
+      }
     }
-  }
-  for (const key of Object.keys(attempts)) {
-    if (!links.has(key) || archives[key]) delete attempts[key];
+    for (const key of Object.keys(attempts)) {
+      if (!links.has(key) || archives[key]) delete attempts[key];
+    }
   }
 
   // Never-attempted first (in link order: sort is stable), then least
@@ -369,14 +437,7 @@ export async function updateArchives(archives, links, options = {}) {
   let captures = 0;
   /** @type {string[]} */
   const missing = [];
-  /** @type {string[]} */
-  const deferred = [];
-  for (const [i, [url, date]] of queue.entries()) {
-    if (now() >= deadline) {
-      deferred.push(...queue.slice(i).map(([u]) => u));
-      log(`deadline reached; ${deferred.length} links left for the next run`);
-      break;
-    }
+  for (const [url, date] of queue) {
     try {
       let snapshot = await findSnapshot(url, date, request);
       const attempt = attempts[url];
@@ -400,7 +461,7 @@ export async function updateArchives(archives, links, options = {}) {
             failures: (attempt?.failures ?? 0) + 1,
             firstFailed: attempt?.firstFailed ?? at,
             lastTried: at,
-            lastError: error instanceof Error ? error.message : String(error),
+            lastError: errorMessage(error),
           };
           await onChange(archives, attempts);
           throw error;
@@ -416,12 +477,12 @@ export async function updateArchives(archives, links, options = {}) {
         missing.push(url);
       }
     } catch (error) {
-      log(`✗ ${url}: ${error instanceof Error ? error.message : error}`);
+      warn(url, errorMessage(error));
       missing.push(url);
     }
     await sleep(paceMs);
   }
-  return { added, pruned, missing, deferred, ...stats };
+  return { added, pruned, missing, ...stats };
 }
 
 /**

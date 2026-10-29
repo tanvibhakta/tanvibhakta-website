@@ -3,8 +3,9 @@
 # build attaches to links as data-archive, plus src/data/archive-attempts.json,
 # the failed captures it retries less often. Runs on content pushes to main
 # (Sveltia and Telegram commits included), weekly to retry links that had no
-# snapshot yet, and by hand. The run goes red when archive.org looks down or
-# rejects the keys, after committing whatever it did get.
+# snapshot yet, and by hand. The run goes red when the keys are missing (up
+# front) or archive.org rejects them (after committing whatever it did get);
+# other failed requests show as warnings on the run.
 #
 # Save Page Now captures need the ARCHIVE_ORG_ACCESS_KEY and
 # ARCHIVE_ORG_SECRET_KEY repository secrets (archive.org S3 API keys); without
@@ -53,9 +54,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # The script stops starting new links after 60 minutes; this cap only
-      # catches a run that hangs anyway. Either way the next step commits
-      # what finished.
+      # The script saves after every change, so if this cap stops it, the next
+      # step still commits what finished.
       - run: pnpm archive
         timeout-minutes: 75
         env:

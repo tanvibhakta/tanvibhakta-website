@@ -12,6 +12,7 @@ import {
   updateArchives,
   type ArchiveMap,
   type AttemptMap,
+  type RequestInfo,
 } from "../sync.js";
 
 describe("archiveKey", () => {
@@ -68,16 +69,15 @@ describe("collectLinks", () => {
   });
 });
 
-test("collectLinks skips reference definitions nothing uses", () => {
+test("collectLinks keeps reference definitions nothing uses", () => {
   const md = [
-    "[used][u] and [Case Insensitive][CI]",
+    "[used][u]",
     "",
     "[u]: https://used.com/",
     "[unused]: https://unused.com/",
-    "[ci]: https://ci.com/",
   ].join("\n");
   expect(collectLinks(md).sort()).toEqual([
-    "https://ci.com/",
+    "https://unused.com/",
     "https://used.com/",
   ]);
 });
@@ -215,7 +215,6 @@ describe("updateArchives", () => {
       added: 1,
       pruned: 1,
       missing: ["https://unarchived.com/"],
-      deferred: [],
       requests: 2,
       requestErrors: 0,
       authFailed: false,
@@ -489,20 +488,151 @@ describe("updateArchives attempts", () => {
     await updateArchives({}, new Map(), { attempts, paceMs: 0 });
     expect(attempts).toEqual({});
   });
+});
 
-  test("links left when the deadline passes are deferred, not visited", async () => {
-    let t = 0;
-    const f = fakeFetch([[/available/, none]]);
-    const result = await updateArchives(
-      {},
-      new Map([
-        ["https://a.com/", ""],
-        ["https://b.com/", ""],
-        ["https://c.com/", ""],
-      ]),
-      { fetch: f, paceMs: 0, deadline: 2, now: () => t++ },
-    );
-    expect(result.missing).toEqual(["https://a.com/", "https://b.com/"]);
-    expect(result.deferred).toEqual(["https://c.com/"]);
+test("warn reports each failed link instead of the default log line", async () => {
+  const warned: [string, string][] = [];
+  const log = vi.fn();
+  await updateArchives({}, new Map([["https://a.com/", ""]]), {
+    fetch: vi.fn(async () => {
+      throw new Error("offline");
+    }) as unknown as typeof fetch,
+    paceMs: 0,
+    log,
+    warn: (url, reason) => warned.push([url, reason]),
   });
+  expect(warned).toEqual([
+    ["https://a.com/", expect.stringContaining("offline")],
+  ]);
+  expect(log).not.toHaveBeenCalled();
+});
+
+describe("onRequest timings", () => {
+  const keys = { access: "a", secret: "s" };
+
+  test("reports each lookup, including a 429 retry, with its status", async () => {
+    const infos: RequestInfo[] = [];
+    const f = sequence(
+      () => new Response("slow down", { status: 429 }),
+      () => Response.json(none),
+    );
+    await findSnapshot("https://a.com/", "", {
+      fetch: f,
+      retryAfterMs: 0,
+      onRequest: (i) => infos.push(i),
+    });
+    expect(infos.map(({ kind, status }) => [kind, status])).toEqual([
+      ["lookup", 429],
+      ["lookup", 200],
+    ]);
+    for (const i of infos) {
+      expect(i.ms).toBeGreaterThanOrEqual(0);
+      expect(i.url).toContain("archive.org/wayback/available");
+    }
+  });
+
+  test("a request with no response reports its error", async () => {
+    const infos: RequestInfo[] = [];
+    const f = vi.fn(async () => {
+      throw new Error("offline");
+    }) as unknown as typeof fetch;
+    await findSnapshot("https://a.com/", "", {
+      fetch: f,
+      onRequest: (i) => infos.push(i),
+    }).catch(() => {});
+    expect(infos).toMatchObject([{ kind: "lookup", error: "offline" }]);
+    expect(infos[0].status).toBeUndefined();
+  });
+
+  test("a capture reports its POST, each poll, and its total", async () => {
+    const infos: RequestInfo[] = [];
+    let polls = 0;
+    const f = fakeFetch([
+      [
+        /\/save\/status\//,
+        () =>
+          ++polls < 2
+            ? { status: "pending" }
+            : { status: "success", timestamp: "1", original_url: "u" },
+      ],
+      [/\/save$/, { job_id: "j" }],
+    ]);
+    await capture("https://a.com/", keys, {
+      fetch: f,
+      pollMs: 0,
+      onRequest: (i) => infos.push(i),
+    });
+    expect(infos.map((i) => i.kind)).toEqual([
+      "capture",
+      "status",
+      "status",
+      "capture-total",
+    ]);
+    expect(infos[3]).toMatchObject({ url: "https://a.com/" });
+    expect(infos[3].error).toBeUndefined();
+  });
+
+  test("a failed or timed-out capture's total carries the error", async () => {
+    const failing = fakeFetch([
+      [/\/save\/status\//, { status: "error", message: "blocked" }],
+      [/\/save$/, { job_id: "j" }],
+    ]);
+    const pending = fakeFetch([
+      [/\/save\/status\//, { status: "pending" }],
+      [/\/save$/, { job_id: "j" }],
+    ]);
+    const totals: RequestInfo[] = [];
+    const onRequest = (i: RequestInfo) => {
+      if (i.kind === "capture-total") totals.push(i);
+    };
+    await capture("https://a.com/", keys, {
+      fetch: failing,
+      pollMs: 0,
+      onRequest,
+    }).catch(() => {});
+    await capture("https://a.com/", keys, {
+      fetch: pending,
+      pollMs: 1,
+      timeoutMs: 3,
+      onRequest,
+    });
+    expect(totals.map((t) => t.error)).toEqual(["blocked", "timed out"]);
+  });
+
+  test("updateArchives passes onRequest through", async () => {
+    const infos: RequestInfo[] = [];
+    await updateArchives({}, new Map([["https://a.com/", ""]]), {
+      fetch: fakeFetch([[/available/, none]]),
+      paceMs: 0,
+      onRequest: (i) => infos.push(i),
+    });
+    expect(infos.map((i) => i.kind)).toEqual(["lookup"]);
+  });
+});
+
+test("updateArchives with prune: false keeps entries outside links", async () => {
+  const archives: ArchiveMap = {
+    "https://other.com/": "https://web.archive.org/web/1/other",
+  };
+  const attempts: AttemptMap = {
+    "https://stuck.com/": {
+      failures: 2,
+      firstFailed: "2026-01-01T00:00:00.000Z",
+      lastTried: "2026-01-02T00:00:00.000Z",
+      lastError: "blocked",
+    },
+  };
+  const result = await updateArchives(
+    archives,
+    new Map([["https://a.com/", ""]]),
+    {
+      attempts,
+      prune: false,
+      fetch: fakeFetch([[/available/, none]]),
+      paceMs: 0,
+    },
+  );
+  expect(result.pruned).toBe(0);
+  expect(Object.keys(archives)).toEqual(["https://other.com/"]);
+  expect(Object.keys(attempts)).toEqual(["https://stuck.com/"]);
 });

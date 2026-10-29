@@ -60,10 +60,15 @@ Spotify, Letterboxd and IMDb (the list is `EXCLUDE` in
 `ARCHIVE_ORG_ACCESS_KEY` / `ARCHIVE_ORG_SECRET_KEY` repository secrets
 (archive.org → account → S3 API keys); without them only existing snapshots
 are recorded. Links whose capture keeps failing are listed, with their last
-error, in `src/data/archive-attempts.json` and retried less often. The run
-goes red when archive.org looks down or rejects the keys. The build adds each
+error, in `src/data/archive-attempts.json` and retried less often. In the
+Action, missing keys fail the run before it starts, and keys archive.org
+rejects fail it after it saves; any other failed request is a warning on the
+run. Both files are saved after every change, so a run stopped partway keeps
+its progress. The build adds each
 snapshot to its link as an invisible `data-archive` attribute; nothing
-displays them yet.
+displays them yet. Each run ends with a timing summary of its archive.org
+requests. Flags: `pnpm archive --sample N` (a random N links; never prunes
+entries outside the sample), `--max-captures N`, `--request-timeout-ms N`.
 
 ## 📜 Custom Scripts
 
