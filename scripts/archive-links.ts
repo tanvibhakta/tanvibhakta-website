@@ -11,8 +11,8 @@ import {
 
 /**
  * Records a Wayback Machine snapshot for every archivable external link in
- * posts/ in src/data/archive-links.json, which rehype-wayback reads at build
- * time to add "[archive]" links. The generic work lives in
+ * posts/ in src/data/archive-links.json, for the site to display archive links
+ * from (not wired up yet). The generic work lives in
  * packages/rehype-wayback; this is the site's wiring: where posts are, how
  * their dates are written, and which domains to leave alone.
  *

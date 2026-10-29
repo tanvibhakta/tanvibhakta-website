@@ -51,14 +51,14 @@ Pre-commit hook runs automatically:
 
 Relative paths work in both dev and production. The link checker validates them on every commit.
 
-**Archive links:** external links get a small superscript "archive" link to a Wayback
-Machine snapshot, except social media, Goodreads, Spotify, Letterboxd and IMDb (the list is
-`EXCLUDE` in `scripts/archive-links.ts`). Nothing to do by hand: the
-Archive links GitHub Action runs `pnpm archive` after each content push and
-weekly, and commits `src/data/archive-links.json`. Creating snapshots that
-don't exist yet needs the `ARCHIVE_ORG_ACCESS_KEY` / `ARCHIVE_ORG_SECRET_KEY`
-repository secrets (archive.org → account → S3 API keys); without them only
-existing snapshots are used.
+**Archive links:** the Archive links GitHub Action runs `pnpm archive` after
+each content push and weekly. It records a Wayback Machine snapshot for every
+external link in posts in `src/data/archive-links.json` and commits it, except
+social media, Goodreads, Spotify, Letterboxd and IMDb (the list is `EXCLUDE`
+in `scripts/archive-links.ts`). Creating snapshots that don't exist yet needs
+the `ARCHIVE_ORG_ACCESS_KEY` / `ARCHIVE_ORG_SECRET_KEY` repository secrets
+(archive.org → account → S3 API keys); without them only existing snapshots
+are recorded. The site doesn't display them yet.
 
 ## 📜 Custom Scripts
 

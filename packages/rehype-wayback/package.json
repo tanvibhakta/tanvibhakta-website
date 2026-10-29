@@ -1,21 +1,17 @@
 {
   "name": "rehype-wayback",
   "version": "0.1.0",
-  "description": "rehype plugin adding [archive] links to Wayback Machine snapshots, plus a Node API to find or create them",
+  "description": "Find or create Wayback Machine snapshots for the links in markdown documents",
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": "./index.js",
     "./sync": "./sync.js"
   },
   "files": [
-    "index.js",
     "sync.js",
     "lib/"
   ],
   "keywords": [
-    "rehype",
-    "rehype-plugin",
     "unified",
     "wayback-machine",
     "internet-archive",

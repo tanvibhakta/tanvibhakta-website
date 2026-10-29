@@ -1,8 +1,8 @@
 /**
- * Node-side half of rehype-wayback: finds (and, with archive.org keys,
- * creates) Wayback Machine snapshots for the links in a set of markdown
- * documents, keeping them in a `{ url: snapshotUrl }` map that the rehype
- * plugin renders from. Run it from a script or CI job, not during a build:
+ * Finds (and, with archive.org keys, creates) Wayback Machine snapshots for
+ * the links in a set of markdown documents, keeping them in a
+ * `{ url: snapshotUrl }` map for a site to render archive links from. Run it
+ * from a script or CI job, not during a build:
  * captures take seconds to minutes each and archive.org rate-limits.
  */
 import { unified } from "unified";

@@ -74,12 +74,6 @@ a:visited {
   margin-left: 0.15em;
   vertical-align: baseline;
 }
-/* The superscript "archive" link after an off-site link with a Wayback
-   snapshot, emitted by rehype-wayback (packages/rehype-wayback). */
-.archive-link {
-  white-space: nowrap;
-  font-size: 0.7em;
-}
 
 /* Galleries emitted by rehype-gallery (src/plugins/rehype-gallery.mjs). */
 .prose figure.gallery {

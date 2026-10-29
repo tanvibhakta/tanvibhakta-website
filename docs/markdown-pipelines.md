@@ -106,13 +106,13 @@ Telegram, and plain-text editors keep it.
 
 The same file is rendered by different parsers with different settings:
 
-| Renderer                               | Parser                     | Single newline           | Galleries | Anchors                  | External links                         |
-| -------------------------------------- | -------------------------- | ------------------------ | --------- | ------------------------ | -------------------------------------- |
-| Site pages                             | Astro remark/rehype + GFM  | `<br>` (`remark-breaks`) | yes       | yes, except poetry/notes | new tab + icon + superscript `archive` |
-| RSS feeds (`src/utils/feeds.ts`)       | `new MarkdownIt()` default | joined into one line     | no        | no                       | no                                     |
-| Titles (`src/utils/title-markdown.ts`) | markdown-it, inline subset | n/a                      | n/a       | n/a                      | n/a                                    |
-| Sveltia preview                        | Sveltia's own              | unverified               | no        | no                       | no                                     |
-| GitHub file view, VS Code preview      | GFM                        | joined                   | no        | no                       | no                                     |
+| Renderer                               | Parser                     | Single newline           | Galleries | Anchors                  | External links |
+| -------------------------------------- | -------------------------- | ------------------------ | --------- | ------------------------ | -------------- |
+| Site pages                             | Astro remark/rehype + GFM  | `<br>` (`remark-breaks`) | yes       | yes, except poetry/notes | new tab + icon |
+| RSS feeds (`src/utils/feeds.ts`)       | `new MarkdownIt()` default | joined into one line     | no        | no                       | no             |
+| Titles (`src/utils/title-markdown.ts`) | markdown-it, inline subset | n/a                      | n/a       | n/a                      | n/a            |
+| Sveltia preview                        | Sveltia's own              | unverified               | no        | no                       | no             |
+| GitHub file view, VS Code preview      | GFM                        | joined                   | no        | no                       | no             |
 
 ### Known rendering mismatches
 

@@ -87,18 +87,16 @@ rehype plugins (`.anchor-link`) belong in `src/styles/global.css`.
 
 ### Archive links
 
-- External links in markdown get a superscript "archive" link to a Wayback Machine
-  snapshot, rendered from `src/data/archive-links.json`. The build makes no
-  network calls.
-- The generic code is a workspace package, `packages/rehype-wayback` (rehype
-  plugin + `rehype-wayback/sync` Node API), meant to be publishable to npm
-  as-is. Keep it that way: it must not import anything from the site, and
-  site-specific choices go in options from `astro.config.mjs` or
-  `scripts/archive-links.ts`.
+- `src/data/archive-links.json` maps each external link in posts to a Wayback
+  Machine snapshot. Nothing renders it yet.
+- The generic code is a workspace package, `packages/rehype-wayback`
+  (`rehype-wayback/sync`, a Node API), meant to be publishable to npm as-is.
+  Keep it that way: it must not import anything from the site, and
+  site-specific choices go in options from `scripts/archive-links.ts`.
 - `pnpm archive` (`scripts/archive-links.ts`) is the site's wiring: post
   locations, frontmatter dates, and the `EXCLUDE` domain list (social media,
-  Goodreads, Spotify, Letterboxd, IMDb, login-walled). The Archive links GitHub Action runs it
-  on content pushes and weekly.
+  Goodreads, Spotify, Letterboxd, IMDb, login-walled). The Archive links
+  GitHub Action runs it on content pushes and weekly, and commits the JSON.
 
 ### Code Quality
 

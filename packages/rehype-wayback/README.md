@@ -1,18 +1,13 @@
 # rehype-wayback
 
-Fight link rot: add a bracketed link to a [Wayback Machine](https://web.archive.org)
-snapshot after each external link, so `[a post](https://example.com/post)`
-renders as "a post [archive]", with "archive" linking to the snapshot. The
-brackets come from a wrapping `<span class="archive-link">`.
+Fight link rot: find the [Wayback Machine](https://web.archive.org) snapshot
+of each link in a set of markdown documents, closest to the date you wrote
+about it, or ask Save Page Now to create one. The results are kept in a
+`{ url: snapshotUrl }` map you commit as JSON, so whatever renders your site
+can show archive links without touching the network. Run it from a script or
+a scheduled CI job.
 
-It comes in two halves, so builds never touch the network:
-
-- **`rehype-wayback/sync`** (Node) finds the snapshot of each link closest to
-  the date you wrote about it, or asks Save Page Now to create one, and keeps
-  the results in a `{ url: snapshotUrl }` map you commit as JSON. Run it from
-  a script or a scheduled CI job.
-- **`rehype-wayback`** (the rehype plugin) renders archive links from that
-  map.
+Rendering is not included yet: `rehype-wayback/sync` is the only entry point.
 
 ## Install
 
@@ -65,36 +60,7 @@ longer in any document (or is now excluded) are pruned.
 - `collectLinks(markdown)`, `shouldArchive(href, exclude)`,
   `archiveKey(href)`, `serializeArchives(archives)`, `SOCIAL_DOMAINS`.
 
-## Rendering
-
-```js
-import rehypeWayback from "rehype-wayback";
-import archives from "./archive-links.json" with { type: "json" };
-
-unified().use(rehypeWayback, {
-  archives,
-  properties: { target: "_blank", rel: ["noopener"] },
-  screenReaderText: " copy (opens in a new tab)",
-});
-```
-
-Options:
-
-- `archives` (required): the map from `rehype-wayback/sync`.
-- `label`: link text, default `"archive"`.
-- `tagName`: wrapping element, default `"span"`; `"sup"` for a superscript.
-- `className`: class on the wrapping element, default `"archive-link"`. Style
-  it `white-space: nowrap` so the brackets never split.
-- `brackets`: text around the link, default `["[", "]"]`; `false` for none.
-- `properties`: extra properties for the archive `<a>`.
-- `screenReaderText`: appended in a `.sr-only` span.
-- `test(link)`: which links get one; default: links with visible text, so
-  image-only links are skipped.
-
-Run it **after** plugins that add content to links (icons, screen-reader
-text); otherwise they decorate the archive links too.
-
 ## Why not an existing package
 
-No remark/rehype plugin found or created Wayback snapshots when this was
-written; the nearest tool was an Obsidian plugin.
+No unified/remark/rehype package found or created Wayback snapshots when this
+was written; the nearest tool was an Obsidian plugin.
