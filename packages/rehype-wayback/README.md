@@ -28,6 +28,7 @@ import {
 } from "rehype-wayback/sync";
 
 const archives = JSON.parse(await readFile("archive-links.json", "utf8"));
+const attempts = JSON.parse(await readFile("archive-attempts.json", "utf8"));
 
 // One entry per markdown document; `date` (YYYYMMDD) picks the snapshot
 // closest to when you linked it.
@@ -36,30 +37,70 @@ const links = gatherLinks(
   { exclude: [...SOCIAL_DOMAINS, "my-own-site.com"] },
 );
 
-await updateArchives(archives, links, {
+const result = await updateArchives(archives, links, {
+  attempts,
   // Optional: archive.org → account → S3 API keys. Without them, only
   // existing snapshots are recorded.
   keys: { access: process.env.IA_ACCESS, secret: process.env.IA_SECRET },
-  onChange: (a) => writeFile("archive-links.json", serializeArchives(a)),
+  deadline: Date.now() + 60 * 60 * 1000,
+  onChange: async (a, t) => {
+    await writeFile("archive-links.json", serializeArchives(a));
+    await writeFile("archive-attempts.json", serializeArchives(t));
+  },
   log: console.log,
 });
+if (result.authFailed) throw new Error("archive.org rejected the keys");
 ```
 
 Links already in the map are never looked up again. Entries whose link is no
-longer in any document (or is now excluded) are pruned.
+longer in any document (or is now excluded) are pruned, from both maps.
+
+Failed captures are recorded in `attempts` (`{ failures, firstFailed,
+lastTried, lastError }` per link). Each run visits never-attempted links
+first, then the least recently tried, so links a site always refuses can't use
+up every run's captures. After `slowAfter` failures a link is captured at most
+once per `slowIntervalDays`; its (cheap) lookup still runs every time, and its
+entry is removed as soon as a snapshot exists.
 
 ### API
 
 - `gatherLinks(documents, { exclude })` → `Map<url, date>` of archivable
-  links: every absolute http(s) link (inline, reference, autolink, GFM bare
-  URL) not on an excluded domain (subdomains included) or an archive site.
-- `updateArchives(archives, links, options)` → `{ added, pruned, missing }`.
-  Options: `keys`, `paceMs` (default 1000, between requests),
-  `maxCaptures` (default 25 per run), `onChange`, `log`, `fetch`.
-- `findSnapshot(url, date?)`: closest snapshot via the availability API.
-- `capture(url, keys)`: Save Page Now capture, polled to completion.
+  links: every absolute http(s) link that renders as one (inline, used
+  reference, autolink, GFM bare URL; not unused reference definitions) and is
+  not on an excluded domain (subdomains included) or an archive site.
+- `updateArchives(archives, links, options)` → `{ added, pruned, missing,
+deferred, requests, requestErrors, authFailed }`. `deferred` lists links
+  left unvisited when `deadline` passed; `requestErrors` counts requests that
+  failed outright (network, timeout, HTTP error) as opposed to finding no
+  snapshot, and `authFailed` is set by any 401/403, so a caller can tell an
+  outage or bad keys from ordinary misses. Options:
+  - `attempts`: the attempts map, mutated in place.
+  - `keys`: archive.org S3 keys; without them nothing is captured.
+  - `maxCaptures` (default 25): capture attempts per run, failures included.
+  - `slowAfter` (default 5), `slowIntervalDays` (default 30).
+  - `deadline` (epoch ms): no new link is started after it.
+  - `paceMs` (default 1000): pause between links.
+  - `requestTimeoutMs` (default 30000): abort a request after this long.
+  - `retryAfterMs` (default 60000): wait before retrying a 429 once.
+  - `pollMs` (default 5000), `captureTimeoutMs` (default 180000): how often
+    and how long to wait for a capture.
+  - `onChange(archives, attempts)`, `log(line)`, `fetch`, `now`.
+- `findSnapshot(url, date?, options?)`: closest snapshot via the availability
+  API. `capture(url, keys, options?)`: Save Page Now capture, polled to
+  completion; `null` if it doesn't finish in time. Both take `fetch`,
+  `requestTimeoutMs`, `retryAfterMs`, and throw `RequestError` (with the HTTP
+  `status`, if any) when a request fails.
 - `collectLinks(markdown)`, `shouldArchive(href, exclude)`,
-  `archiveKey(href)`, `serializeArchives(archives)`, `SOCIAL_DOMAINS`.
+  `archiveKey(href)`, `serializeArchives(map)`, `SOCIAL_DOMAINS`.
+
+### URL keys
+
+Links are recorded under `archiveKey(href)`: the fragment is dropped and the
+host lowercased, so `https://Example.com/a#b` and `https://example.com/a`
+share a snapshot. `http` and `https`, `www.` and bare hosts, and URLs that
+differ only in query string (tracking parameters included) stay distinct on
+purpose: stripping them could merge genuinely different pages. The cost is
+the occasional duplicate lookup.
 
 ## Attaching snapshots to links
 
@@ -84,4 +125,8 @@ dropped, host lowercased).
 ## Why not an existing package
 
 No unified/remark/rehype package found or created Wayback snapshots when this
-was written; the nearest tool was an Obsidian plugin.
+was written. The closest tool,
+[archive-md-urls](https://github.com/sbaack/archive-md-urls), scans Markdown
+and picks the snapshot nearest each file's date, but rewrites the links in the
+Markdown itself; this package keeps the source untouched, records snapshots in
+a separate map, and creates ones that don't exist.

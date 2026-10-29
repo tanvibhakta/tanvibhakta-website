@@ -2,6 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 import {
   archiveKey,
   capture,
+  RequestError,
   collectLinks,
   findSnapshot,
   gatherLinks,
@@ -10,6 +11,7 @@ import {
   SOCIAL_DOMAINS,
   updateArchives,
   type ArchiveMap,
+  type AttemptMap,
 } from "../sync.js";
 
 describe("archiveKey", () => {
@@ -66,6 +68,20 @@ describe("collectLinks", () => {
   });
 });
 
+test("collectLinks skips reference definitions nothing uses", () => {
+  const md = [
+    "[used][u] and [Case Insensitive][CI]",
+    "",
+    "[u]: https://used.com/",
+    "[unused]: https://unused.com/",
+    "[ci]: https://ci.com/",
+  ].join("\n");
+  expect(collectLinks(md).sort()).toEqual([
+    "https://ci.com/",
+    "https://used.com/",
+  ]);
+});
+
 describe("gatherLinks", () => {
   test("keeps archivable links with the earliest linking date", () => {
     const links = gatherLinks(
@@ -114,7 +130,7 @@ describe("findSnapshot", () => {
     const f = fakeFetch([
       [/available/, available("http://web.archive.org/web/20220101/a.com")],
     ]);
-    expect(await findSnapshot("https://a.com/", "20220101", f)).toBe(
+    expect(await findSnapshot("https://a.com/", "20220101", { fetch: f })).toBe(
       "https://web.archive.org/web/20220101/a.com",
     );
     const asked = new URL(String(f.mock.calls[0][0]));
@@ -123,11 +139,11 @@ describe("findSnapshot", () => {
   });
   test("ignores error-page captures", async () => {
     const f = fakeFetch([[/available/, available("http://x", "404")]]);
-    expect(await findSnapshot("https://a.com/", "", f)).toBeNull();
+    expect(await findSnapshot("https://a.com/", "", { fetch: f })).toBeNull();
   });
   test("returns null when nothing is archived", async () => {
     const f = fakeFetch([[/available/, none]]);
-    expect(await findSnapshot("https://a.com/", "", f)).toBeNull();
+    expect(await findSnapshot("https://a.com/", "", { fetch: f })).toBeNull();
   });
 });
 
@@ -199,6 +215,10 @@ describe("updateArchives", () => {
       added: 1,
       pruned: 1,
       missing: ["https://unarchived.com/"],
+      deferred: [],
+      requests: 2,
+      requestErrors: 0,
+      authFailed: false,
     });
     // known.com was never looked up.
     expect(f).toHaveBeenCalledTimes(2);
@@ -244,6 +264,245 @@ describe("updateArchives", () => {
       log,
     });
     expect(result.missing).toEqual(["https://a.com/"]);
-    expect(log).toHaveBeenCalledWith("✗ https://a.com/: offline");
+    expect(log).toHaveBeenCalledWith(
+      expect.stringMatching(/^✗ https:\/\/a\.com\/: offline/),
+    );
+    expect(result).toMatchObject({ requests: 1, requestErrors: 1 });
+  });
+});
+
+/** A fetch stub that answers each call with the next of `responses`. */
+function sequence(...responses: (() => Response | Promise<Response>)[]) {
+  let i = 0;
+  return vi.fn(async () =>
+    responses[Math.min(i++, responses.length - 1)](),
+  ) as unknown as typeof fetch & ReturnType<typeof vi.fn>;
+}
+
+describe("requests", () => {
+  test("a 429 is retried once after retryAfterMs", async () => {
+    const f = sequence(
+      () => new Response("slow down", { status: 429 }),
+      () => Response.json(available("http://web.archive.org/web/1/a")),
+    );
+    expect(
+      await findSnapshot("https://a.com/", "", { fetch: f, retryAfterMs: 0 }),
+    ).toBe("https://web.archive.org/web/1/a");
+    expect(f).toHaveBeenCalledTimes(2);
+  });
+
+  test("a hung request is aborted after requestTimeoutMs", async () => {
+    const f = vi.fn(
+      (_url: unknown, init?: RequestInit) =>
+        new Promise<Response>((_, reject) =>
+          init?.signal?.addEventListener("abort", () =>
+            reject(init.signal?.reason),
+          ),
+        ),
+    ) as unknown as typeof fetch;
+    const error = await findSnapshot("https://a.com/", "", {
+      fetch: f,
+      requestTimeoutMs: 10,
+    }).catch((e) => e);
+    expect(error).toBeInstanceOf(RequestError);
+    expect(error.status).toBeUndefined();
+  });
+
+  test("HTTP errors carry their status and count toward stats", async () => {
+    const stats = { requests: 0, requestErrors: 0, authFailed: false };
+    const f = sequence(() => new Response("no", { status: 401 }));
+    const error = await findSnapshot("https://a.com/", "", {
+      fetch: f,
+      stats,
+    }).catch((e) => e);
+    expect(error).toBeInstanceOf(RequestError);
+    expect(error.status).toBe(401);
+    expect(stats).toEqual({ requests: 1, requestErrors: 1, authFailed: true });
+  });
+
+  test("a capture that never finishes returns null", async () => {
+    const f = fakeFetch([
+      [/\/save\/status\//, { status: "pending" }],
+      [/\/save$/, { job_id: "j" }],
+    ]);
+    expect(
+      await capture(
+        "https://a.com/",
+        { access: "a", secret: "s" },
+        { fetch: f, pollMs: 1, timeoutMs: 3 },
+      ),
+    ).toBeNull();
+  });
+});
+
+describe("updateArchives attempts", () => {
+  const keys = { access: "a", secret: "s" };
+  const DAY = 24 * 60 * 60 * 1000;
+  const NOW = Date.parse("2026-10-29T00:00:00Z");
+  const iso = (ms: number) => new Date(ms).toISOString();
+  /** No snapshots anywhere; every capture is refused. */
+  const refusing = () =>
+    fakeFetch([
+      [/available/, none],
+      [/\/save\/status\//, { status: "error", message: "blocked" }],
+      [/\/save$/, { job_id: "j" }],
+    ]);
+  const captured = (f: ReturnType<typeof refusing>) =>
+    f.mock.calls
+      .filter(
+        ([, init]) => (init as RequestInit | undefined)?.method === "POST",
+      )
+      .map(([, init]) =>
+        new URLSearchParams(String((init as RequestInit).body)).get("url"),
+      );
+
+  test("tries never-attempted links first, then the least recently tried", async () => {
+    const attempts: AttemptMap = {
+      "https://recent.com/": {
+        failures: 1,
+        firstFailed: iso(NOW - DAY),
+        lastTried: iso(NOW - DAY),
+        lastError: "x",
+      },
+      "https://old.com/": {
+        failures: 1,
+        firstFailed: iso(NOW - 9 * DAY),
+        lastTried: iso(NOW - 9 * DAY),
+        lastError: "x",
+      },
+    };
+    const f = refusing();
+    await updateArchives(
+      {},
+      new Map([
+        ["https://recent.com/", ""],
+        ["https://old.com/", ""],
+        ["https://new.com/", ""],
+      ]),
+      {
+        attempts,
+        keys,
+        fetch: f,
+        paceMs: 0,
+        pollMs: 0,
+        now: () => NOW,
+        maxCaptures: 2,
+      },
+    );
+    expect(captured(f)).toEqual(["https://new.com/", "https://old.com/"]);
+  });
+
+  test("records failures and clears the entry once a snapshot exists", async () => {
+    const attempts: AttemptMap = {};
+    const links = new Map([["https://a.com/", ""]]);
+    const onChange = vi.fn(async () => {});
+    await updateArchives({}, links, {
+      attempts,
+      keys,
+      fetch: refusing(),
+      paceMs: 0,
+      pollMs: 0,
+      now: () => NOW,
+      onChange,
+    });
+    expect(attempts["https://a.com/"]).toEqual({
+      failures: 1,
+      firstFailed: iso(NOW),
+      lastTried: iso(NOW),
+      lastError: "blocked",
+    });
+    expect(onChange).toHaveBeenCalledWith({}, attempts);
+
+    await updateArchives({}, links, {
+      attempts,
+      keys,
+      fetch: refusing(),
+      paceMs: 0,
+      pollMs: 0,
+      now: () => NOW + DAY,
+    });
+    expect(attempts["https://a.com/"]).toMatchObject({
+      failures: 2,
+      firstFailed: iso(NOW),
+      lastTried: iso(NOW + DAY),
+    });
+
+    const archives: ArchiveMap = {};
+    const found = fakeFetch([
+      [/available/, available("https://web.archive.org/web/1/a")],
+    ]);
+    await updateArchives(archives, links, {
+      attempts,
+      keys,
+      fetch: found,
+      paceMs: 0,
+    });
+    expect(archives["https://a.com/"]).toBe("https://web.archive.org/web/1/a");
+    expect(attempts).toEqual({});
+  });
+
+  test("a link failing slowAfter times rests for slowIntervalDays, but is still looked up", async () => {
+    const attempts: AttemptMap = {
+      "https://a.com/": {
+        failures: 3,
+        firstFailed: iso(NOW - 40 * DAY),
+        lastTried: iso(NOW - 5 * DAY),
+        lastError: "x",
+      },
+    };
+    const links = new Map([["https://a.com/", ""]]);
+    const opts = {
+      attempts,
+      keys,
+      paceMs: 0,
+      pollMs: 0,
+      slowAfter: 3,
+      slowIntervalDays: 7,
+    };
+    const resting = refusing();
+    await updateArchives({}, links, {
+      ...opts,
+      fetch: resting,
+      now: () => NOW,
+    });
+    expect(captured(resting)).toEqual([]);
+    expect(resting).toHaveBeenCalledTimes(1); // the lookup
+
+    const due = refusing();
+    await updateArchives({}, links, {
+      ...opts,
+      fetch: due,
+      now: () => NOW + 3 * DAY,
+    });
+    expect(captured(due)).toEqual(["https://a.com/"]);
+  });
+
+  test("prunes attempts for links no longer linked", async () => {
+    const attempts: AttemptMap = {
+      "https://gone.com/": {
+        failures: 1,
+        firstFailed: iso(NOW),
+        lastTried: iso(NOW),
+        lastError: "x",
+      },
+    };
+    await updateArchives({}, new Map(), { attempts, paceMs: 0 });
+    expect(attempts).toEqual({});
+  });
+
+  test("links left when the deadline passes are deferred, not visited", async () => {
+    let t = 0;
+    const f = fakeFetch([[/available/, none]]);
+    const result = await updateArchives(
+      {},
+      new Map([
+        ["https://a.com/", ""],
+        ["https://b.com/", ""],
+        ["https://c.com/", ""],
+      ]),
+      { fetch: f, paceMs: 0, deadline: 2, now: () => t++ },
+    );
+    expect(result.missing).toEqual(["https://a.com/", "https://b.com/"]);
+    expect(result.deferred).toEqual(["https://c.com/"]);
   });
 });

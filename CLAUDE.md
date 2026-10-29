@@ -96,9 +96,13 @@ rehype plugins (`.anchor-link`) belong in `src/styles/global.css`.
   import anything from the site, and site-specific choices go in options
   from `astro.config.mjs` or `scripts/archive-links.ts`.
 - `pnpm archive` (`scripts/archive-links.ts`) is the site's wiring: post
-  locations, frontmatter dates, and the `EXCLUDE` domain list (social media,
-  Goodreads, Spotify, Letterboxd, IMDb, login-walled). The Archive links
-  GitHub Action runs it on content pushes and weekly, and commits the JSON.
+  locations, frontmatter dates, drafts skipped, the `EXCLUDE` domain list
+  (social media, Goodreads, Spotify, Letterboxd, IMDb, login-walled), and the
+  tuning constants (retry slow-down, run budget, outage threshold). The
+  Archive links GitHub Action runs it on content pushes and weekly, and
+  commits the JSON plus `src/data/archive-attempts.json` (failed captures,
+  retried less often). The run fails when archive.org looks down or rejects
+  the keys, after committing what it got.
 
 ### Code Quality
 

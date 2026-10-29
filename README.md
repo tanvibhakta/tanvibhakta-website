@@ -53,13 +53,17 @@ Relative paths work in both dev and production. The link checker validates them 
 
 **Archive links:** the Archive links GitHub Action runs `pnpm archive` after
 each content push and weekly. It records a Wayback Machine snapshot for every
-external link in posts in `src/data/archive-links.json` and commits it, except
-social media, Goodreads, Spotify, Letterboxd and IMDb (the list is `EXCLUDE`
-in `scripts/archive-links.ts`). Creating snapshots that don't exist yet needs
-the `ARCHIVE_ORG_ACCESS_KEY` / `ARCHIVE_ORG_SECRET_KEY` repository secrets
+external link in published posts (drafts wait until they're published) in
+`src/data/archive-links.json` and commits it, except social media, Goodreads,
+Spotify, Letterboxd and IMDb (the list is `EXCLUDE` in
+`scripts/archive-links.ts`). Creating snapshots that don't exist yet needs the
+`ARCHIVE_ORG_ACCESS_KEY` / `ARCHIVE_ORG_SECRET_KEY` repository secrets
 (archive.org → account → S3 API keys); without them only existing snapshots
-are recorded. The build adds each snapshot to its link as an invisible
-`data-archive` attribute; nothing displays them yet.
+are recorded. Links whose capture keeps failing are listed, with their last
+error, in `src/data/archive-attempts.json` and retried less often. The run
+goes red when archive.org looks down or rejects the keys. The build adds each
+snapshot to its link as an invisible `data-archive` attribute; nothing
+displays them yet.
 
 ## 📜 Custom Scripts
 
