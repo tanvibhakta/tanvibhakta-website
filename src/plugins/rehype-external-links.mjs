@@ -7,9 +7,13 @@
  * mailto:/tel:, and absolute links back to `site` (with or without `www.`, on
  * either scheme) stay internal and keep same-tab behaviour.
  *
- * The icon must never wrap onto a line by itself, so the link's last word and
- * the icon are wrapped together in a no-wrap span. Links with no text (an
- * image link) get no icon, only the screen-reader text.
+ * The icon must never wrap onto a line by itself, so the link's last
+ * character and the icon are wrapped together in a no-wrap span. Only the
+ * last character, not the last word: a no-wrap span around a whole bare URL
+ * stops `.prose`'s overflow-wrap from breaking it, and one such URL widens
+ * the page past a phone's screen. A word that fits never breaks inside, so
+ * the icon still stays with its word. Links with no text (an image link) get
+ * no icon, only the screen-reader text.
  *
  * Why not the `rehype-external-links` package: it can add target/rel and
  * append content to a link, but can't wrap the last word with the icon, so
@@ -91,6 +95,8 @@ const ICON = {
   ],
 };
 
+const GRAPHEMES = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+
 /** @param {string} host */
 function bareHost(host) {
   return host.toLowerCase().replace(/^www\./, "");
@@ -117,13 +123,13 @@ function hasText(node) {
 }
 
 /**
- * Wraps the last word of `node`'s text together with `icon` in a no-wrap
+ * Wraps the last character of `node`'s text together with `icon` in a no-wrap
  * span, descending into trailing inline elements (`<em>`, `<code>`) so the
  * icon sits right after the final visible character.
  */
 function appendToLastWord(node, icon) {
   const children = node.children;
-  // Skip trailing whitespace-only text so "link " still finds "link".
+  // Skip trailing whitespace-only text so "link " still finds "k".
   let i = children.length - 1;
   while (
     i >= 0 &&
@@ -148,7 +154,9 @@ function appendToLastWord(node, icon) {
 
   if (last?.type === "text") {
     const text = last.value.trimEnd();
-    const cut = text.search(/\S+$/);
+    // Last grapheme, so an emoji or accented letter isn't split apart.
+    const graphemes = [...GRAPHEMES.segment(text)];
+    const cut = graphemes.at(-1).index;
     const before = text.slice(0, cut);
     tail.children.push({ type: "text", value: text.slice(cut) }, icon);
     children.splice(

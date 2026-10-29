@@ -14,8 +14,9 @@ const { title } = Astro.props;
   class="min-w-screen min-h-screen flex flex-col items-center text-stone-800 bg-stone-100"
 >
   <Nav />
+  <!-- Phone-width cap: see the matching comment in ProseLayout.astro. -->
   <main
-    class="mx-8 md:w-1/2 leading-6 pb-8 mt-6 md:mt-8 prose md:prose-lg prose-stone prose-headings:font-literata prose-headings:font-bold"
+    class="mx-8 max-md:max-w-[calc(100%-4rem)] md:w-1/2 leading-6 pb-8 mt-6 md:mt-8 prose md:prose-lg prose-stone prose-headings:font-literata prose-headings:font-bold"
   >
     <slot />
   </main>

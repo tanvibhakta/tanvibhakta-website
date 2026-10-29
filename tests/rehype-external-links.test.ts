@@ -56,7 +56,7 @@ describe("rehypeExternalLinks", () => {
     const a = link(href);
     expect(a.properties.target).toBe("_blank");
     expect(a.properties.rel).toEqual(["noopener"]);
-    expect(inner(a)).toBe(`a <span.external-link-tail>page[icon]</span>${SR}`);
+    expect(inner(a)).toBe(`a pag<span.external-link-tail>e[icon]</span>${SR}`);
   });
 
   test.each([
@@ -75,15 +75,31 @@ describe("rehypeExternalLinks", () => {
     expect(inner(a)).toBe("a page");
   });
 
-  test("a single-word link is wholly inside the tail", () => {
-    expect(inner(link("https://x.com", [text("docs")]))).toBe(
-      `<span.external-link-tail>docs[icon]</span>${SR}`,
+  test("only the last character is glued, so a bare URL can still break", () => {
+    // A no-wrap span around a whole URL would stop overflow-wrap from
+    // breaking it, and one long URL would widen the page on phones.
+    expect(
+      inner(link("https://x.com", [text("https://x.com/a/very/long/path")])),
+    ).toBe(
+      `https://x.com/a/very/long/pat<span.external-link-tail>h[icon]</span>${SR}`,
     );
   });
 
-  test("ignores trailing whitespace when finding the last word", () => {
+  test("a single-character link is wholly inside the tail", () => {
+    expect(inner(link("https://x.com", [text("x")]))).toBe(
+      `<span.external-link-tail>x[icon]</span>${SR}`,
+    );
+  });
+
+  test("keeps a multi-codepoint emoji whole", () => {
+    expect(inner(link("https://x.com", [text("hi 👩🏽‍💻")]))).toBe(
+      `hi <span.external-link-tail>👩🏽‍💻[icon]</span>${SR}`,
+    );
+  });
+
+  test("ignores trailing whitespace when finding the last character", () => {
     expect(inner(link("https://x.com", [text("the docs "), text(" ")]))).toBe(
-      `the <span.external-link-tail>docs[icon]</span>${SR}`,
+      `the doc<span.external-link-tail>s[icon]</span>${SR}`,
     );
   });
 
@@ -93,7 +109,7 @@ describe("rehypeExternalLinks", () => {
       elem("em", {}, [text("the docs")]),
     ]);
     expect(inner(a)).toBe(
-      `see <em>the <span.external-link-tail>docs[icon]</span></em>${SR}`,
+      `see <em>the doc<span.external-link-tail>s[icon]</span></em>${SR}`,
     );
   });
 

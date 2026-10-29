@@ -63,7 +63,7 @@ a:visited {
 
 /* Off-site links, emitted by rehype-external-links
    (src/plugins/rehype-external-links.mjs). The tail span keeps the icon glued
-   to the link's last word so it never wraps onto a line alone. */
+   to the link's last character so it never wraps onto a line alone. */
 .external-link-tail {
   white-space: nowrap;
 }

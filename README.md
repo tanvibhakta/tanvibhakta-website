@@ -29,10 +29,11 @@ Pre-commit hook runs automatically:
 
 ## 🧪 Tests
 
-| Test                  | What it does                                                          |
-| :-------------------- | :-------------------------------------------------------------------- |
-| `linkChecker.test.ts` | Builds site, validates all internal links resolve to existing files   |
-| `feeds.test.ts`       | Tests RSS feed config, collection exclusions, markdown→HTML rendering |
+| Test                                    | What it does                                                                                                                                                         |
+| :-------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `linkChecker.test.ts`                   | Builds site, validates all internal links resolve to existing files                                                                                                  |
+| `feeds.test.ts`                         | Tests RSS feed config, collection exclusions, markdown→HTML rendering                                                                                                |
+| `horizontal-scroll.integration.test.ts` | Loads every built page in headless Chromium at 375px and 1280px; fails if any page scrolls sideways. Needs `pnpm exec playwright install --only-shell chromium` once |
 
 ## ✍️ Writing Content
 

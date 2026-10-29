@@ -25,4 +25,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      # tests/horizontal-scroll.integration.test.ts measures layout in a real
+      # browser; only the headless shell is needed.
+      - run: pnpm exec playwright install --with-deps --only-shell chromium
+
       - run: pnpm check
