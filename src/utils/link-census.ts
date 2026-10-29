@@ -71,12 +71,11 @@ export function classifyLink(
 export type LinkSource = { href: string; body: string };
 
 export type TargetCount = { target: string; count: number };
-export type DomainCount = TargetCount & { urls: TargetCount[] };
+export type OutgoingLink = Extract<ClassifiedLink, { kind: "outgoing" }>;
 
 export type LinkCensus = {
-  total: number;
   internal: TargetCount[];
-  outgoing: DomainCount[];
+  outgoing: OutgoingLink[];
 };
 
 // Most-linked first; ties broken alphabetically so the page is stable.
@@ -93,10 +92,10 @@ function tally(targets: string[]): TargetCount[] {
     .sort(byCount);
 }
 
-/** Count and rank every link across a set of pages. */
+/** Every link across a set of pages: internal ones counted, outgoing raw. */
 export function buildLinkCensus(pages: LinkSource[]): LinkCensus {
   const internal: string[] = [];
-  const outgoing: { target: string; domain: string }[] = [];
+  const outgoing: OutgoingLink[] = [];
 
   for (const page of pages) {
     for (const href of extractLinks(page.body)) {
@@ -107,14 +106,86 @@ export function buildLinkCensus(pages: LinkSource[]): LinkCensus {
     }
   }
 
-  return {
-    total: internal.length + outgoing.length,
-    internal: tally(internal),
-    outgoing: tally(outgoing.map((l) => l.domain)).map((domain) => ({
-      ...domain,
-      urls: tally(
-        outgoing.filter((l) => l.domain === domain.target).map((l) => l.target),
-      ),
-    })),
+  return { internal: tally(internal), outgoing };
+}
+
+/** src/data/people.json: a person and the sites that are theirs. */
+export type Person = { name: string; sites: string[] };
+/** src/data/platforms.json: section heading → the domains filed under it. */
+export type Platforms = Record<string, string[]>;
+
+/** A ranked row: a person, platform or site, and the URLs behind it. */
+export type LinkGroup = { label: string; count: number; urls: TargetCount[] };
+export type LinkSection = { heading: string; groups: LinkGroup[] };
+
+export const PEOPLE_HEADING = "People";
+export const OTHER_HEADING = "Blogs & Publications";
+
+/**
+ * A site is a bare domain ("ankursethi.com", which also covers its
+ * subdomains) or a domain plus path ("instagram.com/barkwhip") for a profile
+ * on a shared platform, which covers that path and everything under it.
+ */
+export function matchesSite(link: OutgoingLink, site: string): boolean {
+  const [host, ...rest] = site
+    .toLowerCase()
+    .replace(/^www\./, "")
+    .split("/");
+  const domain = link.domain.toLowerCase();
+  if (domain !== host && !domain.endsWith(`.${host}`)) return false;
+  const path = rest.filter(Boolean).join("/");
+  if (!path) return true;
+  const linkPath = new URL(link.target).pathname.toLowerCase();
+  return linkPath === `/${path}` || linkPath.startsWith(`/${path}/`);
+}
+
+/**
+ * File each outgoing link under a person (people.json wins, so a friend's
+ * Instagram is theirs, not Instagram's), else a platform section
+ * (platforms.json), else Blogs & Publications grouped by its own domain.
+ * Sections come back People, Blogs & Publications, then platforms.json order.
+ */
+export function groupOutgoing(
+  links: OutgoingLink[],
+  people: Person[],
+  platforms: Platforms,
+): LinkSection[] {
+  const sections = new Map<string, Map<string, string[]>>(
+    [PEOPLE_HEADING, OTHER_HEADING, ...Object.keys(platforms)].map((h) => [
+      h,
+      new Map(),
+    ]),
+  );
+  const file = (heading: string, label: string, url: string) => {
+    const groups = sections.get(heading)!;
+    groups.set(label, [...(groups.get(label) ?? []), url]);
   };
+
+  for (const link of links) {
+    const person = people.find((p) =>
+      p.sites.some((s) => matchesSite(link, s)),
+    );
+    if (person) {
+      file(PEOPLE_HEADING, person.name, link.target);
+      continue;
+    }
+    const platform = Object.entries(platforms)
+      .flatMap(([heading, domains]) =>
+        domains.map((domain) => ({ heading, domain })),
+      )
+      .find(({ domain }) => matchesSite(link, domain));
+    if (platform) file(platform.heading, platform.domain, link.target);
+    else file(OTHER_HEADING, link.domain, link.target);
+  }
+
+  return [...sections].map(([heading, groups]) => ({
+    heading,
+    groups: [...groups]
+      .map(([label, urls]) => ({
+        label,
+        count: urls.length,
+        urls: tally(urls),
+      }))
+      .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label)),
+  }));
 }

@@ -85,6 +85,17 @@ rehype plugins (`.anchor-link`) belong in `src/styles/global.css`.
   `posts/notes/images/` (albums → one gallery note). Design:
   `docs/plans/2026-10-05-telegram-photo-notes-design.md`.
 
+### Stats page
+
+- `/stats` counts every link in published posts' and pages' markdown at
+  build time (`src/utils/link-census.ts`).
+- Outgoing links are filed by two hand-maintained files: `src/data/people.json`
+  (a name and the sites that are theirs) wins first, then
+  `src/data/platforms.json` (section heading → domains, e.g. Aggregators,
+  References); everything else lands under Blogs & Publications.
+- A site is `domain` (covers subdomains) or `domain/path` (a profile on a
+  shared platform, e.g. `instagram.com/<handle>`).
+
 ### Code Quality
 
 - ESLint with TypeScript support configured in `eslint.config.js`
