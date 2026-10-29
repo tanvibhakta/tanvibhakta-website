@@ -97,7 +97,13 @@ beforeAll(async () => {
   }
   server = await serveDist();
   baseUrl = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
-  browser = await chromium.launch();
+  // PLAYWRIGHT_CHROMIUM_PATH points at a Chromium already on the machine, for
+  // environments that ship their own and can't run `playwright install`
+  // (e.g. cloud agent sandboxes whose browser build doesn't match this
+  // Playwright version). Unset, Playwright uses the browser it installed.
+  browser = await chromium.launch({
+    executablePath: process.env.PLAYWRIGHT_CHROMIUM_PATH || undefined,
+  });
 }, 120000);
 
 afterAll(async () => {
