@@ -1,7 +1,15 @@
 import ProseLayout from "../layouts/ProseLayout.astro";
 import { STANDALONE_PAGES } from "../content.config";
 
-<ProseLayout frontmatter={STANDALONE_PAGES.work}>
+export const page = {
+  // Dates mirror the `pages` collection's frontmatter: bump lastUpdatedOn
+  // by hand for content edits, not reformatting.
+  ...STANDALONE_PAGES.work,
+  publishedOn: new Date("2025-05-27"),
+  lastUpdatedOn: new Date("2025-07-23"),
+};
+
+<ProseLayout frontmatter={page} showLastUpdatedOn>
 
 <div class="text-sm">
   If you're on this page, you might be interested in my

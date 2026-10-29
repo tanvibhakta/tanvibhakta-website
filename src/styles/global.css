@@ -61,6 +61,20 @@ a:visited {
   filter: none;
 }
 
+/* Off-site links, emitted by rehype-external-links
+   (src/plugins/rehype-external-links.mjs). The tail span keeps the icon glued
+   to the link's last character so it never wraps onto a line alone. */
+.external-link-tail {
+  white-space: nowrap;
+}
+.external-link-icon {
+  display: inline;
+  width: 0.7em;
+  height: 0.7em;
+  margin-left: 0.15em;
+  vertical-align: baseline;
+}
+
 /* Galleries emitted by rehype-gallery (src/plugins/rehype-gallery.mjs). */
 .prose figure.gallery {
   display: grid;

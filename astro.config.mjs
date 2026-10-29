@@ -11,10 +11,13 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { rehypeAnchors } from "./src/plugins/rehype-anchors.mjs";
 import { rehypeGallery } from "./src/plugins/rehype-gallery.mjs";
+import { rehypeExternalLinks } from "./src/plugins/rehype-external-links.mjs";
+
+const site = "https://tanvibhakta.in";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://tanvibhakta.in",
+  site,
 
   image: {
     // Responsive markdown images: srcset + sizes + lazy loading for every
@@ -63,6 +66,8 @@ export default defineConfig({
             /[\\/]posts[\\/](poetry|notes)[\\/]/.test(file?.path ?? ""),
         },
       ],
+      // Off-site links open in a new tab and carry an icon saying so.
+      [rehypeExternalLinks, { site }],
     ],
   },
 

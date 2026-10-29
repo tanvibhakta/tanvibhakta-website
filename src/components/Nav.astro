@@ -27,7 +27,17 @@ const items: Section[] =
     >
       {
         items.map((item) => (
-          <li>
+          <li
+            class:list={[
+              // The off-nav section leads on wider screens; on phones it gets
+              // its own row below the main nav. w-0 keeps its label out of
+              // the nav's intrinsic width, so the main row wraps the same as
+              // on pages without an extra item.
+              item === current &&
+                !inMainNav &&
+                "max-sm:order-last max-sm:basis-full max-sm:w-0 max-sm:min-w-0 max-sm:text-right max-sm:whitespace-nowrap",
+            ]}
+          >
             <a
               href={item.href}
               aria-current={current?.href === item.href ? "page" : undefined}
