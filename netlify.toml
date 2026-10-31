@@ -1,5 +1,10 @@
+# Delete Astro's content cache before every build. Netlify keeps node_modules
+# between builds, and Astro reuses a post's rendered HTML until the post's
+# text changes — so a change to a markdown plugin never reached posts that
+# didn't change, and production served stale markup that CI's clean build
+# (and its tests) never saw. A clean build of every page takes ~12s.
 [build]
-  command = "pnpm run build"
+  command = "rm -rf node_modules/.astro && pnpm run build"
   publish = "dist"
 
 [build.environment]
