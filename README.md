@@ -16,6 +16,7 @@ All commands are run from the root of the project, from a terminal:
 | `pnpm preview`      | Preview your build locally, before deploying            |
 | `pnpm test`         | Run tests with Vitest                                   |
 | `pnpm img <file>`   | Optimize an image for posts (≤3000px WebP, no metadata) |
+| `pnpm archive`      | Record Wayback Machine snapshots for links in posts     |
 | `pnpm astro ...`    | Run CLI commands like `astro add`, `astro check`        |
 | `pnpm astro --help` | Get help using the Astro CLI                            |
 
@@ -49,6 +50,25 @@ Pre-commit hook runs automatically:
 ```
 
 Relative paths work in both dev and production. The link checker validates them on every commit.
+
+**Archive links:** the Archive links GitHub Action runs `pnpm archive` after
+each content push and weekly. It records a Wayback Machine snapshot for every
+external link in published posts (drafts wait until they're published) in
+`src/data/archive-links.json` and commits it, except social media, Goodreads,
+Spotify, Letterboxd and IMDb (the list is `EXCLUDE` in
+`scripts/archive-links.ts`). Creating snapshots that don't exist yet needs the
+`ARCHIVE_ORG_ACCESS_KEY` / `ARCHIVE_ORG_SECRET_KEY` repository secrets
+(archive.org → account → S3 API keys); without them only existing snapshots
+are recorded. Links whose capture keeps failing are listed, with their last
+error, in `src/data/archive-attempts.json` and retried less often. In the
+Action, missing keys fail the run before it starts, and keys archive.org
+rejects fail it after it saves; any other failed request is a warning on the
+run. Both files are saved after every change, so a run stopped partway keeps
+its progress. The build adds each
+snapshot to its link as an invisible `data-archive` attribute; nothing
+displays them yet. Each run ends with a timing summary of its archive.org
+requests. Flags: `pnpm archive --sample N` (a random N links; never prunes
+entries outside the sample), `--max-captures N`, `--request-timeout-ms N`.
 
 ## 📜 Custom Scripts
 
