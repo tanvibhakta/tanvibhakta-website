@@ -254,7 +254,14 @@ collections:
     media_folder: images
     public_folder: images
     create: true
-    slug: "{{slug}}"
+    # The slug is the filename, and a page is served at /<filename>, so it is
+    # the page's URL. On a new page, the sidebar's Slug panel lets you type it;
+    # left empty, it falls back to the title. Locked once saved, so a
+    # published URL can't be changed (and its links broken) by accident.
+    slug:
+      template: "{{slug}}"
+      editable: [create]
+      hint: "The page's URL: /<slug>. Leave empty to use the title."
     view_filters:
       - label: Drafts
         field: draft
