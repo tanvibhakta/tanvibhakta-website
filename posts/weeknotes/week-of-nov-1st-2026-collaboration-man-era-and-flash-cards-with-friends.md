@@ -1,6 +1,6 @@
 ---
-title: 'Week of Nov 1st, 2026: Collaboration, man era, and flash cards with friends'
-publishedOn: 2026-11-01T21:41:00+05:30
+title: 'Week of Nov 1st, 2026: Collaboration, man era, flash cards with friends'
+publishedOn: 2026-11-01T22:28:00+05:30
 draft: true
 tags: []
 ---
@@ -28,18 +28,18 @@ I have at least 5 drafts that just need time to be polished and published (inclu
 
 This week has been very social! I went out for several meals, courtesy [Restaurant Week](https://www.district.in/campaigns/restaurant-week)
 
-1. Baan Phad Thai with a gang of 6, followed by coffee and excellent cake at Ondu Plate (happy birthday!)
-2. Boteco for a team lunch
-3. Mai Mai with Kenneth, Nupur, and Ankur for a mostly sushi and pork dinner
-4. Bistro Cameo for a sunny sunday lunch
+1. [Baan Phad Thai](https://www.baanphadthai.com/bengaluru) with a gang of 6, followed by coffee and excellent cake at [Ondu Plate](https://www.onduplate.com/) (happy birthday!)
+2. [Boteco](https://boteco.co.in/) for a team lunch
+3. [Mai Mai](https://www.maimaiindia.com/) with [Kenneth](https://kenneth.dsouza.im/), Noopur, and [Ankur](https://ankursethi.com/) for a mostly sushi and pork dinner
+4. [Bistro Cameo](https://map-india.org/cameo/) for a sunny sunday lunch
 
-We also had several people over, and I played entirely too many hours of Unrailed on the couch, classic co-op style.
+We also had several people over, and I played entirely too many hours of [Unrailed](https://unrailed-game.com/unrailed.html) on the couch, classic co-op style.
 
-Early in the week, I was still recovering from the sickness, and Devanjal and my aunt both insisted on feeding me, which I am very grateful for. Mum also came by and made me a tambali from the sambarballi growing in my balcony! Proud Plant Parent moment for sure (though my gardener and my help should take most of the credit for pruning and watering respectively).
+I spent 5 shameful but glorious hours on [dietsabya](https://www.instagram.com/dietsabya/) this week. Learnt about [Komolika](https://www.utsavpedia.com/bollywood-beyond/the-tv-show/komolika/), whose style [Lara Raj](https://en.wikipedia.org/wiki/Lara_Raj) seems to have lifted as inspiration recently. I think - maybe - I would tentatively like to be on social media if the consumption is of culture curators like this (I am similarly partial to [r/popheads](https://www.reddit.com/r/popheads/)) as opposed to meme content or comedy/influencer skits? I feel like there is more to think about and I feel better about it. Who are the current culture curators in our upper-class, english-speaking context lately?
 
-I have not cooked for several weeks now. I am surprisingly happy and okay with this. A combination of people feeding me, frozen food from large batches, and going out have kept me pretty happy and well fed. I have occasionally made eggs, maggi, or soup that would take less than 10 minutes (and less than 1 cycle of brain power). I am very happy to slowly morph into the [straight raja beta](https://tanvibhakta.in/blog/whats-in-a-name/#p-7) I was meant to be. Being free of responsibilities - even for yourself and your house - frees up so much of the brain cycle time for thinking, doing, or recovering from all the thinking and doing.
+Early in the week, I was still recovering from the sickness, and [Devanjal](https://devanjal.mataroa.blog/) and my aunt both insisted on feeding me, which I am very grateful for. Mum also came by and made me a [tambali](https://en.wikipedia.org/wiki/Thambuli) from the [sambarballi](https://en.wikipedia.org/wiki/Coleus_amboinicus) growing in my balcony! Proud Plant Parent moment for sure (though my gardener and my help should take most of the credit for pruning and watering respectively).
 
-I spent 5 shameful but glorious hours on dietsabya this week. Learnt about Komolika, whose style Lara Raj seems to have lifted as inspiration recently. I think - maybe - I would tentatively like to be on social media if the consumption is of culture curators like this (I am similarly partial to r/popheads) as opposed to meme content or comedy/influencer skits? I feel like there is more to think about and I feel better about it. Who are the current culture curators in our upper-class, english-peaking context lately?
+I have not cooked for several weeks now. I am surprisingly happy and okay with this. A combination of people feeding me, frozen food from meal prepped large batches (that mom generously supplied!), and going out have kept me pretty happy and well fed. I have occasionally made eggs, maggi, or soup that would take less than 10 minutes (and less than 1 cycle of brain power). I am very happy to slowly morph into the [straight raja beta](https://tanvibhakta.in/blog/whats-in-a-name/#p-7) I was meant to be. Being free of responsibilities - even for yourself and your house - frees up so much of the brain cycle time for thinking, doing, or recovering from all the thinking and doing.
 
 ## Health
 
@@ -47,15 +47,15 @@ The flare continuous to flare. It is horrible. When will I be released from this
 
 A friend has recommended a new, different personal trainer who supposedly has a good track record and experience working with people with chronic illness. Do I trust them? In the last few years, I have been disillusioned by the fitness training world the way I was disillusioned by the medical field in my early twenties. Nothing can be outsourced. I have to do all the reading, research, collating, myself. I have to recognize the various interactions and contraindications, understand the implications, and make my own decisions. Some days I feel like I should get rid of this section entirely - thinking about this reminds me how nerfed I am. But I must remember. I must do something about this. Without my health I have nothing. I have fought so hard, and come so far, that regression is no longer a possibility. But I have plateaued - sacrificing the progress of better health for the ability to dive deeper at work.
 
-I don't regret it yet. But I need to balance this now. I have a Very Large painscience.org article to read through (without getting distracted and following all the footnotes this time!). And i am getting back on gfdf. Let us hope the sacrifices please the inflammation gods.
+I don't regret it yet? But I need to balance this now. I have a Very Large painscience.org article to read through (without getting distracted and following all the footnotes this time!). And i am getting back on gfdf. Let us hope the sacrifices please the inflammation gods.
 
 ## Learning
 
-Did my flash cards only three days of this week, but progress continues to be excellent. I spent an evening doing the flashcard recall with a friend who has also spent some time learning the Kannada script. They had actually taken classes, so I learnt about how some letter forms are writter in. a way that is different from the font - there is not nerly as many twists and turns as print kannada makes it look like! I also found that reading handwritten kannada was much harder than reading the font. I am unsure where to practice this second skill from, apart from perhaps writing letters to my mother back and forth?
+Did my flash cards only three days of this week, but progress continues to be excellent. I spent an evening doing the flashcard recall with a friend who has also spent some time learning the kannada script. They had actually taken classes, so I learnt about how some letter forms are written in a way that is different from the font - there is not nearly as many twists and turns as print kannada makes it look like! I also found that reading handwritten kannada was much harder than reading the font. I am unsure where to practice this second skill from, apart from perhaps writing letters to my mother back and forth?
 
 Things I need to spend time learning this week (there is urgency)
 
-1. The vagaries of various models that ai-sdk smoothes out (and what it doesn't)
+1. The vagaries of various models that ai-sdk smooths out (and what it doesn't)
 2. How the router on our custom software factory works
 3. How to design a good benchmark for a model
 4. How steroids work, and what long-term usage does to a body
@@ -65,5 +65,5 @@ there really aren't enough hours in the day.
 
 ## Media Diet
 
-girl where is the time. I did visit the A Moving Line exhibit at MAP and added about 20 graphic novels to my to-read list, but I doubt a dent is being made in it any time soon. I would like to pick up India After Gandhi, and I would really like to read well-reported fashion ethnographies, but I don't think any exist in popular culture? I miss catching up on music videos as they come out. I have only been listening to singles, but they are all good. All the pop girlies are doing good.
+girl where is the time. I did visit the [A Moving Line exhibit at MAP](https://map-india.org/exhibition/a-moving-line-1500-years-of-indian-visual-storytelling/) and added about 20 graphic novels to my to-read list, but I doubt a dent is being made in it any time soon. I would like to pick up [India After Gandhi](https://www.goodreads.com/en/book/show/356824.India_After_Gandhi), and I would really like to read well-reported fashion ethnographies, but I don't think any exist in popular culture? I miss catching up on music videos as they come out. I have only been listening to singles, but they are all good. All the pop girlies are doing good.
 
