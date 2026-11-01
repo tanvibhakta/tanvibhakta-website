@@ -1,7 +1,7 @@
 ---
 title: 'Week of Nov 1st, 2026: Collaboration, man era, flash cards with friends'
-publishedOn: 2026-11-01T22:28:00+05:30
-draft: true
+publishedOn: 2026-11-01T22:42:00+05:30
+draft: false
 tags: []
 ---
 
