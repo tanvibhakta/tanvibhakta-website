@@ -1,5 +1,5 @@
 ---
-title: 'Week of Nov 1st, 2026: Collaboration, man era, flash cards with friends'
+title: "Week of Nov 1st, 2026: Collaboration, man era, flash cards with friends"
 publishedOn: 2026-11-01T22:42:00+05:30
 draft: false
 tags: []
@@ -66,4 +66,3 @@ there really aren't enough hours in the day.
 ## Media Diet
 
 girl where is the time. I did visit the [A Moving Line exhibit at MAP](https://map-india.org/exhibition/a-moving-line-1500-years-of-indian-visual-storytelling/) and added about 20 graphic novels to my to-read list, but I doubt a dent is being made in it any time soon. I would like to pick up [India After Gandhi](https://www.goodreads.com/en/book/show/356824.India_After_Gandhi), and I would really like to read well-reported fashion ethnographies, but I don't think any exist in popular culture? I miss catching up on music videos as they come out. I have only been listening to singles, but they are all good. All the pop girlies are doing good.
-
