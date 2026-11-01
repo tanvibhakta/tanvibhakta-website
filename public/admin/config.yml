@@ -261,6 +261,13 @@ collections:
         pattern: true
     fields:
       - { label: Title, name: title, widget: string }
+      # Blurb shown on /sitemap and used for the share-card description.
+      - {
+          label: Description,
+          name: description,
+          widget: string,
+          required: false,
+        }
       - {
           label: Draft,
           name: draft,
