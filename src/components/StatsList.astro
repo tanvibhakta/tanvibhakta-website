@@ -1,0 +1,127 @@
+---
+import type { TargetCount } from "../utils/link-census";
+
+/**
+ * One ranked list on /stats. Every row is a single label: it links straight
+ * to its target when there's one URL behind it, and expands to list the URLs
+ * when there are several (starting open when there are exactly two). Rows
+ * under FOLD_BELOW mentions fold into one collapsed, alphabetical line.
+ */
+export type StatsRow = {
+  label: string;
+  /** Label as trusted HTML (rendered titles); takes precedence over label. */
+  labelHtml?: string;
+  /** Small-caps context shown before the count, e.g. a post's section. */
+  meta?: string;
+  count: number;
+  urls: TargetCount[];
+};
+
+interface Props {
+  rows: StatsRow[];
+}
+
+const FOLD_BELOW = 3;
+
+const { rows } = Astro.props;
+const ranked = rows.filter((row) => row.count >= FOLD_BELOW);
+const tail = rows
+  .filter((row) => row.count < FOLD_BELOW)
+  .sort((a, b) => a.label.localeCompare(b.label));
+
+const mentions = (n: number) => `${n} ${n === 1 ? "mention" : "mentions"}`;
+// Domains are shown bare, so expanded URLs drop the scheme and www. too.
+const stripScheme = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "");
+
+const escape = (text: string) =>
+  text.replace(
+    /[&<>"']/g,
+    (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
+        c
+      ]!,
+  );
+const labelHtml = (row: StatsRow) => row.labelHtml ?? escape(row.label);
+
+// The tail is built as one string: in markup, the whitespace between inline
+// elements would render as stray underlined spaces around every link. Its
+// label links to the first URL; any others follow as superscript numbers.
+const tailHtml = tail
+  .map(({ urls, ...row }) => {
+    const [first, ...rest] = urls;
+    const extra = rest
+      .map(
+        (url, i) => `<sup><a href="${escape(url.target)}">${i + 2}</a></sup>`,
+      )
+      .join("");
+    return `<a href="${escape(first.target)}">${labelHtml(row as StatsRow)}</a>${extra}`;
+  })
+  .join(`<span class="opacity-40"> · </span>`);
+---
+
+<ul class="list-none pl-0!">
+  {
+    ranked.map((row) => (
+      <li
+        class:list={[
+          "my-1.5!",
+          // Single-link rows indent past the disclosure triangle so every
+          // label in the list starts at the same x.
+          row.urls.length === 1 ? "pl-[1.1em]!" : "pl-0!",
+        ]}
+      >
+        {row.urls.length === 1 ? (
+          <>
+            <a
+              href={row.urls[0].target}
+              class="[overflow-wrap:anywhere]"
+              set:html={labelHtml(row)}
+            />
+            <span class="count">
+              {row.meta && `${row.meta} · `}
+              {mentions(row.count)}
+            </span>
+          </>
+        ) : (
+          <details open={row.urls.length === 2}>
+            <summary class="cursor-pointer">
+              {row.label}
+              <span class="count">{mentions(row.count)}</span>
+            </summary>
+            <ul class="list-none pl-[1.2em]! my-1! text-sm">
+              {row.urls.map((url) => (
+                <li class="my-0.5! pl-0! [overflow-wrap:anywhere]">
+                  <a href={url.target}>{stripScheme(url.target)}</a>
+                  <span class="count">{mentions(url.count)}</span>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+{
+  tail.length > 0 && (
+    <details class="mt-3">
+      <summary class="cursor-pointer opacity-70">
+        …and {tail.length} more, mentioned once or twice
+      </summary>
+      <p class="mt-2 text-sm leading-relaxed" set:html={tailHtml} />
+    </details>
+  )
+}
+
+<style>
+  /* Shared small-caps count treatment, matching /tags and /sitemap. Kept on
+     one line so a long label can't break the count mid-word. */
+  .count {
+    font-size: 0.85rem;
+    font-variant: small-caps;
+    margin-left: 0.5rem;
+    opacity: 0.6;
+    white-space: nowrap;
+  }
+</style>

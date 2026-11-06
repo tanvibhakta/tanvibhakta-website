@@ -1,0 +1,84 @@
+---
+import ProseLayout from "../layouts/ProseLayout.astro";
+import StatsList, { type StatsRow } from "../components/StatsList.astro";
+import { SECTIONS, STANDALONE_PAGES } from "../content.config";
+import { getAllTaggedPosts, getPublishedEntries } from "../utils/collections";
+import { formatNoteTimestamp } from "../utils/date-helpers";
+import {
+  buildLinkCensus,
+  groupOutgoing,
+  type Person,
+  type Platforms,
+} from "../utils/link-census";
+import { titleHtml } from "../utils/title-markdown";
+import people from "../data/people.json";
+import platforms from "../data/platforms.json";
+
+// Counts links in the markdown source of every published post and markdown
+// page (underscore-prefixed fixtures excluded). Hand-built .astro/.mdx routes
+// aren't scanned — their links are mostly nav, not writing.
+const posts = await getAllTaggedPosts();
+const pages = (await getPublishedEntries("pages"))
+  .filter((page) => !page.id.startsWith("_"))
+  .map((page) => ({ ...page, href: `/${page.id}` }));
+
+const census = buildLinkCensus(
+  [...posts, ...pages].map(({ href, body }) => ({ href, body: body ?? "" })),
+);
+
+// Internal targets show what they are, labelled like the /tags listings: a
+// post's title and section, a note's timestamp, a page or section's name.
+// Anything unrecognised falls back to its path.
+const titles = new Map<string, { html: string; meta?: string }>([
+  ...[...Object.values(SECTIONS), ...Object.values(STANDALONE_PAGES)].map(
+    ({ href, title }) => [href, { html: titleHtml(title) }] as const,
+  ),
+  ...pages.map(
+    (page) => [page.href, { html: titleHtml(page.data.title) }] as const,
+  ),
+  ...posts.map((post) => {
+    const title = (post.data as { title?: string }).title;
+    return [
+      post.href,
+      {
+        html: title
+          ? titleHtml(title)
+          : formatNoteTimestamp(post.data.publishedOn),
+        meta: post.label,
+      },
+    ] as const;
+  }),
+]);
+
+const internalRows: StatsRow[] = census.internal.map(({ target, count }) => ({
+  label: target,
+  labelHtml: titles.get(target)?.html,
+  meta: titles.get(target)?.meta,
+  count,
+  urls: [{ target, count }],
+}));
+
+const outgoingSections = groupOutgoing(
+  census.outgoing,
+  people as Person[],
+  platforms as Platforms,
+).filter((section) => section.groups.length > 0);
+
+const frontmatter = STANDALONE_PAGES.stats;
+---
+
+<ProseLayout frontmatter={frontmatter}>
+  <section>
+    <h2>Internal Links</h2>
+    <StatsList rows={internalRows} />
+  </section>
+
+  {
+    outgoingSections.map((section) => (
+      <section>
+        <h2>{section.heading}</h2>
+        <StatsList rows={section.groups} />
+      </section>
+    ))
+  }
+</ProseLayout>

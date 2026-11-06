@@ -1,0 +1,96 @@
+[
+  { "name": "Abhinav Sarkar", "sites": ["abhinavsarkar.net"] },
+  { "name": "Aditya Athalye", "sites": ["evalapply.org"] },
+  { "name": "Akhil Unnikrishnan", "sites": ["akhilunnikrishnan.com"] },
+  { "name": "Akshata", "sites": ["libraryofscroll.wordpress.com"] },
+  { "name": "Anik", "sites": ["blog.anikthink.com"] },
+  { "name": "Ankur Sethi", "sites": ["ankursethi.com", "ankursethi.in"] },
+  { "name": "Ashlesh", "sites": ["fossunited.org/u/ashlesh_biradar"] },
+  { "name": "Asma", "sites": ["instagram.com/playful.pursuits"] },
+  { "name": "Azan", "sites": ["azan-n.com"] },
+  { "name": "Benjanun Sriduangkaew", "sites": ["beekian.wordpress.com"] },
+  { "name": "Calra", "sites": ["himanshikalra.com"] },
+  { "name": "Chandra", "sites": ["nchandrasekharr.github.io"] },
+  { "name": "Cindy Kay", "sites": ["cindykayvo.com"] },
+  { "name": "Deepti", "sites": ["deeptimegh.com"] },
+  { "name": "Devanjal", "sites": ["devanjal.mataroa.blog"] },
+  { "name": "Divya", "sites": ["divyashivaram.substack.com"] },
+  {
+    "name": "Dr Manjesh",
+    "sites": [
+      "practo.com/bangalore/doctor/dr-manjesh-kashinath-orthopedic-surgeon"
+    ]
+  },
+  {
+    "name": "Dr Meghna",
+    "sites": [
+      "practo.com/bangalore/doctor/dr-meghna-potluri-ear-nose-throat-ent-specialist"
+    ]
+  },
+  { "name": "Fujii Kaze", "sites": ["fujiikaze.com"] },
+  { "name": "Geoff Keighley", "sites": ["geoffkeighley.com"] },
+  { "name": "Greeshma Kuthar", "sites": ["muckrack.com/greeshma-kuthar"] },
+  { "name": "Harshal", "sites": ["harshalbhatia.com"] },
+  { "name": "Herman", "sites": ["herman.bearblog.dev"] },
+  { "name": "Ishan", "sites": ["github.com/twitu"] },
+  { "name": "James Stanier", "sites": ["theengineeringmanager.substack.com"] },
+  { "name": "Joan", "sites": ["joanbangera.wordpress.com"] },
+  { "name": "Josh W. Comeau", "sites": ["joshwcomeau.com"] },
+  { "name": "Lynne Sargent", "sites": ["scribbledshadows.wordpress.com"] },
+  { "name": "Maria Popova", "sites": ["themarginalian.org"] },
+  { "name": "Meghana", "sites": ["medium.com/@meg_srinivas"] },
+  { "name": "Mihir", "sites": ["learningwala.in"] },
+  { "name": "Mithila", "sites": ["instagram.com/mithila.ramani"] },
+  { "name": "Moira Quirk", "sites": ["moiraquirk.com"] },
+  {
+    "name": "Nats",
+    "sites": [
+      "natswhy.com",
+      "stateofnats.com",
+      "natashay.notion.site",
+      "natashayad.substack.com"
+    ]
+  },
+  { "name": "Nemo", "sites": ["captnemo.in"] },
+  { "name": "Nghi Vo", "sites": ["nghivo.com"] },
+  { "name": "Nihar", "sites": ["nihar.works"] },
+  { "name": "Nirbheek", "sites": ["nirbheek.in"] },
+  { "name": "Patricia Santomasso", "sites": ["patriciasantomasso.com"] },
+  { "name": "Pooja Saxena", "sites": ["anexasajoop.in"] },
+  { "name": "Pranav", "sites": ["instagram.com/barkwhip"] },
+  { "name": "Prateek", "sites": ["prtksxna.com"] },
+  { "name": "Purvai", "sites": ["purvaiaranya.com"] },
+  { "name": "Robin Cook", "sites": ["robincook.com"] },
+  { "name": "Rohini", "sites": ["instagram.com/roh_malur"] },
+  {
+    "name": "Roshni",
+    "sites": [
+      "roshni-ranganathan.squarespace.com",
+      "roshniranganathan.wordpress.com",
+      "linkedin.com/in/roshni-ranganathan"
+    ]
+  },
+  { "name": "Rudi", "sites": ["rudimk.com"] },
+  { "name": "Sahiti", "sites": ["itihas.review"] },
+  { "name": "Saket", "sites": ["saketghaisas.com", "paus.in"] },
+  { "name": "Santrupti P", "sites": ["santais.online"] },
+  { "name": "Scott Jenson", "sites": ["jenson.org"] },
+  { "name": "Seema Hegde", "sites": ["seemateeta.blogspot.com"] },
+  {
+    "name": "Shivani Vakil Savant",
+    "sites": ["linkedin.com/in/shivani-vakil-savant-212a0519b"]
+  },
+  { "name": "Shruti Sunderraman", "sites": ["shrutisunderraman.com"] },
+  { "name": "Sindhu", "sites": ["instagram.com/sindhu_ganga"] },
+  { "name": "Sohini Chattopadhyay", "sites": ["sohinichattopadhyay.com"] },
+  { "name": "Sohom", "sites": ["signalshore.net", "signalshore.github.io"] },
+  { "name": "Sreechand", "sites": ["sreechand.pm"] },
+  { "name": "Steven Deobald", "sites": ["deobald.ca"] },
+  { "name": "T Kingfisher", "sites": ["redwombatstudio.com"] },
+  { "name": "Unmana", "sites": ["unmana.com"] },
+  { "name": "Vinay Hiremath", "sites": ["vinay.sh"] },
+  { "name": "Visakan", "sites": ["visakanv.com"] },
+  { "name": "Winnie Lim", "sites": ["winnielim.org"] },
+  { "name": "Yungblud", "sites": ["yungbludofficial.com"] },
+  { "name": "Zoya", "sites": ["zoya.life"] }
+]

@@ -1,0 +1,30 @@
+{
+  "Aggregators": [
+    "goodreads.com",
+    "thestorygraph.com",
+    "letterboxd.com",
+    "boxd.it",
+    "imdb.com",
+    "archiveofourown.org",
+    "boardgamegeek.com",
+    "spotify.com",
+    "youtube.com",
+    "youtu.be",
+    "instagram.com",
+    "x.com",
+    "xcancel.com",
+    "twitter.com",
+    "tumblr.com",
+    "reddit.com",
+    "quora.com",
+    "linkedin.com",
+    "medium.com",
+    "github.com",
+    "githubusercontent.com",
+    "strava.com",
+    "hevy.com",
+    "linktr.ee",
+    "t.me"
+  ],
+  "References": ["wikipedia.org", "fandom.com", "genius.com"]
+}
