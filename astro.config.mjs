@@ -62,8 +62,10 @@ export default defineConfig({
       [
         rehypeAnchors,
         {
+          // /now stacks several entries on one page, so their per-file
+          // p-1, p-2… ids would collide.
           skip: (/** @type {{ path?: string } | undefined} */ file) =>
-            /[\\/]posts[\\/](poetry|notes)[\\/]/.test(file?.path ?? ""),
+            /[\\/]posts[\\/](poetry|notes|now)[\\/]/.test(file?.path ?? ""),
         },
       ],
       // Off-site links open in a new tab and carry an icon saying so.

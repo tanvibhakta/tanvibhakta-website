@@ -17,7 +17,7 @@ const tagSchema = z
  * blurb from the section's own index page and count its entries.
  *
  * STANDALONE_PAGES are hand-built routes with no child collection. Markdown
- * pages (the `pages` collection, e.g. /care, /now) are NOT listed here — they
+ * pages (the `pages` collection, e.g. /care) are NOT listed here — they
  * carry their own `description` in frontmatter and are discovered
  * automatically, so adding one needs no edit here.
  *
@@ -39,6 +39,8 @@ export const COLLECTION_SEGMENTS = {
   weeknotes: "weeknotes",
   digitalGarden: "digital-garden",
   notes: "notes",
+  // Now updates have no per-entry routes; they all render on /now.
+  now: "now",
   pages: "",
 } as const satisfies Record<keyof typeof collections, string>;
 
@@ -78,6 +80,7 @@ export const STANDALONE_PAGES = {
     title: "Subscribe",
     description: "RSS feeds for every section",
   },
+  now: { href: "/now", title: "Now", description: "what im doing now" },
   tags: {
     href: "/tags",
     title: "Tags",
@@ -145,6 +148,16 @@ const notes = defineCollection({
   }),
 });
 
+// Updates to the /now page, one file per update (named by date). The newest
+// renders untitled at the top of /now; older ones follow, headed by their
+// date. No title, no draft, no tags — an update is live once committed.
+const now = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./posts/now/" }),
+  schema: z.object({
+    publishedOn: z.date(),
+  }),
+});
+
 const pages = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./posts/pages/" }),
   schema: z.object({
@@ -165,5 +178,6 @@ export const collections = {
   poetry,
   digitalGarden,
   notes,
+  now,
   pages,
 };

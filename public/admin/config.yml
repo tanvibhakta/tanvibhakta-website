@@ -248,6 +248,32 @@ collections:
       - *tagsField
       - *bodyField
 
+  # Each entry is one update to /now. The newest shows at the top of the
+  # page; older ones stay below it, headed by their date.
+  - name: now
+    label: Now
+    label_singular: Now update
+    folder: posts/now
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}"
+    summary: "{{publishedOn}}"
+    sortable_fields:
+      fields: [publishedOn]
+      default:
+        field: publishedOn
+        direction: descending
+    fields:
+      - {
+          label: Published,
+          name: publishedOn,
+          widget: datetime,
+          date_format: YYYY-MM-DD,
+          time_format: false,
+          format: YYYY-MM-DD,
+          default: "{{now}}",
+        }
+      - *bodyField
+
   - name: pages
     label: Pages
     folder: posts/pages
