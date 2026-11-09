@@ -34,6 +34,7 @@ function markdownToHtml(markdown: string | undefined): string {
 // here automatically removes it from the type as well.
 const EXCLUDED_COLLECTIONS = [
   "pages",
+  "now",
 ] as const satisfies readonly CollectionName[];
 
 /**
