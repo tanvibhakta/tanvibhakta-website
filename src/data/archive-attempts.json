@@ -1,0 +1,32 @@
+{
+  "http://www.patriciasantomasso.com/": {
+    "failures": 1,
+    "firstFailed": "2026-10-29T20:33:22.973Z",
+    "lastTried": "2026-10-29T20:33:22.973Z",
+    "lastError": "fetch failed (https://web.archive.org/save)"
+  },
+  "https://archiveofourown.org/tags/Fluff/works": {
+    "failures": 1,
+    "firstFailed": "2026-10-29T20:32:34.992Z",
+    "lastTried": "2026-10-29T20:32:34.992Z",
+    "lastError": "fetch failed (https://web.archive.org/save)"
+  },
+  "https://boardgamegeek.com/user/tanvibhakta": {
+    "failures": 1,
+    "firstFailed": "2026-10-29T20:32:23.784Z",
+    "lastTried": "2026-10-29T20:32:23.784Z",
+    "lastError": "fetch failed (https://web.archive.org/save/status/spn2-4daf0dfffe03cb46ec0034bed3a20d9bd7e823c5)"
+  },
+  "https://maggieappleton.com/garden-history/": {
+    "failures": 1,
+    "firstFailed": "2026-10-29T20:32:54.142Z",
+    "lastTried": "2026-10-29T20:32:54.142Z",
+    "lastError": "fetch failed (https://web.archive.org/save)"
+  },
+  "https://www.expedition33.com/": {
+    "failures": 1,
+    "firstFailed": "2026-10-29T20:32:48.085Z",
+    "lastTried": "2026-10-29T20:32:48.085Z",
+    "lastError": "fetch failed (https://web.archive.org/save)"
+  }
+}

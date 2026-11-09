@@ -85,6 +85,25 @@ rehype plugins (`.anchor-link`) belong in `src/styles/global.css`.
   `posts/notes/images/` (albums → one gallery note). Design:
   `docs/plans/2026-10-05-telegram-photo-notes-design.md`.
 
+### Archive links
+
+- `src/data/archive-links.json` maps each external link in posts to a Wayback
+  Machine snapshot. The build attaches it to each link as an invisible
+  `data-archive` attribute; nothing displays it yet.
+- The generic code is a workspace package, `packages/rehype-wayback` (the
+  rehype plugin adding `data-archive`, plus `rehype-wayback/sync`, a Node
+  API), meant to be publishable to npm as-is. Keep it that way: it must not
+  import anything from the site, and site-specific choices go in options
+  from `astro.config.mjs` or `scripts/archive-links.ts`.
+- `pnpm archive` (`scripts/archive-links.ts`) is the site's wiring: post
+  locations, frontmatter dates, drafts skipped, the `EXCLUDE` domain list
+  (social media, Goodreads, Spotify, Letterboxd, IMDb, login-walled), and the
+  retry slow-down constants. The Archive links GitHub Action runs it on
+  content pushes and weekly, and commits the JSON plus
+  `src/data/archive-attempts.json` (failed captures, retried less often). In
+  the Action, missing keys fail the run up front and rejected keys fail it
+  after committing what it got; other failed requests are warnings.
+
 ### Code Quality
 
 - ESLint with TypeScript support configured in `eslint.config.js`
