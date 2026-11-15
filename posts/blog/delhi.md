@@ -249,7 +249,9 @@ Food I want to eat that I didn’t
 - Moradabadi biryani
 - nalli Nihari in the morning
 
-## Food I ate
+## Quick reference tables (or tldr)
+
+### Food I ate
 
 | What I ate                                                                                                             | Where I ate it                        | Thoughts                                                                                                 | Type         |
 | :--------------------------------------------------------------------------------------------------------------------- | :------------------------------------ | :------------------------------------------------------------------------------------------------------- | :----------- |
@@ -275,7 +277,7 @@ Food I want to eat that I didn’t
 | Mathri, corn fika thing, paan shots, kachori balls, mouth kachori (kachori with dal), dried fruit                      | Manish Foods, Rani Baug               | —                                                                                                        | Snack        |
 | Mutton (the marrow-joint cut)                                                                                          | Host family home                      | —                                                                                                        | Food         |
 
-## Monuments, art, galleries & museums I visited
+### Monuments, art, galleries & museums I visited
 
 | Place                     | Area                  | Type                                            | What I saw & thoughts                                                                                                                                                                                |
 | :------------------------ | :-------------------- | :---------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -291,7 +293,7 @@ Food I want to eat that I didn’t
 | NGMA                      | Central Delhi         | Museum / gallery                                | Permanent exhibits decent for life & times, not that impressed; why was photography banned?                                                                                                          |
 | National Museum (?)       | Central               | Museum (Rameen’s Gupta walk)                    | Gupta empire; the iron pillar; the “usurper” concept; the modern Hindu temple; my name in ancient & Ashokan Brahmi; ivory painting, a queer-looking Mughal painting; on par with Singapore/Hong Kong |
 
-## Areas I visited
+### Areas I visited
 
 | Area                  | Type                           | Highlights / what I did                                                                                 |
 | :-------------------- | :----------------------------- | :------------------------------------------------------------------------------------------------------ |
@@ -312,7 +314,7 @@ Food I want to eat that I didn’t
 | Greater Kailash (GK1) | Neighbourhood                  | A friend’s gig                                                                                          |
 | Rani Baug             | Market                         | E-rickshaw ride; rings, dried fruit, a Sikh pooja kit; snacking at Manish Foods                         |
 
-## Events I went to
+### Events I went to
 
 | Event                                  | Type                   | Where                             | Thoughts                                                                                        |
 | :------------------------------------- | :--------------------- | :-------------------------------- | :---------------------------------------------------------------------------------------------- |
