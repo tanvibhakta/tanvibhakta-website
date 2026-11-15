@@ -3,6 +3,8 @@ import { render } from "astro:content";
 import ProseLayout from "../layouts/ProseLayout.astro";
 import AudioPlayer from "./AudioPlayer.astro";
 import { getReadingTimeMinutes } from "../utils/reading-time";
+// MDX posts get this in scope for remark-note-embeds' <NoteEmbed /> tags.
+import NoteEmbed from "./NoteEmbed.astro";
 import {
   getEntryPath,
   getPublishedEntriesSorted,
@@ -101,7 +103,7 @@ if (presentation.navNoun) {
     next,
   }}
 >
-  <Content />
+  <Content components={{ NoteEmbed }} />
   {
     audio && (
       <AudioPlayer
