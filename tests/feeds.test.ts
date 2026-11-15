@@ -19,7 +19,7 @@ type TestEntry = {
   id: string;
   collection: string;
   data: { title?: string; publishedOn: Date; draft?: boolean };
-  body: string;
+  html?: string;
   filePath?: string;
 };
 
@@ -45,9 +45,9 @@ const mocks = vi.hoisted(() => ({
 vi.mock("astro:content", () => ({
   getCollection: mocks.getCollection,
   defineCollection: vi.fn(),
-  render: vi.fn(() =>
-    Promise.resolve({ Content: () => "<p>Mock content</p>" }),
-  ),
+  // The container mock below "renders" Content by returning it, so each
+  // fixture's html is what the feed sees as the page's rendered HTML.
+  render: vi.fn(async (entry: TestEntry) => ({ Content: entry.html })),
   z: {
     object: vi.fn(() => ({ string: vi.fn(), date: vi.fn() })),
     string: vi.fn(),
@@ -60,49 +60,27 @@ vi.mock("astro/loaders", () => ({
   glob: vi.fn(),
 }));
 
-// Mock astro:assets — a virtual module only resolvable inside Astro's Vite
-// pipeline; feeds.ts pulls it in transitively via feed-image-map.ts.
-vi.mock("astro:assets", () => ({
-  getImage: vi.fn(async () => ({ src: "/_astro/mock.webp" })),
+// Mock the Container API and MDX's server renderer; both need Astro's build.
+vi.mock("astro/container", () => ({
+  experimental_AstroContainer: {
+    create: vi.fn(async () => ({
+      addServerRenderer: vi.fn(),
+      renderToString: vi.fn(async (content: string) => content),
+    })),
+  },
 }));
+vi.mock("@astrojs/mdx/server.js", () => ({ default: {} }));
 
 // Mock @astrojs/rss
 vi.mock("@astrojs/rss", () => ({
   default: mocks.rss,
 }));
 
-// Mock markdown-it and sanitize-html
-vi.mock("markdown-it", () => {
-  return {
-    default: vi.fn(function (this: { render: (md: string) => string }) {
-      this.render = vi.fn((md: string) => {
-        // Simple markdown to HTML conversion for testing
-        let html = md;
-        html = html.replace(/^# (.*?)$/gm, "<h1>$1</h1>");
-        html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-        html = html.replace(/^([^\n]+)$/gm, "<p>$1</p>");
-        return html;
-      });
-      return this;
-    }),
-  };
-});
-
 // title-markdown builds its own parser from markdown-it, which the mock above
 // can't serve. Its behavior has its own tests; here titles pass through as-is.
 vi.mock("../src/utils/title-markdown", () => ({
   titleText: (title: string) => title,
 }));
-
-vi.mock("sanitize-html", () => {
-  const sanitizeDefault = Object.assign(
-    vi.fn((html: string) => html),
-    { defaults: { allowedTags: ["b", "i", "em", "strong", "p", "br"] } },
-  );
-  return {
-    default: sanitizeDefault,
-  };
-});
 
 // Mock the content config to avoid import issues
 vi.mock("../src/content.config", () => ({
@@ -281,8 +259,7 @@ describe("Feed Content Generation", () => {
     mocks.rss.mockReset();
   });
 
-  it("should render markdown content to HTML in feed items", async () => {
-    // Mock content with markdown
+  it("uses the site's rendered HTML, minus site-only chrome", async () => {
     const mockBlogEntry = {
       id: "test-post",
       collection: "blog",
@@ -290,7 +267,8 @@ describe("Feed Content Generation", () => {
         title: "Test Post",
         publishedOn: new Date("2025-01-01"),
       },
-      body: "# Hello World\n\nThis is a **test** post with markdown.",
+      // What the content layer stores after the site's remark/rehype run.
+      html: '<h1>Hello World</h1><p id="p-1">A <strong>test</strong><br>post<a href="#p-1" class="anchor-link"> #</a></p>',
       filePath: "posts/blog/test-post.md",
     };
 
@@ -301,14 +279,14 @@ describe("Feed Content Generation", () => {
 
     await generateMainFeed();
 
-    // Check what was passed to the rss function
     const feedItems = rssCallOptions().items as RSSFeedItem[];
-
-    // Verify the content is HTML, not markdown
-    expect(feedItems[0].content).toContain("<h1>");
-    expect(feedItems[0].content).toContain("<strong>");
-    expect(feedItems[0].content).not.toContain("# Hello World");
-    expect(feedItems[0].content).not.toContain("**test**");
+    expect(feedItems[0].content).toBe(
+      "<h1>Hello World</h1><p>A <strong>test</strong><br />post</p>",
+    );
+    // The feed names its own URL, as validators expect.
+    expect(rssCallOptions().customData).toContain(
+      'href="https://tanvibhakta.in/feed.xml" rel="self"',
+    );
   });
 
   it("should exclude draft posts from the main feed", async () => {
@@ -320,7 +298,7 @@ describe("Feed Content Generation", () => {
         publishedOn: new Date("2025-01-01"),
         draft: false,
       },
-      body: "Published content",
+      html: "<p>Published content</p>",
       filePath: "posts/blog/published-post.md",
     };
 
@@ -332,7 +310,7 @@ describe("Feed Content Generation", () => {
         publishedOn: new Date("2025-01-02"),
         draft: true,
       },
-      body: "Draft content",
+      html: "<p>Draft content</p>",
       filePath: "posts/blog/draft-post.md",
     };
 
@@ -343,7 +321,7 @@ describe("Feed Content Generation", () => {
         title: "No Draft Field",
         publishedOn: new Date("2025-01-03"),
       },
-      body: "Content without draft field",
+      html: "<p>Content without draft field</p>",
       filePath: "posts/blog/no-draft-field.md",
     };
 
@@ -369,7 +347,7 @@ describe("Feed Content Generation", () => {
         id: "pub",
         collection: "poetry",
         data: { title: "Published Poem", publishedOn: new Date("2025-01-01") },
-        body: "poem",
+        html: "<p>poem</p>",
         filePath: "posts/poetry/pub.md",
       },
       {
@@ -380,7 +358,7 @@ describe("Feed Content Generation", () => {
           publishedOn: new Date("2025-01-02"),
           draft: true,
         },
-        body: "draft poem",
+        html: "<p>draft poem</p>",
         filePath: "posts/poetry/draft.md",
       },
     ];
@@ -403,7 +381,7 @@ describe("Feed Content Generation", () => {
         id: "2026-06-21-1200",
         collection: "notes",
         data: { publishedOn: new Date("2026-06-21T12:00:00Z") },
-        body: "Just shipped a tiny new content type for short posts.",
+        html: "<p>Just shipped a tiny new content type for short posts.</p>",
         filePath: "posts/notes/2026-06-21-1200.md",
       },
     ];

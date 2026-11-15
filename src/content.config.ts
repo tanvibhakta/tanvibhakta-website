@@ -107,7 +107,7 @@ const audioSchema = {
 };
 
 const blog = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./posts/blog/" }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./posts/blog/" }),
   schema: collectionSchema.extend(audioSchema),
 });
 
