@@ -38,6 +38,22 @@ describe("toFeedHtml", () => {
     );
   });
 
+  test("per-image gallery captions survive as nested figures", () => {
+    // The shape rehype-gallery emits for a mixed group: a bare img, then a
+    // titled img wrapped in its own figure.
+    const html =
+      '<figure class="gallery" data-count="2">' +
+      '<img src="/a.webp" alt="">' +
+      '<figure><img src="/b.webp" alt="" title="Board game"><figcaption>Board game</figcaption></figure>' +
+      "</figure>";
+    expect(toFeedHtml(html, ITEM)).toBe(
+      "<figure>" +
+        '<img src="https://tanvibhakta.in/a.webp" alt="" />' +
+        '<figure><img src="https://tanvibhakta.in/b.webp" alt="" title="Board game" /><figcaption>Board game</figcaption></figure>' +
+        "</figure>",
+    );
+  });
+
   test("an img with no source is dropped", () => {
     expect(toFeedHtml("<p>hi</p><img alt='x'>", ITEM)).toBe("<p>hi</p>");
   });
