@@ -75,11 +75,17 @@ const fullTitle = pageName ? `${pageName} | ${SITE_TAB_TITLE}` : SITE_TAB_TITLE;
       href="/notes/feed.xml"
     />
 
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22256%22 height=%22256%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%22110%22>🪭</text></svg>"
-    />
+    <!--
+      Real icon files, not a data: URI: external fetchers (DuckDuckGo's icon
+      service, IndieWeb member directories) only follow HTTP URLs or try
+      /favicon.ico. The ICO comes first with sizes="32x32" so browsers that
+      support SVG still pick the SVG.
+      Artwork: Noto Emoji U+1FAAD (folding hand fan), (c) Google LLC,
+      SIL Open Font License 1.1, https://github.com/googlefonts/noto-emoji
+    -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{fullTitle}</title>
     <script
       defer
