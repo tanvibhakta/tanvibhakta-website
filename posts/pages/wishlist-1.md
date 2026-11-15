@@ -14,6 +14,7 @@ publishedOn: 2026-11-07
    b. will listen to me and work with me
    c. is effective at what they can do.
 4. A router that is more powerful (ie will cover my house better). I have to do the research on this one though. Must also support openwrt.
+5. Chitra Ganesh book from the [Chitra Ganesh website](https://www.chitraganesh.com/qpcb)
 
 ## Thailand
 
@@ -39,6 +40,11 @@ All of these should be available at any major grocery store - very accessible ar
 
 - mala peanuts
 - puer - especially hibisucs tea
+- black tea packets (or pu'er of any kind)
+
+## Vietnam
+
+- flavoured salt (prawn salt or sweet mango salt)
 
 ## Japan
 
@@ -48,8 +54,18 @@ All of these should be available at any major grocery store - very accessible ar
 
 - halloumi (only if you're going to meet me immediately after landing)
 - good salted pitted olives
-- stroopwaffels from carrefour (box set please)
+- stroopwaffels from [carrefour](https://www.carrefouruae.com/stroopwafels/c/stroopwafels) (box set please)
 - this specific brand of joshunda powder
+- cardamom coffee
+
+## Kathmandu
+
+- a custom embroidery Yakx5 t-shirt in three different colours, size medium, in Thamel
+- [Himalayan Java](https://himalayanjava.com/) beans
+
+## Australia
+
+- margarine
 
 ## Delhi
 
