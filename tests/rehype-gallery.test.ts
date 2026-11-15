@@ -114,17 +114,58 @@ describe("rehypeGallery", () => {
     expect(out[0].tagName).toBe("p");
   });
 
-  test("first title attribute becomes the figcaption", () => {
+  test("a lone titled image keeps the gallery-level figcaption", () => {
+    const out = run([p(img("images/a.webp", { title: "Chai break" }))]);
+    const children = out[0].children as HastElement[];
+    expect(children.map((c) => c.tagName)).toEqual(["img", "figcaption"]);
+    expect((children[1].children[0] as HastText).value).toBe("Chai break");
+    expect(children[0].properties.title).toBe("Chai break");
+  });
+
+  test("every titled image in a group gets its own captioned figure", () => {
+    // Mirrors the Delhi post's Khan Market group: one bare, three titled.
     const out = run([
-      p(
-        img("images/a.webp", { title: "Chai break" }),
-        elem("br"),
-        img("images/b.webp"),
-      ),
+      p(img("images/a.webp")),
+      text("\n"),
+      p(img("images/b.webp", { title: "B" })),
+      text("\n"),
+      p(img("images/c.webp", { title: "C" })),
+      text("\n"),
+      p(img("images/d.webp", { title: "D" })),
     ]);
-    const caption = out[0].children.at(-1) as HastElement;
-    expect(caption.tagName).toBe("figcaption");
-    expect((caption.children[0] as HastText).value).toBe("Chai break");
+    expect(out).toHaveLength(1);
+    expect(out[0].properties.dataCount).toBe(4);
+    const cells = out[0].children as HastElement[];
+    // Untitled stays a bare img; no gallery-level figcaption.
+    expect(cells.map((c) => c.tagName)).toEqual([
+      "img",
+      "figure",
+      "figure",
+      "figure",
+    ]);
+    for (const [cell, title] of [
+      [cells[1], "B"],
+      [cells[2], "C"],
+      [cells[3], "D"],
+    ] as const) {
+      const [image, caption] = cell.children as HastElement[];
+      expect(image.tagName).toBe("img");
+      // The lightbox reads the title off the img, so it must stay.
+      expect(image.properties.title).toBe(title);
+      expect(image.properties.sizes).toBe("(min-width: 768px) 17vw, 50vw");
+      expect(caption.tagName).toBe("figcaption");
+      expect((caption.children[0] as HastText).value).toBe(title);
+    }
+  });
+
+  test("a group's only caption sits under its own image", () => {
+    const out = run([
+      p(img("images/a.webp")),
+      p(img("images/b.webp", { title: "Board game" })),
+    ]);
+    const cells = out[0].children as HastElement[];
+    expect(cells.map((c) => c.tagName)).toEqual(["img", "figure"]);
+    expect((cells[1].children[1] as HastElement).tagName).toBe("figcaption");
   });
 
   test("grouped imgs get a sizes attribute by group count", () => {

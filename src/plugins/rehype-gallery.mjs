@@ -6,8 +6,17 @@
  * Must run BEFORE rehypeAnchors in markdown.rehypePlugins: anchors target
  * every <p>, and grouping first removes image paragraphs from its reach.
  *
- * A markdown image title (`![alt](src "title")`) becomes the group's
- * <figcaption>; the first titled image in a group wins.
+ * Captions come from markdown image titles (`![alt](src "title")`):
+ * - A lone image keeps the original shape: figure.gallery > img + figcaption.
+ * - In a multi-image group, each titled image is wrapped in its own
+ *   <figure> (img + figcaption) that takes the img's place as a grid cell,
+ *   so every caption sits under its own photo. Untitled images stay bare
+ *   imgs — wrapping them would add markup with nothing to hold. A caption
+ *   always describes one photo, so even a group's only caption goes under
+ *   that photo rather than spanning the gallery.
+ * The img keeps its title either way: the lightbox reads each `.prose img`
+ * title as that slide's caption, and the nested figure doesn't change which
+ * imgs it finds.
  *
  * Each grouped img also gets a `sizes` attribute reflecting its actual
  * render width in the gallery grid (1 col; 2 cols for count≥2; 3 cols at
@@ -86,20 +95,28 @@ function galleryFigure(images) {
   for (const image of images) {
     image.properties = { ...image.properties, sizes };
   }
-  const title = images.find((i) => i.properties?.title)?.properties.title;
-  const children = [...images];
-  if (title) {
-    children.push({
-      type: "element",
-      tagName: "figcaption",
-      properties: {},
-      children: [{ type: "text", value: String(title) }],
-    });
-  }
-  return {
-    type: "element",
-    tagName: "figure",
-    properties: { className: ["gallery"], dataCount: images.length },
+  const children =
+    images.length === 1
+      ? [images[0], ...captionFor(images[0])]
+      : images.map((image) => {
+          const caption = captionFor(image);
+          if (caption.length === 0) return image;
+          return element("figure", {}, [image, ...caption]);
+        });
+  return element(
+    "figure",
+    { className: ["gallery"], dataCount: images.length },
     children,
-  };
+  );
+}
+
+// [<figcaption>] from an img's title, or [] if it has none.
+function captionFor(image) {
+  const title = image.properties?.title;
+  if (!title) return [];
+  return [element("figcaption", {}, [{ type: "text", value: String(title) }])];
+}
+
+function element(tagName, properties, children) {
+  return { type: "element", tagName, properties, children };
 }

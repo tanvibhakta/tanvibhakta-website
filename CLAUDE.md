@@ -80,6 +80,10 @@ rehype plugins (`.anchor-link`) belong in `src/styles/global.css`.
 - Adjacent image lines, or image-only paragraphs separated by blank lines,
   group into a `<figure class="gallery">` (gallery grid + lightbox); any
   intervening prose breaks the group.
+- Captions are image titles (`![alt](src "caption")`), one per photo: a lone
+  image gets the gallery's `<figcaption>`; in a group, each titled image is
+  wrapped in its own `<figure>` cell. The img keeps its `title`, which the
+  lightbox shows as that slide's caption.
 - Full design: `docs/plans/2026-09-07-colocated-images-design.md`.
 - Photos sent to the Telegram notes bot become notes with images in
   `posts/notes/images/` (albums → one gallery note). Design:
