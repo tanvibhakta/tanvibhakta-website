@@ -3,7 +3,6 @@ title: wishlist
 description: (country sorted) list of things I want
 draft: false
 publishedOn: 2026-11-07
-lastUpdatedOn: ''
 ---
 
 ## Generic
@@ -67,4 +66,3 @@ All of these should be available at any major grocery store - very accessible ar
 ## Bombay
 
 - loshniche chutney that you put in vada pav
-
