@@ -106,20 +106,23 @@ Telegram, and plain-text editors keep it.
 
 The same file is rendered by different parsers with different settings:
 
-| Renderer                               | Parser                     | Single newline           | Galleries | Anchors                  | External links |
-| -------------------------------------- | -------------------------- | ------------------------ | --------- | ------------------------ | -------------- |
-| Site pages                             | Astro remark/rehype + GFM  | `<br>` (`remark-breaks`) | yes       | yes, except poetry/notes | new tab + icon |
-| RSS feeds (`src/utils/feeds.ts`)       | `new MarkdownIt()` default | joined into one line     | no        | no                       | no             |
-| Titles (`src/utils/title-markdown.ts`) | markdown-it, inline subset | n/a                      | n/a       | n/a                      | n/a            |
-| Sveltia preview                        | Sveltia's own              | unverified               | no        | no                       | no             |
-| GitHub file view, VS Code preview      | GFM                        | joined                   | no        | no                       | no             |
+| Renderer                               | Parser                     | Single newline           | Galleries  | Anchors                  | External links           |
+| -------------------------------------- | -------------------------- | ------------------------ | ---------- | ------------------------ | ------------------------ |
+| Site pages                             | Astro remark/rehype + GFM  | `<br>` (`remark-breaks`) | yes        | yes, except poetry/notes | new tab + icon           |
+| RSS feeds (`src/utils/feeds.ts`)       | site's, via Container API  | `<br>` (`remark-breaks`) | `<figure>` | stripped                 | link kept, icon stripped |
+| Titles (`src/utils/title-markdown.ts`) | markdown-it, inline subset | n/a                      | n/a        | n/a                      | n/a                      |
+| Sveltia preview                        | Sveltia's own              | unverified               | no         | no                       | no                       |
+| GitHub file view, VS Code preview      | GFM                        | joined                   | no         | no                       | no                       |
 
 ### Known rendering mismatches
 
-- **Feeds ignore line breaks.** markdown-it's `breaks` is off, so poems and
-  notes that rely on single newlines collapse into one paragraph in RSS
-  readers while looking right on the site.
-- **Feeds get no galleries.** Grouped images come through as separate `<img>`.
+- **Feeds reuse the site's HTML, then trim it.** `feeds.ts` renders each
+  entry's `<Content />` with Astro's Container API (so `.md` and `.mdx` take
+  one path), and `toFeedHtml` (`src/utils/feed-html.ts`) sanitizes it, drops
+  the `.anchor-link` permalinks and `.sr-only` "(opens in a new tab)" text,
+  makes every link absolute against the item's URL (footnotes point at the
+  page), and swaps each image to its 1280w `srcset` candidate. Galleries
+  arrive as a bare `<figure>` of images.
 - **Emoji shortcodes** (`:grin:`) aren't rendered anywhere — no plugin.
 
 ## Sveltia editor fixes

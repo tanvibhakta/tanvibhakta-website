@@ -1,7 +1,7 @@
 import rss from "@astrojs/rss";
-import { getCollection, type CollectionEntry } from "astro:content";
-import MarkdownIt from "markdown-it";
-import sanitizeHtml from "sanitize-html";
+import { experimental_AstroContainer } from "astro/container";
+import mdxRenderer from "@astrojs/mdx/server.js";
+import { getCollection, render, type CollectionEntry } from "astro:content";
 import { collections } from "../content.config";
 import {
   getEntryPath,
@@ -10,24 +10,12 @@ import {
   type CollectionName,
 } from "./collections";
 import { formatLongDate, noteWallClockToInstant } from "./date-helpers";
-import { absolutizeImages } from "./feed-images";
-import { entryImageMap } from "./feed-image-map";
+import { toFeedHtml } from "./feed-html";
 import { getNoteSlugs } from "./notes";
 import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION } from "./site";
 import { titleText } from "./title-markdown";
 
 const FEED_LIMIT = 25;
-const markdownParser = new MarkdownIt();
-
-/**
- * Convert markdown to sanitized HTML for RSS feed content
- */
-function markdownToHtml(markdown: string | undefined): string {
-  const html = markdownParser.render(markdown ?? "");
-  return sanitizeHtml(html, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
-  });
-}
 
 // Single source of truth for which collections never get feeds. The
 // FeedCollectionName type is derived from this list, so adding a collection
@@ -104,11 +92,6 @@ function feedPubDate(entry: FeedEntry): Date {
 }
 
 /**
- * The HTML body for a feed item: rendered markdown with relative image
- * references rewritten to absolute optimized URLs (unresolvable ones
- * dropped) — feed readers can't resolve site-relative paths.
- */
-/**
  * The line a reply's feed item opens with, linking its parent note. Empty
  * when the parent is missing (deleted), which the site shows as a
  * placeholder instead.
@@ -119,11 +102,47 @@ export function noteReplyPrefix(parentSlug: string | undefined): string {
   return `<p>↳ replying to <a href="${href}">${parentSlug}</a></p>`;
 }
 
-async function feedItemContent(entry: FeedEntry): Promise<string> {
-  return absolutizeImages(
-    markdownToHtml(entry.body),
-    await entryImageMap(entry.filePath),
-  );
+// One container for the whole build, created on first use. MDX content is a
+// JSX component, so the container needs MDX's server renderer; plain
+// markdown renders as an Astro component and needs none.
+let container: Promise<experimental_AstroContainer> | undefined;
+function feedContainer(): Promise<experimental_AstroContainer> {
+  container ??= experimental_AstroContainer.create().then((c) => {
+    c.addServerRenderer({ name: "astro:jsx", renderer: mdxRenderer });
+    return c;
+  });
+  return container;
+}
+
+/**
+ * The HTML body for a feed item: the entry rendered exactly as its page
+ * renders it — Astro's full remark/rehype pipeline, MDX components and
+ * optimized images included — then made feed-safe by toFeedHtml.
+ *
+ * Why the Container API (experimental) rather than entry.rendered.html: MDX
+ * entries have no rendered.html (MDX compiles to a component, rendered only
+ * at page time), and for markdown that field leaves local images as
+ * unresolved __ASTRO_IMAGE_ placeholders. Rendering <Content /> handles both
+ * formats in one path.
+ */
+async function feedItemContent(
+  entry: FeedEntry,
+  link: string,
+): Promise<string> {
+  const { Content } = await render(entry);
+  const html = await (await feedContainer()).renderToString(Content);
+  return toFeedHtml(html, new URL(link, SITE_URL).href);
+}
+
+/**
+ * RSS readers and validators expect a feed to name its own URL
+ * (atom:link rel="self"); @astrojs/rss doesn't add it on its own.
+ */
+function selfLink(path: string) {
+  return {
+    xmlns: { atom: "http://www.w3.org/2005/Atom" },
+    customData: `<atom:link href="${new URL(path, SITE_URL).href}" rel="self" type="application/rss+xml"/>`,
+  };
 }
 
 export async function getAllCollectionEntries(): Promise<FeedEntry[]> {
@@ -153,13 +172,17 @@ export async function generateMainFeed() {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     site: SITE_URL,
+    ...selfLink("/feed.xml"),
     items: await Promise.all(
-      sortedEntries.map(async (entry) => ({
-        title: `[${capitalizeFirst(entry.collection)}] ${feedItemTitle(entry)}`,
-        pubDate: feedPubDate(entry),
-        link: `${getEntryPath(entry.collection, entry.id)}/`,
-        content: await feedItemContent(entry),
-      })),
+      sortedEntries.map(async (entry) => {
+        const link = `${getEntryPath(entry.collection, entry.id)}/`;
+        return {
+          title: `[${capitalizeFirst(entry.collection)}] ${feedItemTitle(entry)}`,
+          pubDate: feedPubDate(entry),
+          link,
+          content: await feedItemContent(entry, link),
+        };
+      }),
     ),
   });
 }
@@ -179,18 +202,22 @@ export async function generateCollectionFeed(
     title: `${SITE_TITLE} - ${capitalizeFirst(collectionName)}`,
     description: `${capitalizeFirst(collectionName)} posts from ${SITE_TITLE}`,
     site: SITE_URL,
+    ...selfLink(`/${collectionName}/feed.xml`),
     items: await Promise.all(
-      sortedEntries.map(async (entry) => ({
-        title: feedItemTitle(entry),
-        pubDate: feedPubDate(entry),
-        link: noteSlugs
+      sortedEntries.map(async (entry) => {
+        const link = noteSlugs
           ? `/${noteSlugs.get(entry.id)}/`
-          : `${getEntryPath(entry.collection, entry.id)}/`,
-        content:
-          (noteSlugs && "inReplyTo" in entry.data && entry.data.inReplyTo
-            ? noteReplyPrefix(noteSlugs.get(entry.data.inReplyTo))
-            : "") + (await feedItemContent(entry)),
-      })),
+          : `${getEntryPath(entry.collection, entry.id)}/`;
+        return {
+          title: feedItemTitle(entry),
+          pubDate: feedPubDate(entry),
+          link,
+          content:
+            (noteSlugs && "inReplyTo" in entry.data && entry.data.inReplyTo
+              ? noteReplyPrefix(noteSlugs.get(entry.data.inReplyTo))
+              : "") + (await feedItemContent(entry, link)),
+        };
+      }),
     ),
   });
 }
