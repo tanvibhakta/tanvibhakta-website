@@ -8,29 +8,29 @@ At close to 8000 words, this is not a travelogue for the faint hearted. I wrote 
 
 The very first part of this trip I chronicled in my [notes](https://tanvibhakta.in/notes/). I am just including them for completeness.
 
-> Touchdown in Delhi! I’m very glad I picked a flight that let me take the metro from the airport. There’s something about airport <> metro stations the world over that look/feel the same. Taiwan, Singapore (?), Hong Kong, Delhi. It feels like a womb. A cold dark place underground that the sun can’t touch, where you’re safe. Then you board a train and are spit into the chaos of the world (city). Go forth, it seems to say.
+> Touchdown in Delhi! I’m very glad I picked a flight that let me take the metro from the airport. There’s something about airport \<> metro stations the world over that look/feel the same. Taiwan, Singapore (?), Hong Kong, Delhi. It feels like a womb. A cold dark place underground that the sun can’t touch, where you’re safe. Then you board a train and are spit into the chaos of the world (city). Go forth, it seems to say. ([note](/2026aug20-01))
 
-> The average man in Delhi puts more effort into their appearance than the average man in Bangalore. And there’s more variety in the style too! The gentleman sitting opposite me looks very much like a smart late eighties hero.
+> The average man in Delhi puts more effort into their appearance than the average man in Bangalore. And there’s more variety in the style too! The gentleman sitting opposite me looks very much like a smart late eighties hero. ([note](/2026aug20-03))
 
-> The Delhi metro doesn’t have a ladies compartment?? Is this just because it’s the line from the airport? Wait, I’m trying to remember if there was a ladie’s compartment when I travelled elsewhere. Is segregation on the basis of gender like this a uniquely Indian thing?
+> The Delhi metro doesn’t have a ladies compartment?? Is this just because it’s the line from the airport? Wait, I’m trying to remember if there was a ladie’s compartment when I travelled elsewhere. Is segregation on the basis of gender like this a uniquely Indian thing? ([note](/2026aug20-02))
 
-> Encountered the infamous privatisation of public roads right away. Couldn’t find the entrance to friend’s apartment so I went exploring through a gate. Came back to find the gate locked! Was told that the other gate is open so I went around. Interestingly, the “other road” was twice the size of the one I was on, but not actually marked on the gate. I wonder if they had to appeal to get the road unlisted or if gmaps just assumes that a road behind a gate is private andmust be unlisted? But I know of several private roads in small towns that have been listed too…
+> Encountered the infamous privatisation of public roads right away. Couldn’t find the entrance to friend’s apartment so I went exploring through a gate. Came back to find the gate locked! Was told that the other gate is open so I went around. Interestingly, the “other road” was twice the size of the one I was on, but not actually marked on the gate. I wonder if they had to appeal to get the road unlisted or if gmaps just assumes that a road behind a gate is private andmust be unlisted? But I know of several private roads in small towns that have been listed too… ([note](/2026aug20-04))
 
-> Anyway, off to a jazz night and then to see the sights. I was complaining about delhi exhibiting bangalore-ass behaviour (25min for 4km!) but it looks like the peaks for traffic in Delhi are much more contained. Got here in 14 minutes instead.
+> Anyway, off to a jazz night and then to see the sights. I was complaining about delhi exhibiting bangalore-ass behaviour (25min for 4km!) but it looks like the peaks for traffic in Delhi are much more contained. Got here in 14 minutes instead. ([note](/2026aug20-04))
 
 Landed on Thursday evening, and immediately dropped bags at GG’s and went to [Pianoman Safdarjung](https://www.google.com/maps/search/?api=1&query=The+Piano+Man+Jazz+Club+Safdarjung+Delhi) to watch [a jazz band](https://www.thepianoman.in/event/detail/1/bittersweet-four-thousand-four-hundred-fifty-two). Drank the picante and gin smash - both were a miss. But then I went to [Painkiller](https://www.google.com/maps/search/?api=1&query=Painkiller+cocktail+bar+Delhi) - all three cocktails I tasted there were excellent. Stayed up until 4am talking to GG and Avani..
 
 Friday, mostly a work day but I went out for chai, chaat, and a walk around the Malviya Nagar market. I ate golgappe, pav bhaji, and aloo tikki. I wasn’t a fan of the pav bhaji - Pune still has my heart about it - but the aloo tikki was unexpectedly good. I understand the hype now. The tikki had a perfect layer of crisp all over, underneath which existed a perfect layer of soft. Is this achieved via double frying? Then I stayed up all night talking to GG.
 
 > Jazz night was excellent. Measured thoughts on it later. I’ve had entirely too much work today, so I haven’t even been able to step out of work to buy milk! Until just now - all the agents have decided to be busy right now, so I’m going to take my ten minutes for chai.
-
-My friend lives next to a market, and it is very happening. There’s places like this all over - thippsandra, chikpete, places in Pune - but I think what is unique about Delhi is that they’re all more planned - so the bazaar is happening in 4 concentric rectangles around a large park. And (perhaps because of the population density?) the incidence of these bazaars (and parks) are much higher here than elsewhere. I love it!
-
-    I went to get tea and the man running the shop wasn’t there, so a few regulars colluded to pour me some in the span of thirty seconds. The stall owner got yelled at for not filling the kettle before he left 😁
-
-I’m in an area that is relatively planned - it was built up to accommodate refugees from the partition - so I’m told the cameraderie in the neighbourhood is higher. Most regulars have families who grew up here.
-
-    There are so many food places interspersed with the bazaar! I’m holding off on chaat until a friend accompanies me, but I am sorely tempted. I am also told that the standards for all kinds of food is just much higher here than in Bangalore. I feel like the service is definitely much better. At pianoman last night, in a packed house, when I asked for water, the waiter remembered that id asked for warm two hours ago and brought me more of the same. It was a good, surprising feeling.
+>
+> My friend lives next to a market, and it is very happening. There’s places like this all over - thippsandra, chikpete, places in Pune - but I think what is unique about Delhi is that they’re all more planned - so the bazaar is happening in 4 concentric rectangles around a large park. And (perhaps because of the population density?) the incidence of these bazaars (and parks) are much higher here than elsewhere. I love it!
+>
+> I went to get tea and the man running the shop wasn’t there, so a few regulars colluded to pour me some in the span of thirty seconds. The stall owner got yelled at for not filling the kettle before he left 😁
+>
+> I’m in an area that is relatively planned - it was built up to accommodate refugees from the partition - so I’m told the cameraderie in the neighbourhood is higher. Most regulars have families who grew up here.
+>
+> There are so many food places interspersed with the bazaar! I’m holding off on chaat until a friend accompanies me, but I am sorely tempted. I am also told that the standards for all kinds of food is just much higher here than in Bangalore. I feel like the service is definitely much better. At pianoman last night, in a packed house, when I asked for water, the waiter remembered that id asked for warm two hours ago and brought me more of the same. It was a good, surprising feeling. ([note](/2026aug21-01))
 
 My personal notes from the jazz night [these are very rough notes and all questions here have been answered and statements discussed]
 
