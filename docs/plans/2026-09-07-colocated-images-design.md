@@ -125,7 +125,10 @@ posts/weeknotes/images/…
     count: 1 full-width, 2 side-by-side, 3+ a grid (`object-fit: cover`,
     shared `aspect-ratio`; classes styled in `global.css`, where
     plugin-emitted classes belong). Captions use markdown's title syntax:
-    `![alt](images/chai.webp "Chai break")` → `<figcaption>`. Prose between
+    `![alt](images/chai.webp "Chai break")` → `<figcaption>`. A lone image's
+    caption is the gallery's own figcaption; in a multi-image group each
+    titled image becomes its own `<figure>` (img + figcaption) grid cell, so
+    every photo keeps its caption (untitled ones stay bare imgs). Prose between
     images breaks the group — adjacency always means album; to stack
     full-width images, put text (even an HTML comment) between them.
     Sveltia only ever sees plain `![]()` lines, so dropping three files

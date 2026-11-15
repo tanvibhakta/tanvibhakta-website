@@ -84,6 +84,8 @@ a:visited {
   display: grid;
   gap: 0.5rem;
   grid-template-columns: repeat(var(--gallery-cols, 1), 1fr);
+  /* A captioned cell is taller than a bare img; keep row-mates top-aligned. */
+  align-items: start;
 }
 .prose figure.gallery:not([data-count="1"]) {
   --gallery-cols: 2;
@@ -102,6 +104,12 @@ a:visited {
   aspect-ratio: 1;
   object-fit: cover;
 }
-.prose figure.gallery figcaption {
+/* A lone image's caption: the gallery's own figcaption, under the grid. */
+.prose figure.gallery > figcaption {
   grid-column: 1 / -1;
+}
+/* A captioned image in a multi-image group: its own figure as a grid cell.
+   Zero prose's figure margins so it lines up with its bare-img row-mates. */
+.prose figure.gallery > figure {
+  margin: 0;
 }

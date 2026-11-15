@@ -78,13 +78,14 @@ const fullTitle = pageName ? `${pageName} | ${SITE_TAB_TITLE}` : SITE_TAB_TITLE;
     <!--
       Real icon files, not a data: URI: external fetchers (DuckDuckGo's icon
       service, IndieWeb member directories) only follow HTTP URLs or try
-      /favicon.ico. The ICO comes first with sizes="32x32" so browsers that
-      support SVG still pick the SVG.
-      Artwork: Noto Emoji U+1FAAD (folding hand fan), (c) Google LLC,
-      SIL Open Font License 1.1, https://github.com/googlefonts/noto-emoji
+      /favicon.ico. The sizes attributes let browsers pick the ICO for tabs and
+      the 160px PNG on high-density screens.
+      Artwork: Apple Color Emoji U+1FAAD (folding hand fan), (c) Apple Inc.,
+      extracted from the macOS system font's bitmap strikes (20/32/48/160px).
+      Used without a licence, as a knowingly accepted risk.
     -->
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" type="image/png" href="/favicon.png" sizes="160x160" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{fullTitle}</title>
     <script
