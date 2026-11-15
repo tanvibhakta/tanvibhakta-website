@@ -209,78 +209,76 @@ Food I want to eat that I didn’t
 
 ## Food I ate
 
-| What I ate                                                                                                             | Where I ate it               | Thoughts                                                                                                                                                                                                              | Type         |
-| :--------------------------------------------------------------------------------------------------------------------- | :--------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------- |
-| Picante, gin smash                                                                                                     | Pianoman, Safdarjung         | Both a miss                                                                                                                                                                                                           | Drink        |
-| Three cocktails                                                                                                        | Painkiller                   | All excellent                                                                                                                                                                                                         | Drink        |
-| Golgappe, pav bhaji, aloo tikki                                                                                        | Malviya Nagar market         | Not a fan of the pav bhaji (Pune wins); aloo tikki unexpectedly good — crisp over soft, maybe double-fried                                                                                                            | Snack        |
-| Bun omelette, espresso martini                                                                                         | Social, Hauz Khas            | Omelette eh; espresso martini disgusting                                                                                                                                                                              | Snack, drink |
-| Food, coffee                                                                                                           | Perch, Khan Market           | Mediocre at best                                                                                                                                                                                                      | Food, drink  |
-| Kakori kebab, chicken tikka, kakori roti                                                                               | Aslam’s, Khan Market         | Kakori kebab first time — “what a concept,” perfect for a haleem lover; softest chicken tikka ever; kakori roti not for me                                                                                            | Food         |
-| Paan                                                                                                                   | Street stalls (nightly)      | Delhi paan is stronger, more intense; had it every night after dinner                                                                                                                                                 | Snack        |
-| Golgappe, soya-chunk kebab with kulcha, dahi bhalla                                                                    | Monday chaat stop            | Sooji shell crunchier & carries the paani, but aloo filling under-spiced and sparse, puri too big, only 5 to a plate; soya kebab charred then in tomato gravy; dahi bhalla not a fan (no-reseal policy felt casteist) | Snack        |
-| Bun maska chai                                                                                                         | Stall near M2K               | Surprisingly good                                                                                                                                                                                                     | Snack        |
-| Chaap                                                                                                                  | Takeaway shop (name unknown) | Ordered a big batch; froze a plate for mom                                                                                                                                                                            | Food         |
-| Chaap, home chicken, ragi & regular roti, paan                                                                         | Host family home             | Chicken excellent                                                                                                                                                                                                     | Food         |
-| Kachori chaat, paneer pakoda                                                                                           | Sweet shop (local darshini)  | Grabbed after the accident errand                                                                                                                                                                                     | Snack        |
-| Pork momos, spicy pork stir fry, charred beans in chilli oil, chicken mother momos, butter tea, ema datshi with tingmo | LHA Kitchen, Mehrauli        | Pork momos 3rd best ever (best in India); ema datshi with tingmo absolutely fantastic                                                                                                                                 | Food         |
-| A drink                                                                                                                | Rooh, Mehrauli               | Didn’t enjoy it, or the spot, much                                                                                                                                                                                    | Drink        |
-| Six cocktails                                                                                                          | Tranzzit, Khan Market        | Every one delicious; the 2nd was a mistake — passed out in the cab                                                                                                                                                    | Drink        |
-| Chhole kulche                                                                                                          | Stall opposite NIFT campus   | The guy is legit                                                                                                                                                                                                      | Snack        |
-| Ram bonda                                                                                                              | Stall outside Jantar Mantar  | Never heard of it; too full but Ankur insisted — really good                                                                                                                                                          | Snack        |
-| Butter chicken roll, traditional kulfi                                                                                 | Meherchand market            | —                                                                                                                                                                                                                     | Snack        |
-| Cocktails, butter chicken, dal makhani, dahi ka kebab                                                                  | Havemor                      | Bad cocktails                                                                                                                                                                                                         | Food, drink  |
-| Litti, chicken curry, chokha, makhana kheer, mushroom pickle in mustard                                                | Bihar Nivas                  | Shared a table with a bizarre old man; grabbed the mushroom pickle on the way out                                                                                                                                     | Food         |
-| Sweets, golgappe, malai sandwich                                                                                       | Gulab (sweet shop)           | —                                                                                                                                                                                                                     | Snack        |
-| Mathri, corn fika thing, paan shots, kachori balls, mouth kachori (kachori with dal), dried fruit                      | Manish Foods, Rani Baug      | —                                                                                                                                                                                                                     | Snack        |
-| Mutton (the marrow-joint cut)                                                                                          | Host family home             | —                                                                                                                                                                                                                     | Food         |
+| What I ate | Where I ate it | Thoughts | Type   |
+| :---- | :---- | :---- | :---- |
+| Picante, gin smash | Pianoman, Safdarjung | Cocktails are a skip, venue is gorgeous | Drink |
+| Three cocktails | Painkiller | All excellent | Drink |
+| Golgappe, pav bhaji, aloo tikki | Malviya Nagar market | Not a fan of the pav bhaji (Pune wins); chaat is brilliant | Snack |
+| Bun omelette, espresso martini | Social, Hauz Khas | Skip, never again | Snack, drink |
+| Food, coffee | Perch, Khan Market | Was served a burnt sandwich. Mediocre at best | Food, drink |
+| Kakori kebab, chicken tikka, kakori roti | Aslam’s, Khan Market | Skip the kakori roti but the kakori kebab and chicken tikka are must haves | Food |
+| Paan |  Netaji Place | Delhi paan is stronger, more intense; had it every night after dinner | Snack |
+| Golgappe, soya-chunk kebab with kulcha, dahi bhalla | Raju Chaat Bandar | Kebabs and kulche were excellent. Pani Puri was decent. Skip the dahi bhalla | Snack |
+| Bun maska chai | Stall near M2K | Surprisingly good - classic mumbai style but better??? Because the tea was thicc and the bun was toasted | Snack |
+| Chaap | Jahangir Naana nd Chaap | Very good | Food |
+| Kachori chaat, paneer pakoda | Gulabs | Nice, not again | Snack |
+| Pork momos, spicy pork stir fry, charred beans in chilli oil, chicken mother momos, butter tea, ema datshi with tingmo | LHA Kitchen, Mehrauli | Fantastic excellent incredible | Food |
+| Paan cocktail and an old fashioned | Rooh, Mehrauli | Didn’t enjoy it, or the spot, much | Drink |
+| Six cocktails | Tranzzit, Khan Market | Every one delicious; the 2nd was a mistake — passed out in the cab | Drink |
+| Ram Laddoo | Stall outside Jantar Mantar | Will eat again | Snack |
+| Butter chicken roll, traditional kulfi | [which restaurant]? Meherchand market | excellent | Snack |
+| Cocktails, butter chicken, dal makhani, dahi ka kebab | Havemor | Terrible cocktail, weird bathroom, skip  | Food, drink |
+| Litti, chicken curry, chokha, makhana kheer, mushroom pickle in mustard | Bihar Nivas | Love it, want to try everything on the menu | Food |
+| Sweets, golgappe, malai sandwich | Gulab (sweet shop) | — | Snack |
+| Mathri, corn fika thing, paan shots, kachori balls, mouth kachori (kachori with dal), dried fruit | Manish Foods, Rani Baug | — | Snack |
+| Mutton (the marrow-joint cut) | Host family home | — | Food |
 
 ## Monuments, art, galleries & museums I visited
 
-| Place                     | Area                  | Type                                            |
-| :------------------------ | :-------------------- | :---------------------------------------------- |
-| Hauz Khas Complex         | Hauz Khas             | Monument (Delhi Sultanate, 13th–14th c.)        |
-| Purana Qila               | Purana Qila           | Monument (16th c.; Humayun & Sher Shah Suri)    |
-| Qutb complex (Qutb Minar) | Mehrauli              | Monument (begun 1192; iron pillar older)        |
-| Jantar Mantar             | Rajiv Chowk / central | Monument (1724, Jai Singh II)                   |
-| Gurudwara Bangla Sahib    | Central               | Monument / gurudwara (17th c.)                  |
-| Nizamuddin Dargah         | Nizamuddin            | Monument / dargah (14th c.)                     |
-| Humayun’s Tomb            | Nizamuddin            | Monument (1560s, built by his widow Bega Begum) |
-| Pitampura TV Tower        | Pitampura             | Modern landmark (1988)                          |
-| Lalit Kala Akademi        | Mandi House           | Art gallery (exhibition)                        |
-| NGMA                      | Central Delhi         | Museum / gallery                                |
-| National Museum (?)       | Central               | Museum (Rameen’s Gupta walk)                    |
+| Place | Area | Type | What I saw & thoughts   |
+| :---- | :---- | :---- | :---- |
+| Hauz Khas Complex | Hauz Khas | Monument (Delhi Sultanate, 13th–14th c.) | Small complex, a nice respite from the market bustle |
+| Purana Qila | Purana Qila | Monument (16th c.; Humayun & Sher Shah Suri) | City Tales walk setting; Babur → Humayun → Sher Shah Suri; birds & animals everywhere |
+| Qutb complex (Qutb Minar) | Mehrauli | Monument (begun 1192; iron pillar older) | Marble plaque with parts literally cut out; defaced animal figures (likely Aurangzeb); the relocated iron pillar; good photo frames |
+| Jantar Mantar | Rajiv Chowk / central | Monument (1724, Jai Singh II) | A symbol of protest/resistance to me; finally grokked the astronomical instruments; pretty frames |
+| Gurudwara Bangla Sahib | Central | Monument / gurudwara (17th c.) | Filled our water bottles; fascinated by the marble inlay on the arches |
+| Nizamuddin Dargah | Nizamuddin | Monument / dargah (14th c.) | Qawwali cancelled (Eid-al-milad); tomb of Humayun’s daughter; the gendered mosque — sacred men’s room vs. garbage-strewn women’s room (made me sad) |
+| Humayun’s Tomb | Nizamuddin | Monument (1560s, built by his widow Bega Begum) | Isa Khan’s tomb on the right; Bibi ka garden (the sticky throw-plant); 2-storey border wall, no guardrails; the white-marble scale floored me (regretted skipping the Taj); 150+ Mughal bodies |
+| Pitampura TV Tower | Pitampura | Modern landmark (1988) | Your tongue-in-cheek “only Rel monument”; caught fire once, had a rotating restaurant on top |
+| Lalit Kala Akademi | Mandi House | Art gallery (exhibition) | 65 works by 65 artists for the 65th anniversary; no curatorial thread, which freed me; only had an hour |
+| NGMA | Central Delhi | Museum / gallery | Permanent exhibits decent for life & times, not that impressed; why was photography banned? |
+| National Museum (?) | Central | Museum (Rameen’s Gupta walk) | Gupta empire; the iron pillar; the “usurper” concept; the modern Hindu temple; my name in ancient & Ashokan Brahmi; ivory painting, a queer-looking Mughal painting; on par with Singapore/Hong Kong |
 
 ## Areas I visited
 
-| Area                  | Type                           | Highlights / what I did |
-| :-------------------- | :----------------------------- | :---------------------- |
-| Safdarjung            | Neighbourhood                  |                         |
-| Malviya Nagar         | Market                         |                         |
-| Hauz Khas             | Neighbourhood / market         |                         |
-| Khan Market           | Market / shopping              |                         |
-| Mandi House           | Arts district                  |                         |
-| Kamla Nagar           | Market                         |                         |
-| M2K area              | Neighbourhood                  |                         |
-| DDA market & parks    | Residential (near host’s home) |                         |
-| Mehrauli              | Historic quarter               |                         |
-| Majnu Ka Tilla        | Shopping area                  |                         |
-| Nizamuddin            | Neighbourhood                  |                         |
-| Rajiv Chowk / central | City centre                    |                         |
-| Meherchand            | Market                         |                         |
-| Pitampura             | Neighbourhood                  |                         |
-| Greater Kailash (GK1) | Neighbourhood                  |                         |
-| Rani Baug             | Market                         |                         |
+| Area | Type | Highlights / what I did   |
+| :---- | :---- | :---- |
+|  | Neighbourhood | Pianoman jazz night the evening I landed |
+| Malviya Nagar | Market | Chai, a market walk, and chaat (golgappe, pav bhaji, aloo tikki) |
+| Hauz Khas | Neighbourhood / market | The market (overpriced, strange), the monuments, Deer Park & the restaurant scene; sat at Social |
+| Khan Market | Market / shopping | Perch, Aslam’s, Faqir Chand & Sons bookshop, Tranzzit bar — my recurring base in the city |
+| Mandi House | Arts district | Lalit Kala Akademi exhibition + the play Ilhaam |
+| Kamla Nagar | Market | Clock tower, farsan place, achaar cart, asafoetida factory, a chemistry-glassware lane; fabric shopping |
+| M2K area | Neighbourhood | Bun maska chai, cellphone-store strip; tour of friends’ old haunts; the street-fight “Delhiism” |
+| DDA market & parks | Residential (near host’s home) | Solitary morning walk; hunted (unsuccessfully) for a glass nail file |
+| Mehrauli | Historic quarter | Qutb complex, lunch at LHA Kitchen, sunset drink at Rooh |
+| Majnu Ka Tilla | Shopping area | Uniqlo-style pieces at half price; cotton bush-shirt hunt |
+| Nizamuddin | Neighbourhood | Nizamuddin Dargah (qawwali night) and Humayun’s Tomb |
+| Rajiv Chowk / central | City centre | Jantar Mantar, Gurudwara Bangla Sahib, Ram bonda outside the gates |
+| Meherchand | Market | Excellent graffiti; butter chicken roll & kulfi |
+| Pitampura | Neighbourhood | The TV Tower |
+| Greater Kailash (GK1) | Neighbourhood | A friend’s gig |
+| Rani Baug | Market | E-rickshaw ride; rings, dried fruit, a Sikh pooja kit; snacking at Manish Foods |
 
 ## Events I went to
 
-| Event                                  | Type                   | Where                             | Thoughts |
-| :------------------------------------- | :--------------------- | :-------------------------------- | :------- |
-| Jazz night (+ Painkiller after)        | Live music / nightlife | Pianoman → Painkiller, Safdarjung |          |
-| City Tales heritage walk (Rameen Khan) | Heritage walk          | Purana Qila                       |          |
-| Ilhaam                                 | Play / theatre         | Mandi House                       |          |
-| Qawwali night                          | Devotional music       | Nizamuddin Dargah                 |          |
-| Rameen’s Gupta-empire museum walk      | Heritage walk          | National Museum (?)               |          |
-| Night out at Tranzzit                  | Nightlife / bar        | Khan Market                       |          |
-| A friend’s gig                         | Live music             | Greater Kailash (GK1)             |          |
-| Ankur’s childhood play (missed)        | Play / theatre         | —                                 |          |
+| Event | Type | Where | Thoughts   |
+| :---- | :---- | :---- | :---- |
+| Jazz night (+ Painkiller after) | Live music / nightlife | Pianoman → Painkiller, Safdarjung | Night I landed; Pianoman cocktails a miss, Painkiller’s excellent; up till 4am |
+| City Tales heritage walk (Rameen Khan) | Heritage walk | Purana Qila | Babur → Humayun → Sher Shah Suri; birds & animals everywhere |
+| Ilhaam | Play / theatre | Mandi House | Enlightenment vs. being unintelligible / illness; performed by “the best school in the country” |
+| Qawwali night | Devotional music | Nizamuddin Dargah | Thursday qawwali — cancelled for Eid-al-milad; a teen’s solo folk singing instead |
+| Rameen’s Gupta-empire museum walk | Heritage walk | National Museum (?) | Samudragupta, the iron pillar, the usurper concept, the modern Hindu temple; my name in Brahmi |
+| Night out at Tranzzit | Nightlife / bar | Khan Market | Six cocktails, all delicious; the second was a mistake |
+| A friend’s gig | Live music | Greater Kailash (GK1) | Pretty meh — it’s about who you already know |
+| Ankur’s childhood play (missed) | Play / theatre | — | Venue closed for Raksha Bandhan; the ticketing app showed the wrong dates |
