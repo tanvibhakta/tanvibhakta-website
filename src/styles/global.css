@@ -23,7 +23,7 @@ html {
 }
 
 a {
-  color: oklch(50.5% 0.213 27.518); /*red-800*/
+  color: var(--color-primary);
 }
 
 /* Let a long unbroken string (a bare URL, a long word) break anywhere rather
@@ -46,11 +46,15 @@ a:visited {
 
 @theme {
   --font-literata: "Literata", serif;
+  /* The site's accent: links, anchor marks, the audio cursor. Tailwind's
+     red-700. As a theme colour it also yields utilities (text-primary,
+     border-primary, …). */
+  --color-primary: oklch(50.5% 0.213 27.518);
 }
 
 .anchor-link {
   opacity: 0;
-  color: oklch(50.5% 0.213 27.518); /*red-800*/
+  color: var(--color-primary);
   text-decoration: none;
   transition: opacity 0.15s ease-in-out;
 }

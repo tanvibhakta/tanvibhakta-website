@@ -5,6 +5,8 @@ import AudioPlayer from "./AudioPlayer.astro";
 import { getReadingTimeMinutes } from "../utils/reading-time";
 // MDX posts get this in scope for remark-note-embeds' <NoteEmbed /> tags.
 import NoteEmbed from "./NoteEmbed.astro";
+// MDX posts opt into a table of contents by writing <TableOfContents />.
+import TableOfContents from "./TableOfContents.astro";
 import {
   getEntryPath,
   getPublishedEntriesSorted,
@@ -55,7 +57,12 @@ const PRESENTATION: Record<
 
 const { entry, collection, noindex } = Astro.props;
 const presentation = PRESENTATION[collection as CollectionName];
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
+// Read by <TableOfContents />, which renders inside <Content />.
+Astro.locals.headings = headings;
+// A post that places <TableOfContents /> also gets the desktop copy, which
+// goes at the top so it lines up with the first paragraph.
+const hasToc = /<TableOfContents\b/.test(entry.body ?? "");
 const readingTimeMinutes = presentation.readingTime
   ? getReadingTimeMinutes(entry.body)
   : undefined;
@@ -103,7 +110,8 @@ if (presentation.navNoun) {
     next,
   }}
 >
-  <Content components={{ NoteEmbed }} />
+  {hasToc && <TableOfContents margin />}
+  <Content components={{ NoteEmbed, TableOfContents }} />
   {
     audio && (
       <AudioPlayer

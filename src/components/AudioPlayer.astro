@@ -72,7 +72,11 @@ const { src, title } = Astro.props;
       url: src,
       waveColor: "oklch(70.8% 0 0)",
       progressColor: "oklch(20.5% 0 0)",
-      cursorColor: "oklch(50.5% 0.213 27.518)",
+      // WaveSurfer paints on a canvas, which can't resolve var(); read the
+      // theme colour's value instead.
+      cursorColor: getComputedStyle(document.documentElement)
+        .getPropertyValue("--color-primary")
+        .trim(),
       barWidth: 1,
       barGap: 2,
       barHeight: 1,
