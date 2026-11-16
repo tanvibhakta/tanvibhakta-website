@@ -19,6 +19,17 @@ Instructions for coding agents working in this repository.
   need. Record that reason in the custom code's header comment (see
   `src/plugins/rehype-external-links.mjs`).
 
+## Components page
+
+- `/components` (`src/showcase/components.mdx`) shows every custom
+  component and markdown feature in each variant, with a usage snippet.
+  Check it before building UI, and reuse what's there.
+- Adding a component, a plugin or a new variant? Add it to that page.
+  `tests/components-page.test.ts` fails for a component or plugin file
+  missing from it.
+- For a UI change, check `/components` at 375, 768 and 1280px, and read
+  its colour table for contrast. New colours show up there automatically.
+
 ## Project guidance
 
 See [CLAUDE.md](./CLAUDE.md), which imports this file and holds
