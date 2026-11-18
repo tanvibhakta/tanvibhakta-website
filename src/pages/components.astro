@@ -1,0 +1,24 @@
+---
+// /components: every custom component and markdown feature, in each of its
+// variants. A reference for reuse and for colour, responsiveness and (later)
+// dark-mode checks. Content lives in src/showcase/components.mdx so markdown
+// features render through the real remark/rehype pipeline.
+// Design: docs/plans/2026-11-16-component-gallery-design.md
+import ProseLayout from "../layouts/ProseLayout.astro";
+import NoteEmbed from "../components/NoteEmbed.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import Showcase, { getHeadings } from "../showcase/components.mdx";
+
+// Read by <TableOfContents />, as EntryPage does for MDX posts.
+Astro.locals.headings = getHeadings();
+
+const frontmatter = {
+  title: "Components",
+  description: "every custom component on this site, in each of its variants",
+};
+---
+
+<ProseLayout frontmatter={frontmatter} noindex>
+  <TableOfContents margin />
+  <Showcase components={{ NoteEmbed, TableOfContents }} />
+</ProseLayout>

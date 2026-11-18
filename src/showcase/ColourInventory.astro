@@ -1,0 +1,72 @@
+---
+// The colour section of /components: every colour in src/, lowest contrast
+// first. See src/utils/colour-inventory.ts for what it scans and misses.
+import { colourInventory, PAGE_BACKGROUND } from "../utils/colour-inventory";
+
+const colours = colourInventory();
+---
+
+<p>
+  Contrast is against the page background, <code>{PAGE_BACKGROUND}</code>. Text
+  needs 4.5:1; borders, lines and other non-text marks need 3:1; surfaces
+  (backgrounds) have no rule against the page, only against what sits on them.
+  Opacity layered on top (e.g. Note's footer at <code>opacity-75</code>) is not
+  counted, so those read lower than listed.
+</p>
+
+<div class="overflow-x-auto">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Colour</th>
+        <th scope="col">Role</th>
+        <th scope="col">Contrast</th>
+        <th scope="col">Used in</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        colours.map((c) => (
+          <tr data-colour={c.name}>
+            <td>
+              <span
+                class="mr-2 inline-block size-4 rounded-sm border border-stone-400 align-middle"
+                style={`background: ${c.value}`}
+                aria-hidden="true"
+              />
+              <code>{c.name}</code>
+            </td>
+            <td>{c.role}</td>
+            <td>
+              {c.contrast}:1{" "}
+              {c.threshold === null ? (
+                <span>(surface)</span>
+              ) : c.contrast >= c.threshold ? (
+                <span>passes</span>
+              ) : (
+                <strong>below {c.threshold}:1</strong>
+              )}
+            </td>
+            <td class="text-sm">
+              <details>
+                <summary>
+                  {c.uses.length} {c.uses.length === 1 ? "use" : "uses"}
+                </summary>
+                <ul>
+                  {c.uses.map((u) => (
+                    <li>
+                      <code>
+                        {u.file}:{u.line}
+                      </code>{" "}
+                      {u.token}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
