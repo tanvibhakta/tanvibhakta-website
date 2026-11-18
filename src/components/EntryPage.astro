@@ -7,6 +7,7 @@ import { getReadingTimeMinutes } from "../utils/reading-time";
 import NoteEmbed from "./NoteEmbed.astro";
 // MDX posts opt into a table of contents by writing <TableOfContents />.
 import TableOfContents from "./TableOfContents.astro";
+import Table from "./Table.astro";
 import {
   getEntryPath,
   getPublishedEntriesSorted,
@@ -111,7 +112,7 @@ if (presentation.navNoun) {
   }}
 >
   {hasToc && <TableOfContents margin />}
-  <Content components={{ NoteEmbed, TableOfContents }} />
+  <Content components={{ NoteEmbed, TableOfContents, Table }} />
   {
     audio && (
       <AudioPlayer

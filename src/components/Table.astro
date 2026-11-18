@@ -1,0 +1,234 @@
+---
+// Wraps a plain markdown table in an MDX post and enhances it: click a column
+// header to sort, optional filter chips built from one column, and a compact
+// layout when the table's container is narrow: the first two columns side by
+// side, the rest full-width beneath them, the filter column hidden. The table stays ordinary
+// markdown inside the tags (blank lines around it, so MDX parses it), which
+// keeps it editable in any markdown editor and readable with JS off.
+//
+//   <Table filter="Type">
+//
+//   | Place | Type |
+//   | ...   | ...  |
+//
+//   </Table>
+//
+// Filter values: a cell's text minus any "(…)" aside, split on "," and "/",
+// so "Food, drink" counts as both Food and Drink, and "Monument (1724)" as
+// Monument.
+//
+// Why not a library: simple-datatables/DataTables ship their own chrome,
+// CSS and pagination we'd have to fight; tablesort only sorts. None offer
+// filter chips or a narrow layout over markdown-authored tables.
+interface Props {
+  /** Header text of the column to build filter chips from. */
+  filter?: string;
+}
+
+const { filter } = Astro.props;
+---
+
+<div class="data-table my-8" data-filter={filter}>
+  <slot />
+</div>
+
+<script>
+  const CHIP =
+    "rounded-full border px-3 py-0.5 text-sm [font-variant:small-caps] tracking-wide transition-colors cursor-pointer";
+  const CHIP_OFF = "border-stone-300 text-stone-600 hover:border-stone-500";
+  const CHIP_ON = "border-stone-800 bg-stone-800 text-stone-50";
+
+  const valuesOf = (text: string) =>
+    text
+      .replace(/\([^)]*\)/g, "")
+      .split(/[,/]/)
+      .map((v) => v.trim().toLowerCase())
+      .filter((v) => v && v !== "—" && v !== "-");
+
+  const title = (v: string) => v.charAt(0).toUpperCase() + v.slice(1);
+
+  function enhance(wrap: HTMLElement) {
+    const table = wrap.querySelector("table");
+    if (!table || wrap.dataset.enhanced) return;
+    wrap.dataset.enhanced = "true";
+
+    const headers = [...table.querySelectorAll("thead th")] as HTMLElement[];
+    const tbody = table.tBodies[0];
+    const rows = [...tbody.rows];
+    const labels = headers.map((th) => th.textContent?.trim() ?? "");
+
+    const name = wrap.dataset.filter?.toLowerCase();
+    const col = name ? labels.findIndex((l) => l.toLowerCase() === name) : -1;
+    // The filter column is redundant with the chips; narrow layouts hide it.
+    if (col >= 0) headers[col].dataset.filterCol = "";
+
+    // The narrow layout places cells by visible column, skipping the hidden
+    // filter column: "a" and "b" are the first two, the rest are "rest".
+    const visible = labels.map((_, i) => i).filter((i) => i !== col);
+    const slot = (i: number) =>
+      i === visible[0] ? "a" : i === visible[1] ? "b" : "rest";
+    headers.forEach((th, i) => (th.dataset.slot = slot(i)));
+
+    for (const row of rows) {
+      [...row.cells].forEach((td, i) => {
+        if (i === col) td.dataset.filterCol = "";
+        td.dataset.slot = slot(i);
+        // A "—" placeholder reads fine in a grid but is noise when stacked.
+        if (/^[\s—–-]*$/.test(td.textContent ?? "")) td.dataset.empty = "";
+      });
+    }
+
+    // Sorting: header text becomes a button; aria-sort carries the state.
+    headers.forEach((th, col) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "sort-button";
+      button.innerHTML = `${th.innerHTML}<span class="sort-icon" aria-hidden="true"></span>`;
+      th.replaceChildren(button);
+      button.addEventListener("click", () => {
+        const dir = th.getAttribute("aria-sort") === "ascending" ? -1 : 1;
+        headers.forEach((h) => h.removeAttribute("aria-sort"));
+        th.setAttribute("aria-sort", dir === 1 ? "ascending" : "descending");
+        const sorted = [...tbody.rows].sort(
+          (a, b) =>
+            dir *
+            (a.cells[col]?.textContent ?? "").localeCompare(
+              b.cells[col]?.textContent ?? "",
+              undefined,
+              { numeric: true, sensitivity: "base" },
+            ),
+        );
+        tbody.append(...sorted);
+      });
+    });
+
+    // Filter chips from the named column, most common first.
+    if (col < 0) return;
+
+    const counts = new Map<string, number>();
+    for (const row of rows)
+      for (const v of valuesOf(row.cells[col]?.textContent ?? ""))
+        counts.set(v, (counts.get(v) ?? 0) + 1);
+    const values = [...counts].sort((a, b) => b[1] - a[1]).map(([v]) => v);
+
+    const bar = document.createElement("div");
+    bar.className = "mb-3 flex flex-wrap gap-2";
+    bar.setAttribute("role", "group");
+    bar.setAttribute("aria-label", `Filter by ${labels[col]}`);
+
+    const chips = [null, ...values].map((value) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.textContent = value
+        ? `${title(value)} ${counts.get(value)}`
+        : `All ${rows.length}`;
+      chip.addEventListener("click", () => select(value));
+      bar.append(chip);
+      return { chip, value };
+    });
+
+    function select(value: string | null) {
+      for (const { chip, value: v } of chips) {
+        const on = v === value;
+        chip.className = `${CHIP} ${on ? CHIP_ON : CHIP_OFF}`;
+        chip.setAttribute("aria-pressed", String(on));
+      }
+      for (const row of rows)
+        row.hidden =
+          value !== null &&
+          !valuesOf(row.cells[col]?.textContent ?? "").includes(value);
+    }
+
+    select(null);
+    wrap.prepend(bar);
+  }
+
+  document
+    .querySelectorAll<HTMLElement>(".data-table")
+    .forEach((wrap) => enhance(wrap));
+</script>
+
+<style>
+  .data-table {
+    container-type: inline-size;
+  }
+
+  .data-table :global(table) {
+    margin: 0;
+  }
+
+  .data-table :global(tr[hidden]) {
+    display: none;
+  }
+
+  .data-table :global(th) {
+    vertical-align: bottom;
+  }
+
+  .data-table :global(.sort-button) {
+    all: unset;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3em;
+  }
+
+  .data-table :global(.sort-button:focus-visible) {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .data-table :global(.sort-icon)::after {
+    content: "↕";
+    font-size: 0.75em;
+    opacity: 0.3;
+  }
+  .data-table :global([aria-sort="ascending"] .sort-icon)::after {
+    content: "↑";
+    opacity: 1;
+  }
+  .data-table :global([aria-sort="descending"] .sort-icon)::after {
+    content: "↓";
+    opacity: 1;
+  }
+
+  /* Narrow container (phones, and tablets' half-width column): the first
+     two visible columns side by side, the rest full-width beneath them. */
+  @container (max-width: 34rem) {
+    .data-table :global(:is(table, thead, tbody)) {
+      display: block;
+    }
+    /* Header and body rows share one grid, so the header labels sit over
+       their columns and the header rule spans the full width. */
+    .data-table :global(tr) {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 0.75rem;
+    }
+    .data-table :global(thead th) {
+      padding: 0 0 0.5rem;
+      font-size: 0.875rem;
+    }
+    .data-table :global(tbody tr) {
+      padding: 0.6rem 0;
+    }
+    .data-table :global(tbody td) {
+      padding: 0;
+    }
+    .data-table :global(tbody td[data-slot="a"]) {
+      font-weight: 600;
+    }
+    .data-table :global(tbody td[data-slot="rest"]) {
+      grid-column: 1 / -1;
+      padding-top: 0.4rem;
+    }
+    .data-table :global(:is(thead th[data-slot="rest"], tbody td[data-empty])) {
+      display: none;
+    }
+
+    /* The filter column repeats what the chips say. */
+    .data-table :global(:is(th, td)[data-filter-col]) {
+      display: none;
+    }
+  }
+</style>

@@ -35,6 +35,13 @@ a {
   overflow-wrap: anywhere;
 }
 
+/* …except in tables, where `anywhere` lets auto table layout shrink a column
+   below its longest word, splitting "Food" into "Foo/d". Cells wrap at
+   spaces; a lone long URL still breaks instead of overflowing. */
+.prose table {
+  overflow-wrap: break-word;
+}
+
 a:hover {
   filter: brightness(0.8);
   transition: filter 0.12s ease-in-out;
