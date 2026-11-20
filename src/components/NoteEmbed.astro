@@ -1,0 +1,37 @@
+---
+// A note quoted inside another post. MDX posts get one wherever a note's URL
+// sits alone on its line (src/plugins/remark-note-embeds.mjs swaps the URL
+// for <NoteEmbed slug="…" />; EntryPage passes this component to MDX).
+//
+// The note is read from the content collection and rendered by Note.astro,
+// so an embedded note has the same text, timestamp, tags and permalink as
+// its own page — one definition, nothing copied.
+import { render } from "astro:content";
+import Note from "./Note.astro";
+import { getSluggedNotes } from "../utils/notes";
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const found = (await getSluggedNotes()).find((n) => n.slug === slug);
+if (!found) {
+  // Fail the build: a broken embed must not ship as a hole in the post.
+  throw new Error(`NoteEmbed: no note at /${slug}`);
+}
+const { Content } = await render(found.note);
+---
+
+<aside
+  data-slug={slug}
+  class="my-7 border-l-2 border-stone-300 pl-5 text-stone-600 [&>article]:my-0 [&>article>:first-child]:mt-0"
+>
+  <Note
+    publishedOn={found.note.data.publishedOn}
+    href={`/${slug}`}
+    tags={found.note.data.tags}
+  >
+    <Content />
+  </Note>
+</aside>

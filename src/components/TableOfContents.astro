@@ -1,0 +1,152 @@
+---
+// A post's table of contents: its h2s, with h3s nested under them. Opt-in
+// per post: an MDX post writes <TableOfContents /> where it should appear
+// (EntryPage passes this component to MDX, like NoteEmbed).
+//
+// The headings come from Astro.locals, which EntryPage fills from
+// render(entry) before the post renders. That keeps the tag prop-free in the
+// post, since MDX content has no handle on its own headings.
+//
+// Two placements, never shown together:
+// - inline (the tag in the post): below xl, sits where the post puts it.
+// - margin (rendered by EntryPage at the top of any post containing the
+//   tag): from xl up, floats into the right margin level with the first
+//   paragraph and sticks below the top of the viewport, so every topic stays
+//   one click away. The negative right margin equals its width plus a gap,
+//   so the float takes no room from the text column and nothing wraps it.
+//
+// Custom rather than remark-toc: that one needs a "Contents" heading written
+// into the markdown and emits a bare list, which would then be styled as
+// body text and land in the post's own heading list.
+interface Props {
+  margin?: boolean;
+}
+
+const { margin = false } = Astro.props;
+const headings = Astro.locals.headings ?? [];
+const titleId = margin ? "toc-title-margin" : "toc-title";
+
+// The nav is not-prose (so its lists aren't styled as body text), which also
+// drops typography's link rules. These restore them (underline, weight 500,
+// plus the global hover/visited filters every <a> gets) in grey instead of
+// the link red. The section being read goes darker and bold.
+const LINK_CLASS =
+  "font-medium text-stone-600! underline aria-[current=location]:font-bold aria-[current=location]:text-stone-950!";
+
+// rehype-autolink-headings appends " #", which ends up in heading text.
+type Item = { slug: string; text: string; children: Item[] };
+const tree: Item[] = [];
+for (const h of headings) {
+  const item = {
+    slug: h.slug,
+    text: h.text.replace(/\s*#$/, ""),
+    children: [],
+  };
+  if (h.depth === 2) tree.push(item);
+  else if (h.depth === 3 && tree.length) tree.at(-1)!.children.push(item);
+}
+---
+
+{
+  tree.length > 0 && (
+    <nav
+      aria-labelledby={titleId}
+      class:list={[
+        // The border is the same quiet gray as the embedded notes' rule
+        // (NoteEmbed's border-stone-300); the background stays the page's own.
+        "not-prose rounded-sm border border-stone-300 px-5 py-4 leading-snug",
+        margin
+          ? "sticky top-24 float-right -mr-[calc(15rem+2rem)] hidden max-h-[calc(100vh-8rem)] w-60 overflow-y-auto text-sm transition-opacity duration-300 xl:block data-[hidden]:opacity-0 hover:opacity-100! focus-within:opacity-100! motion-reduce:transition-none"
+          : "my-8 text-[0.95rem] xl:hidden",
+      ]}
+    >
+      <p id={titleId} class="mb-2 font-literata font-bold text-stone-900">
+        Table of Contents
+      </p>
+      <ol class="space-y-1">
+        {tree.map((h) => (
+          <li>
+            <a
+              href={`#${h.slug}`}
+              data-toc-link={margin ? h.slug : undefined}
+              class={LINK_CLASS}
+            >
+              {h.text}
+            </a>
+            {h.children.length > 0 && (
+              <ol class="mt-1 space-y-1 pl-4 text-sm">
+                {h.children.map((c) => (
+                  <li>
+                    <a
+                      href={`#${c.slug}`}
+                      data-toc-link={margin ? c.slug : undefined}
+                      class={LINK_CLASS}
+                    >
+                      {c.text}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+<script>
+  // Marks the section being read in the margin copy: the last heading that
+  // has scrolled above a line 30% down the viewport. With h3s, both the h3
+  // and its parent h2 are marked.
+  const links = [
+    ...document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]"),
+  ];
+  const targets = links.flatMap(
+    (a) => document.getElementById(a.dataset.tocLink!) ?? [],
+  );
+  const list = links[0]?.closest("nav");
+
+  let last: string | undefined;
+  const update = () => {
+    const line = innerHeight * 0.3;
+    const above = targets.filter((t) => t.getBoundingClientRect().top < line);
+    const current = above.at(-1);
+    const parent = above.filter((t) => t.tagName === "H2").at(-1);
+    if (current?.id === last) return;
+    last = current?.id;
+    for (const a of links) {
+      const on =
+        a.dataset.tocLink === current?.id || a.dataset.tocLink === parent?.id;
+      if (on) a.setAttribute("aria-current", "location");
+      else a.removeAttribute("aria-current");
+    }
+    // Keep the marked entry visible when the list is taller than the screen,
+    // scrolling only the list, never the page.
+    const marked = links.find((a) => a.dataset.tocLink === current?.id);
+    if (list && marked) {
+      const { top, bottom } = marked.getBoundingClientRect();
+      const box = list.getBoundingClientRect();
+      if (top < box.top || bottom > box.bottom)
+        list.scrollTop += top - box.top - box.height / 2;
+    }
+  };
+
+  // Reading means scrolling down: fade the list out then, and bring it back
+  // on any scroll up (looking for something), on hover, or on keyboard focus.
+  let lastY = scrollY;
+  const autoHide = () => {
+    if (!list) return;
+    const y = scrollY;
+    if (y < lastY - 4) list.removeAttribute("data-hidden");
+    else if (y > lastY + 4) list.setAttribute("data-hidden", "");
+    if (Math.abs(y - lastY) > 4) lastY = y;
+  };
+
+  if (links.length) {
+    addEventListener("scroll", autoHide, { passive: true });
+    addEventListener("scroll", update, { passive: true });
+    addEventListener("resize", update);
+    update();
+  }
+</script>

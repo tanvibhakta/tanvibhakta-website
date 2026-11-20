@@ -107,6 +107,7 @@ const audioSchema = {
 };
 
 const blog = defineCollection({
+  // .mdx for posts that embed notes (see src/plugins/remark-note-embeds.mjs).
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./posts/blog/" }),
   schema: collectionSchema.extend(audioSchema),
 });

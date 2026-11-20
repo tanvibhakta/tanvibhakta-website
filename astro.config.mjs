@@ -7,6 +7,7 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import icon from "astro-icon";
 import remarkBreaks from "remark-breaks";
+import { remarkNoteEmbeds } from "./src/plugins/remark-note-embeds.mjs";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { rehypeAnchors } from "./src/plugins/rehype-anchors.mjs";
@@ -40,7 +41,8 @@ export default defineConfig({
   },
 
   markdown: {
-    remarkPlugins: [remarkBreaks],
+    // Embeds first, so remark-breaks also runs over embedded note text.
+    remarkPlugins: [remarkNoteEmbeds, remarkBreaks],
     rehypePlugins: [
       // Must come first: galleries absorb image-only paragraphs before
       // rehypeAnchors targets every <p> (see plugin header comment).
