@@ -30,3 +30,5 @@ I really like this set of questions from [z1nz0l1n](https://z1nz0l1n.com/26w44/)
 19. From where you’re reading this, point north.
 20. What is the season of bloom of your favorite Bangalore flower?
 
+Thank you to [Atharva](https://atharvaraykar.com/) for reviewing these questions with me.
+
