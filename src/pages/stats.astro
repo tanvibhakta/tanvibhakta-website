@@ -1,0 +1,55 @@
+---
+import ProseLayout from "../layouts/ProseLayout.astro";
+import StatsList, { type StatsRow } from "../components/StatsList.astro";
+import { loadLinkData, type LinkRecord } from "../utils/link-records";
+import { STANDALONE_PAGES } from "../content.config";
+import {
+  groupOutgoing,
+  PEOPLE_HEADING,
+  type Person,
+  type Platforms,
+} from "../utils/link-census";
+import people from "../data/people.json";
+import platforms from "../data/platforms.json";
+
+const { census, titles, records } = await loadLinkData();
+
+const internalRows: StatsRow[] = census.internal.map(({ target, count }) => ({
+  label: target,
+  labelHtml: titles.get(target)?.html,
+  count,
+  urls: [{ target, count }],
+}));
+
+// People still go through the grouping, so a friend's site or profile is
+// claimed by people.json instead of landing in Blogs & Publications or
+// Aggregators, but their section isn't shown here.
+const outgoingSections = groupOutgoing(
+  census.outgoing,
+  people as Person[],
+  platforms as Platforms,
+).filter(
+  (section) => section.groups.length > 0 && section.heading !== PEOPLE_HEADING,
+);
+
+// Every mention of each URL, for the ↩ links back to where it was written.
+const backlinks = new Map<string, LinkRecord[]>();
+for (const r of records)
+  backlinks.set(r.url, [...(backlinks.get(r.url) ?? []), r]);
+---
+
+<ProseLayout frontmatter={STANDALONE_PAGES.stats}>
+  <h2>Links</h2>
+  <section>
+    <h3>Internal Links</h3>
+    <StatsList rows={internalRows} backlinks={backlinks} />
+  </section>
+  {
+    outgoingSections.map((section) => (
+      <section>
+        <h3>{section.heading}</h3>
+        <StatsList rows={section.groups} backlinks={backlinks} />
+      </section>
+    ))
+  }
+</ProseLayout>

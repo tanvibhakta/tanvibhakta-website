@@ -78,6 +78,11 @@ export const STANDALONE_PAGES = {
     title: "Subscribe",
     description: "RSS feeds for every section",
   },
+  stats: {
+    href: "/stats",
+    title: "Stats",
+    description: "fun metadata about the site",
+  },
   tags: {
     href: "/tags",
     title: "Tags",
