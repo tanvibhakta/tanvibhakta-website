@@ -2,8 +2,8 @@
 title: Where you at?
 publishedOn: 2026-11-21T14:53:00+05:30
 draft: false
-audio: ''
-audioTitle: ''
+audio: ""
+audioTitle: ""
 tags: []
 ---
 
@@ -42,4 +42,3 @@ IndieWebClub-specific responses will be collected here as and when I hear about 
 For a list of responses the world over, check out [all submissions](https://z1nz0l1n.com/26w44/#submissions)
 
 _Thank you to [Atharva](https://atharvaraykar.com/) for reviewing these questions with me._
-
