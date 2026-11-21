@@ -39,33 +39,37 @@
   <body>
     <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
     <!-- Sveltia commits through the GitHub API, so the Prettier pre-commit
-         hook never sees its saves. This formats the markdown body before each
-         save so CI's `prettier --check` passes. Keep the version in step with
-         package.json's prettier. Frontmatter is serialized by Sveltia after
-         this hook, so it stays out of reach: a title containing ": " still
-         comes out single-quoted, which Prettier rewrites to double quotes. If
-         Prettier fails to load, saves go through unformatted and CI flags them. -->
+         hook never sees its saves. Registering a `toFile` for the built-in
+         frontmatter format lets us take Sveltia's own serialization of the
+         whole file (`serialize`) and run Prettier over all of it, frontmatter
+         included: Sveltia single-quotes YAML strings that need quoting
+         (`audio: ''`, titles containing ": "), which Prettier rewrites to
+         double quotes. Loading still uses Sveltia's built-in parser, since no
+         `fromFile` is given. Sveltia trims the result and adds one newline.
+         Keep the version in step with package.json's prettier;
+         src/utils/format-markdown.ts does the same for Telegram notes. If
+         Prettier fails, the unformatted file is saved and CI flags it. -->
     <script type="module">
       import * as prettier from "https://unpkg.com/prettier@3.9.6/standalone.mjs";
       import * as markdown from "https://unpkg.com/prettier@3.9.6/plugins/markdown.mjs";
+      import * as yaml from "https://unpkg.com/prettier@3.9.6/plugins/yaml.mjs";
 
-      CMS.registerEventListener({
-        name: "preSave",
-        handler: async ({ entry }) => {
-          const data = entry.get("data");
-          const body = data.get("body");
-          if (typeof body !== "string") return;
-          try {
-            const formatted = await prettier.format(body, {
-              parser: "markdown",
-              plugins: [markdown],
-            });
-            return data.set("body", formatted);
-          } catch (error) {
-            console.warn("Prettier could not format the body:", error);
-          }
-        },
-      });
+      const toFile = async (content, { serialize }) => {
+        const text = await serialize(content);
+        try {
+          return await prettier.format(text, {
+            parser: "markdown",
+            plugins: [markdown, yaml],
+          });
+        } catch (error) {
+          console.warn("Prettier could not format the entry:", error);
+          return text;
+        }
+      };
+      // Sveltia looks the formatter up under the configured format
+      // ("frontmatter", the .md default) and then the detected one.
+      CMS.registerCustomFormat("frontmatter", "md", { toFile });
+      CMS.registerCustomFormat("yaml-frontmatter", "md", { toFile });
     </script>
   </body>
 </html>

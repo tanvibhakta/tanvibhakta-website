@@ -1,3 +1,4 @@
+import { formatMarkdown } from "../../src/utils/format-markdown";
 import { createGitHub } from "../../src/utils/github-commit";
 import { toSiteWebp } from "../../src/utils/image-profile";
 import { planPhotoNote } from "../../src/utils/photo-note";
@@ -140,7 +141,7 @@ async function publishPhoto(
   }
   await gh.commitFiles(
     [
-      { path: plan.notePath, content: plan.content },
+      { path: plan.notePath, content: await formatMarkdown(plan.content) },
       { path: plan.imagePath, content: webp },
     ],
     plan.kind === "create"
@@ -157,11 +158,12 @@ async function commitTextNote(
   messageId: number,
 ): Promise<string> {
   const gh = github();
+  const content = await formatMarkdown(note.content);
   let path = `posts/notes/${note.filename}`;
   if (
     !(await gh.createFile(
       path,
-      note.content,
+      content,
       "note: publish from telegram",
       branch(),
     ))
@@ -173,7 +175,7 @@ async function commitTextNote(
     if (
       !(await gh.createFile(
         path,
-        note.content,
+        content,
         "note: publish from telegram",
         branch(),
       ))
