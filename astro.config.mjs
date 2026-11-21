@@ -93,6 +93,12 @@ export default defineConfig({
       status: 301,
       destination: "/2026may16-01",
     },
+    // Sveltia saved the published wishlist as wishlist-1 while a draft held
+    // wishlist.md; links to the old slug may already be out.
+    "/wishlist-1": {
+      status: 301,
+      destination: "/wishlist",
+    },
   },
 
   integrations: [
