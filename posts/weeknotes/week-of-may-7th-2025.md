@@ -13,7 +13,7 @@ Remember how I talked about no new hobbies? Well, I might have lied. I met someo
 
 I had a headache again earlier this week. 48 hours, tension not migraine, but still debilitating. I had to vomit lots. I fully believe this happened because I wrote about no headaches last week and someone put kann. It’s okay, various loved ones did various salt and lemon-chilly things to remove it, and eventually I did feel better.
 
-I’m very glad I kept up with calisthenics this week - apart from the headache, I also haven’t been very well rested. Having Divya come pick me up has been such an important motivator.
+I’m very glad I kept up with calisthenics this week - apart from the headache, I also haven’t been very well rested. Having [Divya](https://divyashivaram.substack.com/) come pick me up has been such an important motivator.
 
 I didn’t run this week. I psyched myself up for it - I even woke up both days meaning to do it, but since I was doing it alone I felt like I could just blow it off and recover instead. Spoiler alert: I didn’t feel actually rested. Somehow (and I’m very happy about this) over the last month my body has become the kind that will complain if it doesn’t get the exercise it is used to. A lesson my body will remember well next week I hope.
 
@@ -33,6 +33,6 @@ I want to go back to listening to more of the happy, peppy, indierockpop music I
 
 ### Around the web
 
-1. With the end of GloPoWriMo, Saket told me about the personal blog of [Purvai](https://www.purvaiaranya.com/), someone I met and really enjoyed hanging out with at Dee’s Lohri Party. More poetry for you all.
+1. With the end of GloPoWriMo, [Saket](https://saketghaisas.com/) told me about the personal blog of [Purvai](https://www.purvaiaranya.com/), someone I met and really enjoyed hanging out with at [Dee](https://deeptimegh.com/)’s Lohri Party. More poetry for you all.
 2. [Steven Deobald](https://www.deobald.ca/) is now [Executive Director at The GNOME Foundation](https://blogs.gnome.org/steven/2025/05/06/introducing-myself/)!
 3. [This fantastic post](https://www.evalapply.org/posts/writing-maketh-the-10x-developer/index.html) on writing as a force multiplier for engineers by Aditya Athalye that makes me regret not paying more attention to my writing journey 5 years ago and grateful that I’m not starting out on this 5 years from now.

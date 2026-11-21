@@ -83,6 +83,11 @@ export const STANDALONE_PAGES = {
     title: "Stats",
     description: "fun metadata about the site",
   },
+  people: {
+    href: "/people",
+    title: "People",
+    description: "people I know, and where I've written about them",
+  },
   tags: {
     href: "/tags",
     title: "Tags",

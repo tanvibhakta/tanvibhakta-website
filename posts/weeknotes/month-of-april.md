@@ -29,7 +29,7 @@ Month note again
 
 - [Shruti](https://www.shrutisunderraman.com/) held a [dissent in poetry writing](<>) workshop at underline.center that was incredibly powerful. I was having a day so I embarrassed myself by nearly crying in my introduction. Poetry can destabilise and ground in strange and scary ways.
 
-- [Anik](https://blog.anikthink.com/) hosted a dinner at his lovely flat in [very far away] that I’m so glad I made the effort to go to. Excellent food and company - and I finally got to meet Malcolm!
+- [Anik](https://blog.anikthink.com/) hosted a dinner at his lovely flat in [very far away] that I’m so glad I made the effort to go to. Excellent food and company - and I finally got to meet [Malcolm](https://blog.anikthink.com/blog/weeknote-9-w2548)!
 
 - I spent 3 soul-healing hours at DMart with [Calra](https://himanshikalra.com/) choosing boxes. Buy groceries with friends, it is always more fun to do errands together.
 

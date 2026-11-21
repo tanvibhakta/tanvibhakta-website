@@ -36,7 +36,7 @@ publishedOn: 2026-08-02
 - I told my parents that I couldn’t come to a vacation that they had (failed to) schedule because I was scheduled to go to a party and get drunk. They were _stressed_. Dad called me several times and wanted to know who would take care of me. Sir, that time has long passed. I am now going to parties in order to take care of other people despite being drunk _points to all the baby gays_
 - I cut my hair. It is now very short. First, I cut it myself into an asymmetric bob. Then, [Sahiti](https://itihas.review/) cut it shorter. Then, I went to a men's barber and got a katori cut!! I am entering a new age of hair experimentation. Maybe this time I will color my hair. Maybe I will get frosted tips?!
 - I really, really enjoy shopping with and for the people I love. Spent half a day with a friend at a fashion exhibition, spent three hours on video call with a friend in a different country thrifting, spent half a day in a mall with a third friend buying shirts for an upcoming trip. Fashion is so important to me. i want to put more of my expeirmentation out into the world, but it involves using skills I don't have that are not related; photography, lighting, videography, editing. I wish it were simpler to capture just the joy I get from cool fits and fun outfits.
-- Ananya, Juhi, Ankur and I drove out of town to see shooting stars! It was the first time I have been successful at seeing them. What an absolutely incredible experience. I love the night sky so much.
+- Ananya, Juhi, [Ankur](https://ankursethi.com/) and I drove out of town to see shooting stars! It was the first time I have been successful at seeing them. What an absolutely incredible experience. I love the night sky so much.
 
 ## My quarter in data
 

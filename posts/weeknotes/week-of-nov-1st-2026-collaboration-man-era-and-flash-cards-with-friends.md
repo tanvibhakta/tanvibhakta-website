@@ -30,7 +30,7 @@ This week has been very social! I went out for several meals, courtesy [Restaura
 
 1. [Baan Phad Thai](https://www.baanphadthai.com/bengaluru) with a gang of 6, followed by coffee and excellent cake at [Ondu Plate](https://www.onduplate.com/) (happy birthday!)
 2. [Boteco](https://boteco.co.in/) for a team lunch
-3. [Mai Mai](https://www.maimaiindia.com/) with [Kenneth](https://kenneth.dsouza.im/), Noopur, and [Ankur](https://ankursethi.com/) for a mostly sushi and pork dinner
+3. [Mai Mai](https://www.maimaiindia.com/) with [Kenneth](https://kenneth.dsouza.im/), [Noopur](http://noopur.me/), and [Ankur](https://ankursethi.com/) for a mostly sushi and pork dinner
 4. [Bistro Cameo](https://map-india.org/cameo/) for a sunny sunday lunch
 
 We also had several people over, and I played entirely too many hours of [Unrailed](https://unrailed-game.com/unrailed.html) on the couch, classic co-op style.

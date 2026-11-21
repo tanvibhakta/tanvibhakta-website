@@ -7,7 +7,7 @@ My task management system broke down completely this week. I had a few bad days 
 
 ## Life
 
-I have spent lots of low-level time with friends this week. Shruti spent a few days living with me, and then I hosted a session of Nonsense Movie Club, and this week Dee and Saket of [paus](https://paus.in/) are spending a few days with me. I somehow have a lot less energy this week and there’s so many things happening and I’m so glad for my friends but also tired.
+I have spent lots of low-level time with friends this week. [Shruti](https://shrutisunderraman.com/) spent a few days living with me, and then I hosted a session of Nonsense Movie Club, and this week [Dee](https://deeptimegh.com/) and [Saket](https://saketghaisas.com/) of [paus](https://paus.in/) are spending a few days with me. I somehow have a lot less energy this week and there’s so many things happening and I’m so glad for my friends but also tired.
 
 ## Health
 

@@ -67,7 +67,7 @@ I think a big green flag if you’re looking to date is reading romance novels. 
 
 ### Watching
 
-Staying with Dee and Saket means that we have to watch something together. Alas, high school musical could not happen so we watched two episodes of Derry Girls instead.
+Staying with [Dee](https://deeptimegh.com/) and [Saket](https://saketghaisas.com/) means that we have to watch something together. Alas, high school musical could not happen so we watched two episodes of Derry Girls instead.
 
 I started watching Pose! I’ve watched half the pilot so far, and I really enjoyed it. Maybe this is the show I’ll watch over the course of this year, in ten-minute increments.
 
