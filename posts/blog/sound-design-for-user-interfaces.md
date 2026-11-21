@@ -2,8 +2,8 @@
 title: Sound Design for User Interfaces
 publishedOn: 2026-11-16T17:11:00+05:30
 draft: true
-audio: ''
-audioTitle: ''
+audio: ""
+audioTitle: ""
 tags: []
 ---
 
@@ -19,4 +19,3 @@ I haven't seen too many people talk about it, but I have designed two different 
 - Sound should not be random for the sake of it. For example, I think if you're adding sound to the Animation of text slowly streaming in or text being typed, then it is expected for there to be a little randomness. But if you have a big interactive visual thing on your landing page and clicking on the same page changing same point in the page changing nothing else gives me a different set of tones then I'm going to be annoyed.
 - Sound should have a level of uniformity and be predictable.
 - Great sound design is achieved when your UI can be used to make music. For example, dialer tones.
-

@@ -111,6 +111,9 @@ importers:
       remark-breaks:
         specifier: ^4.0.0
         version: 4.0.0
+      typescript:
+        specifier: ~5.9.3
+        version: 5.9.3
       typescript-eslint:
         specifier: ^8.69.0
         version: 8.69.0(eslint@10.10.0(jiti@2.7.0))(typescript@5.9.3)
