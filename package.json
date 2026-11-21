@@ -55,6 +55,7 @@
     "prettier": "3.9.6",
     "prettier-plugin-astro": "0.14.1",
     "remark-breaks": "^4.0.0",
+    "typescript": "~5.9.3",
     "typescript-eslint": "^8.69.0",
     "unist-util-visit": "^5.1.0",
     "vitest": "^3.2.7",
