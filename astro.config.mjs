@@ -88,6 +88,11 @@ export default defineConfig({
       status: 301,
       destination: "/ai-policy",
     },
+    // Moved from the blog to notes.
+    "/blog/notes-on-running": {
+      status: 301,
+      destination: "/2026may16-01",
+    },
   },
 
   integrations: [
