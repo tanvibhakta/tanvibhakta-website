@@ -13,6 +13,8 @@ I really like this set of questions from [z1nz0l1n](https://z1nz0l1n.com/26w44/)
 
 I'm modifying it to be Bangalore-specific, and proposing it as a [prompt](https://blr.indiewebclub.org/prompts/) for [IndieWebClub Blr #38](https://blr.indiewebclub.org/events/indiewebclub-38/).
 
+## Questions
+
 1. Trace the water you drink from precipitation to tap.
 2. How many days till the moon is full? (Slack of two days allowed.)
 3. What was on the soil where your home is built? What kind of soil is it built on?
@@ -34,5 +36,10 @@ I'm modifying it to be Bangalore-specific, and proposing it as a [prompt](https:
 19. From where you’re reading this, point north.
 20. What is the season of bloom of your favorite Bangalore flower?
 
-Thank you to [Atharva](https://atharvaraykar.com/) for reviewing these questions with me.
+## Responses
+
+IndieWebClub-specific responses will be collected here as and when I hear about them.
+For a list of responses the world over, check out [all submissions](https://z1nz0l1n.com/26w44/#submissions)
+
+_Thank you to [Atharva](https://atharvaraykar.com/) for reviewing these questions with me._
 
