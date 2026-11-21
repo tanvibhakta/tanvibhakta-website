@@ -1,37 +1,36 @@
 ---
 import type { TargetCount } from "../utils/link-census";
+import type { LinkRecord } from "../utils/link-records";
 
 /**
- * One ranked list on /stats. Every row is a single label: it links straight
- * to its target when there's one URL behind it, and expands to list the URLs
- * when there are several (starting open when there are exactly two). Rows
- * under FOLD_BELOW mentions fold into one collapsed, alphabetical line.
+ * One ranked list on /stats. Each row reads like a book index: the label, a
+ * dotted leader, then its count. A row with one URL links its label straight
+ * to it; a row with several lists them underneath in small run-in text,
+ * always open. Every URL carries one ↩ per mention, back to the paragraph it
+ * was written in. Rows under FOLD_BELOW mentions fold into one collapsed,
+ * alphabetical list in the same format.
  */
 export type StatsRow = {
   label: string;
   /** Label as trusted HTML (rendered titles); takes precedence over label. */
   labelHtml?: string;
-  /** Small-caps context shown before the count, e.g. a post's section. */
-  meta?: string;
   count: number;
   urls: TargetCount[];
 };
 
 interface Props {
   rows: StatsRow[];
+  /** Every mention of each URL, for the ↩ links back to the paragraph. */
+  backlinks: Map<string, LinkRecord[]>;
 }
 
 const FOLD_BELOW = 3;
 
-const { rows } = Astro.props;
+const { rows, backlinks } = Astro.props;
 const ranked = rows.filter((row) => row.count >= FOLD_BELOW);
 const tail = rows
   .filter((row) => row.count < FOLD_BELOW)
   .sort((a, b) => a.label.localeCompare(b.label));
-
-const mentions = (n: number) => `${n} ${n === 1 ? "mention" : "mentions"}`;
-// Domains are shown bare, so expanded URLs drop the scheme and www. too.
-const stripScheme = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "");
 
 const escape = (text: string) =>
   text.replace(
@@ -42,66 +41,47 @@ const escape = (text: string) =>
       ]!,
   );
 const labelHtml = (row: StatsRow) => row.labelHtml ?? escape(row.label);
+const plain = (html: string) => html.replace(/<[^>]+>/g, "");
 
-// The tail is built as one string: in markup, the whitespace between inline
-// elements would render as stray underlined spaces around every link. Its
-// label links to the first URL; any others follow as superscript numbers.
-const tailHtml = tail
-  .map(({ urls, ...row }) => {
-    const [first, ...rest] = urls;
-    const extra = rest
-      .map(
-        (url, i) => `<sup><a href="${escape(url.target)}">${i + 2}</a></sup>`,
-      )
-      .join("");
-    return `<a href="${escape(first.target)}">${labelHtml(row as StatsRow)}</a>${extra}`;
-  })
-  .join(`<span class="opacity-40"> · </span>`);
+// One ↩ per mention of a URL; the hover title names the post.
+const backHtml = (url: string) =>
+  (backlinks.get(url) ?? [])
+    .map((r) => {
+      const title = escape(plain(r.post.titleHtml));
+      return `<a class="back" href="${escape(r.backlink)}" title="${title}" aria-label="Back to where it's mentioned in ${title}">↩</a>`;
+    })
+    .join("");
+
+// When the row is a domain, its URLs drop that domain and show just their
+// path; "/" means the homepage itself.
+const runinLabel = (row: StatsRow, url: string) => {
+  const bare = url.replace(/^https?:\/\/(www\.)?/, "");
+  if (!bare.startsWith(row.label)) return bare;
+  return bare.slice(row.label.length) || "/";
+};
+
+// Rows are built as strings: in markup, the whitespace between inline
+// elements would render as stray underlined spaces around every link.
+const rowHtml = (row: StatsRow) => {
+  const single = row.urls.length === 1;
+  const label = single
+    ? `<a href="${escape(row.urls[0].target)}">${labelHtml(row)}</a>${backHtml(row.urls[0].target)}`
+    : `<span>${labelHtml(row)}</span>`;
+  const runin = single
+    ? ""
+    : `<span class="runin">${row.urls
+        .map(
+          (url) =>
+            `<a href="${escape(url.target)}">${escape(runinLabel(row, url.target))}</a>${backHtml(url.target)}`,
+        )
+        .join(`<span class="opacity-40"> · </span>`)}</span>`;
+  return `<li><div class="leader"><span class="label">${label}</span><span class="dots" aria-hidden="true"></span><span class="n">${row.count}</span></div>${runin}</li>`;
+};
+const listHtml = (list: StatsRow[]) =>
+  `<ul class="stats-list">${list.map(rowHtml).join("")}</ul>`;
 ---
 
-<ul class="list-none pl-0!">
-  {
-    ranked.map((row) => (
-      <li
-        class:list={[
-          "my-1.5!",
-          // Single-link rows indent past the disclosure triangle so every
-          // label in the list starts at the same x.
-          row.urls.length === 1 ? "pl-[1.1em]!" : "pl-0!",
-        ]}
-      >
-        {row.urls.length === 1 ? (
-          <>
-            <a
-              href={row.urls[0].target}
-              class="[overflow-wrap:anywhere]"
-              set:html={labelHtml(row)}
-            />
-            <span class="count">
-              {row.meta && `${row.meta} · `}
-              {mentions(row.count)}
-            </span>
-          </>
-        ) : (
-          <details open={row.urls.length === 2}>
-            <summary class="cursor-pointer">
-              {row.label}
-              <span class="count">{mentions(row.count)}</span>
-            </summary>
-            <ul class="list-none pl-[1.2em]! my-1! text-sm">
-              {row.urls.map((url) => (
-                <li class="my-0.5! pl-0! [overflow-wrap:anywhere]">
-                  <a href={url.target}>{stripScheme(url.target)}</a>
-                  <span class="count">{mentions(url.count)}</span>
-                </li>
-              ))}
-            </ul>
-          </details>
-        )}
-      </li>
-    ))
-  }
-</ul>
+<div set:html={listHtml(ranked)} />
 
 {
   tail.length > 0 && (
@@ -109,19 +89,63 @@ const tailHtml = tail
       <summary class="cursor-pointer opacity-70">
         …and {tail.length} more, mentioned once or twice
       </summary>
-      <p class="mt-2 text-sm leading-relaxed" set:html={tailHtml} />
+      <div class="mt-2" set:html={listHtml(tail)} />
     </details>
   )
 }
 
 <style>
-  /* Shared small-caps count treatment, matching /tags and /sitemap. Kept on
-     one line so a long label can't break the count mid-word. */
-  .count {
-    font-size: 0.85rem;
-    font-variant: small-caps;
-    margin-left: 0.5rem;
+  /* The rows come from set:html, so every rule here needs :global. */
+  :global(.stats-list) {
+    list-style: none;
+    padding-left: 0;
+  }
+  :global(.stats-list li) {
+    margin-block: 0.375rem;
+    padding-left: 0;
+  }
+
+  /* Label ···· count, like a book index. */
+  :global(.stats-list .leader) {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  :global(.stats-list .label) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  :global(.stats-list .dots) {
+    flex: 1 1 auto;
+    min-width: 1.5rem;
+    border-bottom: 1px dotted var(--color-stone-300);
+    transform: translateY(-0.3em);
+  }
+  :global(.stats-list .n) {
+    font-variant-numeric: tabular-nums;
+    font-size: 0.9rem;
     opacity: 0.6;
-    white-space: nowrap;
+  }
+
+  /* A row's URLs as small run-in text, always visible. */
+  :global(.stats-list .runin) {
+    display: block;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    padding-left: 1rem;
+    opacity: 0.85;
+  }
+
+  /* ↩ back to the paragraph a link was written in: small, muted, and
+     un-underlined so a run of them reads as marks, not text. */
+  :global(.stats-list .back) {
+    margin-left: 0.2em;
+    font-size: 0.85em;
+    text-decoration: none;
+    opacity: 0.55;
+  }
+  :global(.stats-list .back:hover) {
+    opacity: 1;
   }
 </style>

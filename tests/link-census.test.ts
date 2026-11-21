@@ -4,6 +4,7 @@ import {
   classifyLink,
   extractLinks,
   groupOutgoing,
+  mentionsByPerson,
   matchesSite,
   type OutgoingLink,
 } from "../src/utils/link-census";
@@ -140,6 +141,54 @@ describe("groupOutgoing", () => {
       { target: "https://ankursethi.in", count: 1 },
     ]);
   });
+
+  test("aliased domains share one row, labelled by the first", () => {
+    const [, , aggregators] = groupOutgoing(
+      [
+        "https://x.com/a",
+        "https://twitter.com/b",
+        "https://xcancel.com/c",
+        "https://youtu.be/d",
+      ].map(outgoing),
+      [],
+      { Aggregators: [["x.com", "twitter.com", "xcancel.com"], "youtu.be"] },
+    );
+    expect(aggregators.groups.map((g) => [g.label, g.count])).toEqual([
+      ["x.com", 3],
+      ["youtu.be", 1],
+    ]);
+  });
+});
+
+describe("mentionsByPerson", () => {
+  test("lists each linked person with their URLs and citing pages", () => {
+    const result = mentionsByPerson(
+      [
+        {
+          href: "/a",
+          body: "[x](https://ankursethi.com/p) [y](https://ankursethi.in)",
+        },
+        {
+          href: "/b",
+          body: "[x](https://ankursethi.com/p) [z](https://example.org)",
+        },
+      ],
+      [
+        { name: "Ankur", sites: ["ankursethi.com", "ankursethi.in"] },
+        { name: "Nobody", sites: ["nobody.example"] },
+      ],
+    );
+    expect(result).toEqual([
+      {
+        person: { name: "Ankur", sites: ["ankursethi.com", "ankursethi.in"] },
+        urls: [
+          { target: "https://ankursethi.com/p", count: 2 },
+          { target: "https://ankursethi.in", count: 1 },
+        ],
+        pages: ["/a", "/b"],
+      },
+    ]);
+  });
 });
 
 describe("data files", () => {
@@ -156,7 +205,7 @@ describe("data files", () => {
   });
 
   test("platforms.json domains are well-formed and filed once", () => {
-    const domains = Object.values(platforms).flat();
+    const domains = Object.values(platforms).flat(2);
     for (const domain of domains) expect(domain).toMatch(SITE);
     expect(new Set(domains).size).toBe(domains.length);
   });

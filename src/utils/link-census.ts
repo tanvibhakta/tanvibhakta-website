@@ -111,8 +111,12 @@ export function buildLinkCensus(pages: LinkSource[]): LinkCensus {
 
 /** src/data/people.json: a person and the sites that are theirs. */
 export type Person = { name: string; sites: string[] };
-/** src/data/platforms.json: section heading → the domains filed under it. */
-export type Platforms = Record<string, string[]>;
+/**
+ * src/data/platforms.json: section heading → the platforms filed under it. A
+ * platform is a domain, or a list of domains that are the same thing (e.g.
+ * ["x.com", "twitter.com"]); they share one row, labelled by the first.
+ */
+export type Platforms = Record<string, (string | string[])[]>;
 
 /** A ranked row: a person, platform or site, and the URLs behind it. */
 export type LinkGroup = { label: string; count: number; urls: TargetCount[] };
@@ -140,6 +144,28 @@ export function matchesSite(link: OutgoingLink, site: string): boolean {
 }
 
 /**
+ * Where one outgoing link is filed: a person (people.json wins, so a friend's
+ * Instagram is theirs), else a platform (platforms.json, aliases sharing the
+ * first domain's label), else Blogs & Publications under its own domain.
+ */
+export function fileLink(
+  link: OutgoingLink,
+  people: Person[],
+  platforms: Platforms,
+): { heading: string; label: string } {
+  const person = people.find((p) => p.sites.some((s) => matchesSite(link, s)));
+  if (person) return { heading: PEOPLE_HEADING, label: person.name };
+  for (const [heading, entries] of Object.entries(platforms)) {
+    for (const entry of entries) {
+      const domains = [entry].flat();
+      if (domains.some((d) => matchesSite(link, d)))
+        return { heading, label: domains[0] };
+    }
+  }
+  return { heading: OTHER_HEADING, label: link.domain };
+}
+
+/**
  * File each outgoing link under a person (people.json wins, so a friend's
  * Instagram is theirs, not Instagram's), else a platform section
  * (platforms.json), else Blogs & Publications grouped by its own domain.
@@ -162,20 +188,8 @@ export function groupOutgoing(
   };
 
   for (const link of links) {
-    const person = people.find((p) =>
-      p.sites.some((s) => matchesSite(link, s)),
-    );
-    if (person) {
-      file(PEOPLE_HEADING, person.name, link.target);
-      continue;
-    }
-    const platform = Object.entries(platforms)
-      .flatMap(([heading, domains]) =>
-        domains.map((domain) => ({ heading, domain })),
-      )
-      .find(({ domain }) => matchesSite(link, domain));
-    if (platform) file(platform.heading, platform.domain, link.target);
-    else file(OTHER_HEADING, link.domain, link.target);
+    const { heading, label } = fileLink(link, people, platforms);
+    file(heading, label, link.target);
   }
 
   return [...sections].map(([heading, groups]) => ({
@@ -188,4 +202,43 @@ export function groupOutgoing(
       }))
       .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label)),
   }));
+}
+
+/** A person's footprint across the site: their URLs and the pages citing them. */
+export type PersonMentions = {
+  person: Person;
+  urls: TargetCount[];
+  /** Hrefs of the pages that link to them, in source order, deduplicated. */
+  pages: string[];
+};
+
+/**
+ * Every person in people.json who is linked from at least one page, with the
+ * URLs used and the pages they appear on. Same matching as groupOutgoing.
+ */
+export function mentionsByPerson(
+  pages: LinkSource[],
+  people: Person[],
+): PersonMentions[] {
+  const found = new Map<string, { urls: string[]; pages: Set<string> }>();
+  for (const page of pages) {
+    for (const href of extractLinks(page.body)) {
+      const link = classifyLink(href, page.href);
+      if (link?.kind !== "outgoing") continue;
+      const person = people.find((p) =>
+        p.sites.some((s) => matchesSite(link, s)),
+      );
+      if (!person) continue;
+      const entry = found.get(person.name) ?? { urls: [], pages: new Set() };
+      entry.urls.push(link.target);
+      entry.pages.add(page.href);
+      found.set(person.name, entry);
+    }
+  }
+  return people
+    .filter((person) => found.has(person.name))
+    .map((person) => {
+      const { urls, pages } = found.get(person.name)!;
+      return { person, urls: tally(urls), pages: [...pages] };
+    });
 }
