@@ -7,7 +7,11 @@ audioTitle: ''
 tags: []
 ---
 
-I really like this set of questions from [z1nz0l1n](https://z1nz0l1n.com/26w44/) that makes up this month's IndieWeb Carnival topic! I'm modifying it to be Bangalore-specific, and this is a [prompt](https://blr.indiewebclub.org/prompts/) for [IndieWebClub Blr #38](https://blr.indiewebclub.org/events/indiewebclub-38/).
+I really like this set of questions from [z1nz0l1n](https://z1nz0l1n.com/26w44/) that makes up this month's IndieWeb Carnival topic!
+
+> What follows is a self-scoring test on basic environmental perception of place
+
+I'm modifying it to be Bangalore-specific, and proposing it as a [prompt](https://blr.indiewebclub.org/prompts/) for [IndieWebClub Blr #38](https://blr.indiewebclub.org/events/indiewebclub-38/).
 
 1. Trace the water you drink from precipitation to tap.
 2. How many days till the moon is full? (Slack of two days allowed.)
