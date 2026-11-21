@@ -45,4 +45,4 @@ This heading feels a little superfluous now - because most of the effort I put i
 
 ### Listening
 
-Chutney Mary played an Imogen Heap inspired set which tells me I need to listen to more of her. Daisho incorporated k pop into his very lush, drip set which I adored. There might be acid techno out there which works for me. I haven't found it yet but it might exist somewhere. New lisa album I'm pretty excited about. Really enjoyed exactly one The Avalanches album. Rohini told me about The Chicks - i can't believe I've just not listened to them before.
+Chutney Mary played an Imogen Heap inspired set which tells me I need to listen to more of her. Daisho incorporated k pop into his very lush, drip set which I adored. There might be acid techno out there which works for me. I haven't found it yet but it might exist somewhere. New lisa album I'm pretty excited about. Really enjoyed exactly one The Avalanches album. [Rohini](https://instagram.com/roh_malur) told me about The Chicks - i can't believe I've just not listened to them before.

@@ -33,7 +33,7 @@ I’ve been spending some time organising how I do things. I used to use Todoist
 
 ### Reading
 
-1. Okay, I’m finally done rereading all of Dungeon Crawler Carl. God, what a ride. This is one of those books (like The Locked Tomb series) where even the idea of engaging with fan fiction feels so off, because I’m afraid to taint the source material. Repeatedly shilling it over the last two years has finally made Pranav pick up the book (yisss) but he’s taking wayyy too long for my liking. I spent literally ALL of Sunday and Wednesday reading. Am I proud of myself? No. Was it worth it? Also no, but I had fun!
+1. Okay, I’m finally done rereading all of Dungeon Crawler Carl. God, what a ride. This is one of those books (like The Locked Tomb series) where even the idea of engaging with fan fiction feels so off, because I’m afraid to taint the source material. Repeatedly shilling it over the last two years has finally made [Pranav](https://instagram.com/barkwhip) pick up the book (yisss) but he’s taking wayyy too long for my liking. I spent literally ALL of Sunday and Wednesday reading. Am I proud of myself? No. Was it worth it? Also no, but I had fun!
 
 ### Around the Web
 

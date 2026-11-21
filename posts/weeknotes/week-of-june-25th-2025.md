@@ -27,7 +27,7 @@ I had some tough conversations with a friend this week. It was really hard to do
 
 I had another migraine on Saturday. Luckily it was on a Saturday, so no calls etc got missed/had to be moved around, though I was sorely bummed at having slept through QRB’s discussion of Carmilla.
 
-I did one (1) calisthenics class this week (my schedule now seems to be the complete opposite of Divya’s) but I did do two at home stretch routine things instead of it! Learnt about the quadruped car exercise that really helps with the general pain (thanks Neehar!)
+I did one (1) calisthenics class this week (my schedule now seems to be the complete opposite of [Divya](https://divyashivaram.substack.com/)’s) but I did do two at home stretch routine things instead of it! Learnt about the quadruped car exercise that really helps with the general pain (thanks Neehar!)
 
 ## Media Diet
 

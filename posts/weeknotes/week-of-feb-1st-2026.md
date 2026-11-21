@@ -23,7 +23,7 @@ I have changed so much in the years I have been coming to Goa. Here, in the past
 5. Adopted by community that is not mine
 6. Gay as hell
 
-Today, I am tired. I was tired before Lolla, I have been tired since September, and I knew I would want to go home immediately after. So here I am, home in weather/clothes/eyes/food/loves. Today, I am tired but I am resting. I still spend ten hours a day working, but when I am done the empty trails and chirping birds greet me. I walked a dog and made small talk with the neighbours, and with the strangers at the tiny places I took myself to. I woke up with a headache for two days straight, and then Dee gave me a massage, I did my stretches, I basked in the sun, and I healed.
+Today, I am tired. I was tired before Lolla, I have been tired since September, and I knew I would want to go home immediately after. So here I am, home in weather/clothes/eyes/food/loves. Today, I am tired but I am resting. I still spend ten hours a day working, but when I am done the empty trails and chirping birds greet me. I walked a dog and made small talk with the neighbours, and with the strangers at the tiny places I took myself to. I woke up with a headache for two days straight, and then [Dee](https://deeptimegh.com/) gave me a massage, I did my stretches, I basked in the sun, and I healed.
 
 I ~~published~~wrote four posts in three days! I am finishing what I started. After work, when I’m tired, I can actually pause and breathe instead of thinking about the next thing I need to do. I miss my friends when I’m eating a thali by myself, but not enough to go back. I can hear myself think after 5 months of just trudging forward. I think I’m going to spend the rest of this month here - accommodation, transportation, and cat care willing.
 
@@ -31,7 +31,7 @@ I have eaten strawberries and dipped myself in clean salt water. I ran into an o
 
 ## Health
 
-This week, I had TWO bad headache days. They’ve become regular again :( But when it was happening, Dee was able to suggest helpful things because I told her to open [my care page](/care). That page is WIP, but did the job when it was needed!
+This week, I had TWO bad headache days. They’ve become regular again :( But when it was happening, [Dee](https://deeptimegh.com/) was able to suggest helpful things because I told her to open [my care page](/care). That page is WIP, but did the job when it was needed!
 
 ## Media Diet
 

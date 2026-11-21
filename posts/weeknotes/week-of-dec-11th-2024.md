@@ -8,7 +8,7 @@ publishedOn: 2024-12-11
 The weight of learning is upon me.
 I’ve been doing the [astro](https://astro.build/) tutorial quite religiously, and in the process I’ve learnt that I have many opinions on frameworks and javascript. It’s a comforting feeling, and validating my skill as an engineer. Maybe I’ll write them up one day.
 
-Akila is learning how to make websites too, and I am pumped! I love teaching programming concepts, it makes things crystal clear in my head. Also, gmeet calls debugging terminal things at 0030 are a great way to feel alive. Been thinking that maybe I have had _too much_ work life balance lately.
+[Akila](https://akils.mataroa.blog/) is learning how to make websites too, and I am pumped! I love teaching programming concepts, it makes things crystal clear in my head. Also, gmeet calls debugging terminal things at 0030 are a great way to feel alive. Been thinking that maybe I have had _too much_ work life balance lately.
 
 ## Life
 

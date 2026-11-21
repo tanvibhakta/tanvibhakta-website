@@ -10,7 +10,7 @@ Analogies are powerful learning/thinking devices that shape popular opinion. I'm
 
 This list is in chronological order.
 
-1. Ai is like plastic (Sohom)
+1. Ai is like plastic ([Sohom](https://signalshore.net/))
 2. Cursor proponents as drug addicts (https://read.readwise.io/filter/has%3Ahighlights%20AND%20last_opened__gt%3A%221%20week%20ago%22/read/01jzqtw14thk8jtcm62pyfexwt)
 3. Chatbot users as psychic marks (https://softwarecrisis.dev/letters/llmentalist/)
 4. Ai is a microwave
