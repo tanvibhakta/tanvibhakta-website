@@ -7,6 +7,8 @@ import { getDraftEntries, type CollectionName } from "../../utils/collections";
 // collection. Draft URLs mirror the published ones with a /drafts prefix:
 // /drafts/blog/<id>, /drafts/poetry/<id>, and /drafts/<id> for root-level
 // pages — so stripping "/drafts" always yields the future published URL.
+// public/_redirects relies on that: once an entry is published, its old
+// draft URL 301s to the published one.
 // These pages are excluded from listings, RSS feeds, tag pages, and the
 // sitemap (see the sitemap filter in astro.config.mjs), and carry a
 // noindex meta tag.

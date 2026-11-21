@@ -28,3 +28,11 @@
 /notes/24  /2026oct03-01   301
 /notes/25  /2026oct03-02   301
 /notes/26  /2026oct05-01   301
+
+# A draft preview lives at /drafts/<published path> until the entry is
+# published, then its page stops being built. Netlify skips an unforced rule
+# while a file exists at the path, so this only fires once the draft page is
+# gone: old review links follow the post to its published URL instead of
+# 404ing. Stripping "/drafts" always yields the published path (see
+# src/pages/drafts/[...slug].astro). Must stay unforced (no "!").
+/drafts/*  /:splat  301
