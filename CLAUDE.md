@@ -99,6 +99,10 @@ rehype plugins (`.anchor-link`) belong in `src/styles/global.css`.
   References); everything else lands under Blogs & Publications.
 - A site is `domain` (covers subdomains) or `domain/path` (a profile on a
   shared platform, e.g. `instagram.com/<handle>`).
+- `/people` lists the people in `people.json` who are linked from a post,
+  most-mentioned first. Each mention shows the URL used, the post (linking to
+  the paragraph) and the post's section. Public figures stay out of
+  `people.json`; their links land under Blogs & Publications.
 
 ### Code Quality
 
