@@ -1,5 +1,6 @@
 import rss from "@astrojs/rss";
 import { experimental_AstroContainer } from "astro/container";
+import { mdxComponents } from "../components/mdx-components";
 import mdxRenderer from "@astrojs/mdx/server.js";
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import { collections } from "../content.config";
@@ -130,7 +131,11 @@ async function feedItemContent(
   link: string,
 ): Promise<string> {
   const { Content } = await render(entry);
-  const html = await (await feedContainer()).renderToString(Content);
+  const html = await (
+    await feedContainer()
+  ).renderToString(Content, {
+    props: { components: mdxComponents },
+  });
   return toFeedHtml(html, new URL(link, SITE_URL).href);
 }
 

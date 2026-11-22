@@ -70,6 +70,8 @@ vi.mock("astro/container", () => ({
   },
 }));
 vi.mock("@astrojs/mdx/server.js", () => ({ default: {} }));
+// .astro components only compile inside Astro's build.
+vi.mock("../src/components/mdx-components", () => ({ mdxComponents: {} }));
 
 // Mock @astrojs/rss
 vi.mock("@astrojs/rss", () => ({
