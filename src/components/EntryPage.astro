@@ -2,6 +2,7 @@
 import { render } from "astro:content";
 import ProseLayout from "../layouts/ProseLayout.astro";
 import AudioPlayer from "./AudioPlayer.astro";
+import { mdxComponents } from "./mdx-components";
 import { getReadingTimeMinutes } from "../utils/reading-time";
 import {
   getEntryPath,
@@ -101,7 +102,7 @@ if (presentation.navNoun) {
     next,
   }}
 >
-  <Content />
+  <Content components={mdxComponents} />
   {
     audio && (
       <AudioPlayer
