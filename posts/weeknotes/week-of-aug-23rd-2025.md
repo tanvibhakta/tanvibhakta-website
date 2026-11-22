@@ -39,7 +39,7 @@ It is one thing to make health decisions for myself. It’s completely another t
 
 ## Learning
 
-I’ve restarted learning the Kannada script with the help of [Sarvabhasin](https://www.scribd.com/document/24032566/Kannada-Script-Book-sarvabhashin). Calra and I have been trading each other pictures of letters - when we haven’t done it together in person, that is. The last time I did this (in 2019) I got pretty good at reading Kannada, but then I moved to Goa and lost it all. This time I don’t plan to move away indefinitely, so I hope it sticks for longer.
+I’ve restarted learning the Kannada script with the help of [Sarvabhasin](https://www.scribd.com/document/24032566/Kannada-Script-Book-sarvabhashin). [Calra](https://himanshikalra.com/) and I have been trading each other pictures of letters - when we haven’t done it together in person, that is. The last time I did this (in 2019) I got pretty good at reading Kannada, but then I moved to Goa and lost it all. This time I don’t plan to move away indefinitely, so I hope it sticks for longer.
 
 ## Media Diet
 

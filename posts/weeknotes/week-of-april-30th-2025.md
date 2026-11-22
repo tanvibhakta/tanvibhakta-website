@@ -15,7 +15,7 @@ I’ve exported most of my posts from my mataroa instance to my new site, but no
 
 ## Health
 
-So far, I’ve been able to manage my workout with work and some social engagements. Running with Dee this week I unlocked two things:
+So far, I’ve been able to manage my workout with work and some social engagements. Running with [Dee](https://deeptimegh.com/) this week I unlocked two things:
 
 1. I’m a heel striker. This is not good for my running or my heel. I will train myself to be a midfoot striker.
 

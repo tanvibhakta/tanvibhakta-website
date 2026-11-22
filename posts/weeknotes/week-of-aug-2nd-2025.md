@@ -25,7 +25,7 @@ I am also appending to my weekly Tuesday RC at UC ritual a Cooke evening/dinner.
 
 The Cooke evening/dinner has to be scheduled now because I am spending so much more time at home. I am pleased with how my relationship to home has changed. I feel so comfortable. I remember feeling like this and writing about it in October last year - I think that was the first time i spent the whole day by myself at home and actually had fun. This feels longer term, more permanent.
 
-I did piece off this weekend and came 6th despite arriving 15 minutes late (!). I did a surprisingly large number of puzzles last month despite not thinking I would, because Pranav and I did pairs speed practice at least once a week. This month it will probably decrease, because the demands of work are getting higher which means I’m not sure about the state of my Monday evenings any more.
+I did piece off this weekend and came 6th despite arriving 15 minutes late (!). I did a surprisingly large number of puzzles last month despite not thinking I would, because [Pranav](https://instagram.com/barkwhip) and I did pairs speed practice at least once a week. This month it will probably decrease, because the demands of work are getting higher which means I’m not sure about the state of my Monday evenings any more.
 
 I still haven’t figured out when I should take the car and when I should call a cab, in time sensitive situations. \
 
@@ -55,7 +55,7 @@ Renee Rap’s new album out! need to make time for it.
 
 re-listened to a bunch of 100 gecs again. man what bangerz. money machine has such a strong intro man I want to write like that.
 
-re-stumbled upon some playlists Dee shared with me when we were first getting to know each other. No you aren’t getting them. But. So much love in there.
+re-stumbled upon some playlists [Dee](https://deeptimegh.com/) shared with me when we were first getting to know each other. No you aren’t getting them. But. So much love in there.
 
 ### Around the web
 

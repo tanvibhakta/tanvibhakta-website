@@ -12,7 +12,7 @@
     "sites": ["akhilunnikrishnan.com"]
   },
   {
-    "name": "Akil",
+    "name": "Akila",
     "sites": ["akils.mataroa.blog"]
   },
   {
@@ -125,6 +125,10 @@
     "sites": ["nirbheek.in"]
   },
   {
+    "name": "Noopur",
+    "sites": ["noopur.me"]
+  },
+  {
     "name": "Pooja Saxena",
     "sites": ["anexasajoop.in"]
   },
@@ -217,9 +221,5 @@
   {
     "name": "Unmana",
     "sites": ["unmana.com"]
-  },
-  {
-    "name": "Zoya",
-    "sites": ["zoya.life"]
   }
 ]

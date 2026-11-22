@@ -18,9 +18,9 @@ Engineering teams have always dealt with problems of knowledge silos. When LLMs 
 
 Last weekend was the healthiest I’ve been in a while. Goa always does that to me, I thought...until I arrived at the Airbnb on Monday, which was so chock-full of dust mites (not dust, remember) that I had such a horrible stuffed nose and bad throat and headache and the whole works. That’s when I discovered that it’s actually [Nats](https://stateofnats.com/)’ home, and not Goa, that had been the antidote I needed all along. Well, now that I have made this discovery, let’s just say that spare bed will be getting a lot more use :)
 
-I have written about [perfect Goa days](https://tanvibhakta.in/weeknotes/week-of-feb-1st-2026/) before; last weekend was another such. How do I know when I’m home? When there is a kitchen that is mine. Nats’ condiment drawer puts mine to shame, her fridge gives me life, and I made - casually - about 6 different lovely things over the span of two days.
+I have written about [perfect Goa days](https://tanvibhakta.in/weeknotes/week-of-feb-1st-2026/) before; last weekend was another such. How do I know when I’m home? When there is a kitchen that is mine. [Nats](https://natswhy.com/)’ condiment drawer puts mine to shame, her fridge gives me life, and I made - casually - about 6 different lovely things over the span of two days.
 
-Goa is also good for movement - I ran 1.5k on Sat, did pickleball for 1ish hour on Tue and Fri, ran a 3k on Wed in no small part thanks to Devanjal, did a bunch of laps in the pool yesterday...
+Goa is also good for movement - I ran 1.5k on Sat, did pickleball for 1ish hour on Tue and Fri, ran a 3k on Wed in no small part thanks to [Devanjal](https://devanjal.mataroa.blog/), did a bunch of laps in the pool yesterday...
 
 What’s been bad: I feel like I’m not getting enough veggies, I’m \*definitely\* not eating enough seafood, my ankle isn’t recovering the greatest, the allergies are still very much present, just not as flagrant, and I may be catching a viral.
 
@@ -48,7 +48,7 @@ I am currently reading
 [b] A Dalit Kitchen of Marathwada
 [b] Desperately Seeking Shah Rukh
 
-This list is sorted by platform - [a]udiobook, [m]oon+ reader, [k]indle and physical [b]ook. I'm also reading one physical book on loneliness that's on my coffee table but it's on my coffee table so I almost never have time for it (and also I have forgotten what it's called). Thanks Nats, for foisting the last two physical books on me, with permission to annotate in the margins and the nice pen to do it with!
+This list is sorted by platform - [a]udiobook, [m]oon+ reader, [k]indle and physical [b]ook. I'm also reading one physical book on loneliness that's on my coffee table but it's on my coffee table so I almost never have time for it (and also I have forgotten what it's called). Thanks [Nats](https://natswhy.com/), for foisting the last two physical books on me, with permission to annotate in the margins and the nice pen to do it with!
 
 ### Listening
 

@@ -13,7 +13,7 @@ For a long time I was not able to approach any past work without feeling shame. 
 2. I know I’ve changed that behaviour (or at least set up the foundations for it?) so it’s time to let the shame go.
    This week I was better about it. I wrote lots of words on my work page without spiraling or procrastinating or self-soothing.
 
-I know I have very strong opinions on software estimation. I haven’t lead a team so I have been hesitant to talk about them. Ishan has been encouraging me to write with authority so I’ve been putting these thoughts down, and they are a lot! I will inflict them on you at some point. To my non-tech friends who follow this blog mostly for my life updates, I apologise in advance. Your eyes can glaze over this one just like it did with my poetry from last month.
+I know I have very strong opinions on software estimation. I haven’t lead a team so I have been hesitant to talk about them. [Ishan](https://github.com/twitu) has been encouraging me to write with authority so I’ve been putting these thoughts down, and they are a lot! I will inflict them on you at some point. To my non-tech friends who follow this blog mostly for my life updates, I apologise in advance. Your eyes can glaze over this one just like it did with my poetry from last month.
 
 ## Life
 

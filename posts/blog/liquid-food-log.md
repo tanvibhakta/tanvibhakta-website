@@ -71,7 +71,7 @@ So of course I told three friends about it and invited them over for dinner and 
 - and I made toppings, frying onions and scallions
 
 While they ate this dinner, I had
-Meal 4: Half a banana smoothie that Devanjal got me as thanks for dinner
+Meal 4: Half a banana smoothie that [Devanjal](https://devanjal.mataroa.blog/) got me as thanks for dinner
 
 After this meal and this group hang, I had a second wind - so I ended up working from 11pm to 4am, so I needed another snack (and another painkiller) at 1am.
 
@@ -101,6 +101,6 @@ Other things:
 
 Shout out once again to Past Tanvi who indulged in a then-partner’s desire to drink lots of ice water and bought [this set](https://amzn.in/d/0dGuolgp) of silicone trays for large ice cubes. I probably went through 36-40 cubes over the course of those four days. I also have never drank this much ice water in my life (I don’t like the cold! I carry a flask around everywhere! I have a _sensitive throat_.)
 
-Before the procedure, I didn’t realise how much pain I would be in and therefore completely failed to plan for most of it. Luckily, Ankur and [Calra](https://himanshikalra.com/) really came through on Day 0 and work was flexible enough to allow for wfh and strange sleep schedules (one of the pain meds made me really drowsy). But this whole experience really made me realise how self-reliant I can be, and how good the systems I've built for my life are. I've always been fairly independent but I've really craved nurturing and care when I'm sick (like most people) - maybe next time I will feel better about taking care of myself. It's also worth thinking about which of these systems are a function of living at home and which of these I can replicate when I'm travelling - for when I spend more time on the road and invariably catch a fever or two.
+Before the procedure, I didn’t realise how much pain I would be in and therefore completely failed to plan for most of it. Luckily, [Ankur](https://ankursethi.com/) and [Calra](https://himanshikalra.com/) really came through on Day 0 and work was flexible enough to allow for wfh and strange sleep schedules (one of the pain meds made me really drowsy). But this whole experience really made me realise how self-reliant I can be, and how good the systems I've built for my life are. I've always been fairly independent but I've really craved nurturing and care when I'm sick (like most people) - maybe next time I will feel better about taking care of myself. It's also worth thinking about which of these systems are a function of living at home and which of these I can replicate when I'm travelling - for when I spend more time on the road and invariably catch a fever or two.
 
 I do have to get the left side set of teeth removed but I think it’s going to be a while before I schedule it...

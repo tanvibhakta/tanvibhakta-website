@@ -1,0 +1,84 @@
+---
+import ProseLayout from "../layouts/ProseLayout.astro";
+import { STANDALONE_PAGES } from "../content.config";
+import { loadLinkData, type LinkRecord } from "../utils/link-records";
+import { PEOPLE_HEADING, type Person } from "../utils/link-census";
+import people from "../data/people.json";
+
+// people.json also files my own profiles so /stats doesn't rank them as
+// aggregators; I'm not one of the people this page is about.
+const SELF = "Tanvi Bhakta";
+
+const { titles, records } = await loadLinkData();
+
+// Every link to a person, grouped under them. Each mention shows the exact
+// URL used, the post it's in (linking to the paragraph), and that post's
+// section, newest first.
+const byPerson = new Map<string, LinkRecord[]>();
+for (const r of records) {
+  if (r.heading !== PEOPLE_HEADING || r.labelHtml === SELF) continue;
+  byPerson.set(r.labelHtml, [...(byPerson.get(r.labelHtml) ?? []), r]);
+}
+const newestFirst = (a: LinkRecord, b: LinkRecord) =>
+  (b.post.date?.getTime() ?? 0) - (a.post.date?.getTime() ?? 0);
+
+// Most-mentioned first; ties alphabetical so the order is stable.
+const mentioned = [...byPerson]
+  .map(([name, mentions]) => ({
+    person: (people as Person[]).find((p) => p.name === name)!,
+    mentions: mentions.toSorted(newestFirst),
+  }))
+  .sort(
+    (a, b) =>
+      b.mentions.length - a.mentions.length ||
+      a.person.name.localeCompare(b.person.name),
+  );
+
+const count = (n: number) => `${n} ${n === 1 ? "mention" : "mentions"}`;
+// A name links to the first site listed for them in people.json.
+const homepage = (person: Person) => `https://${person.sites[0]}`;
+// URLs are shown bare: no scheme, no www., no trailing slash.
+const bare = (url: string) =>
+  url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+
+const frontmatter = STANDALONE_PAGES.people;
+---
+
+<ProseLayout frontmatter={frontmatter}>
+  <ul class="list-none pl-0!">
+    {
+      mentioned.map(({ person, mentions }) => (
+        <li class="pl-0! my-1.5!">
+          <details>
+            <summary class="cursor-pointer">
+              <a href={homepage(person)}>{person.name}</a>
+              <span class="count">{count(mentions.length)}</span>
+            </summary>
+            <ul class="list-none pl-[1.2em]! my-1! text-sm">
+              {mentions.map((m) => (
+                <li class="my-1! pl-0! [overflow-wrap:anywhere]">
+                  <a href={m.url}>{bare(m.url)}</a>
+                  <span class="opacity-60"> in </span>
+                  <a href={m.backlink} set:html={m.post.titleHtml} />
+                  {titles.get(m.post.href)?.meta && (
+                    <span class="count">{titles.get(m.post.href)?.meta}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </details>
+        </li>
+      ))
+    }
+  </ul>
+</ProseLayout>
+
+<style>
+  .count {
+    font-size: 0.85rem;
+    font-variant: small-caps;
+    margin-left: 0.5rem;
+    opacity: 0.6;
+    white-space: nowrap;
+  }
+</style>

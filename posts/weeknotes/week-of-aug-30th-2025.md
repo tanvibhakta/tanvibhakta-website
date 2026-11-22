@@ -59,4 +59,4 @@ I’ve made good progress on [The Day I Became a Runner](https://www.goodreads.c
 
 ### Listening
 
-Ankur and Azan introduced me to the genre of math rock. Which is great! Think God is an Astronaut (one of my all time fav artists) but more... complex, more brain scrambly.
+[Ankur](https://ankursethi.com/) and [Azan](https://azan-n.com/) introduced me to the genre of math rock. Which is great! Think God is an Astronaut (one of my all time fav artists) but more... complex, more brain scrambly.
