@@ -3,6 +3,10 @@ title: "Day 15"
 publishedOn: 2025-04-15
 ---
 
+> Both the poems above are informed by repetition, simple language, and they express _enthusiasm_. They have a sermon/prayer-like quality, and then end with a bang. Your challenge is to write a six-line poem that has these same qualities.
+
+\- Quoting [GloPoWriMo 2025 Day 15](https://www.napowrimo.net/day-fifteen-11/)
+
 In the muddy waters of my childhood  
 a river used to flow here.  
 _gulu gulu, gulu gulu_  
@@ -30,3 +34,5 @@ the river has before it a road
 uncaring drivers punctuate dry summers
 
 Why does land being divvied sound like heartbreak?
+
+---

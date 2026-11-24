@@ -3,6 +3,10 @@ title: "Day 22"
 publishedOn: 2025-04-22
 ---
 
+> We'd like to challenge you to write a poem about something you've done – whether it's music lessons, or playing soccer, crocheting, or fishing, or learning how to change a tire – that gave you some satisfaction
+
+\- Quoting [GloPoWriMo 2025 Day 22](https://www.napowrimo.net/day-twenty-two-11/)
+
 Nouv varsha Tanvi sakaali pode uTun yoga kartashile, tigel vastar iron kartashile, ani vattishele bhi, schoola vach kint pude!
 
 Aiche Tanvi? Madhyan uTuna, nhavchak char paTi yochan karta.
@@ -35,3 +39,5 @@ Her clothes taught her - her joy in her body will keep her.
 Her books taught her - even if her mind is depleted, no mistake is made in asking to borrow some from other people.
 
 What will your life today teach you tomorrow? Think about this, and have a good sleep.
+
+---

@@ -3,6 +3,10 @@ title: "Day 2"
 publishedOn: 2025-04-03T09:02:00+05:30
 ---
 
+> We challenge you to write a poem that directly addresses someone, and that includes a made-up word, an odd/unusual simile, a statement of "fact," and something that seems out of place in time.
+
+\- Quoting [GloPoWriMo 2025 Day 2](https://www.napowrimo.net/day-two-12/)
+
 Talk to me, eternal love  
 We grow and we change  
 We say the same words but we mean different things  
@@ -25,3 +29,5 @@ haunts me with the rest of our unfinished sentences
 
 Just talk to me.  
 We'll Ina Mina Dika our way through the rest.
+
+---
