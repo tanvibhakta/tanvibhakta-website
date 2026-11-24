@@ -3,6 +3,10 @@ title: "Day 4"
 publishedOn: 2025-04-06T09:00:00+05:30
 ---
 
+> Today, we'd like to challenge you to write your own poem about living with a piece of art.
+
+\- Quoting [GloPoWriMo 2025 Day 4](https://www.napowrimo.net/day-four-13/)
+
 My ajjol didn't live with paintings  
 They lived with memories  
 portraits  
@@ -27,3 +31,5 @@ bright blue, pink, and gold foil pictures of
 Today, only 5 people live there  
 but the gods and the spiders  
 keep me company
+
+---

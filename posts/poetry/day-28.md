@@ -3,6 +3,10 @@ title: "Day 28"
 publishedOn: 2025-04-28
 ---
 
+> We challenge you to write a poem that involves music at a ceremony or event of some kind.
+
+\- Quoting [GloPoWriMo 2025 Day 28](https://www.napowrimo.net/day-twenty-eight-11/)
+
 At large public events I always have noise dampeners in.
 
 What is it about us that we need an excess to feel alive?  
@@ -21,3 +25,5 @@ clutch at clammy hands
 &nbsp;&nbsp;&nbsp;&nbsp;but still know that I am okay  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I am here  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I am here
+
+---
