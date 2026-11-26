@@ -162,6 +162,66 @@ needs the local proxy run from the content checkout, not the site's.
 The function keeps running from the site repo. Its code is site code; it
 just writes to a different repo.
 
+## MDX
+
+MDX posts stay allowed: the blog loader keeps `**/*.{md,mdx}`. No post on
+`main` is MDX yet, but `posts/blog/delhi.mdx` is in flight on
+`delhi-travelogue`, `delhi-toc`, `table-component`, `delhi-note-embeds` and
+`component-gallery`.
+
+### Content never imports from the site
+
+An `import` in a content file would have to name a path in the site repo,
+such as `../../src/components/Table.astro`. That couples the content to the
+site's folder layout, and the path doesn't exist in the content repo. So
+the rule is: content files have no `import` or `export` lines. Components
+reach MDX the way they already do on `table-component`, through `<Content
+components={...} />` in `EntryPage.astro`.
+
+That map is a registry, not a template. A post may use any registered tag,
+anywhere, any number of times, with any props, or none at all. Using a tag
+that isn't registered fails the build with "Expected component `X` to be
+defined", so a typo or a missing component never reaches production.
+
+### One registry
+
+Today the set is written inline in `EntryPage.astro`
+(`{ NoteEmbed, TableOfContents, Table }`). It moves to
+`src/components/mdx.ts`:
+
+```ts
+// Every component an MDX post may use, by the tag name it writes.
+// Content files never import; they use these tags and EntryPage passes
+// this map to <Content />. Adding a component for posts = adding it here.
+export { default as NoteEmbed } from "./NoteEmbed.astro";
+export { default as Table } from "./Table.astro";
+export { default as TableOfContents } from "./TableOfContents.astro";
+```
+
+`EntryPage` passes `import * as mdxComponents from "./mdx"`, and the
+`/components` showcase on `component-gallery` lists the same module, so the
+showcase and what posts can use can't drift. `src/showcase/components.mdx`
+is a site page, not content, so it keeps its direct imports.
+
+Remark and rehype plugins that give markdown new syntax, such as
+`remark-note-embeds` on `delhi-note-embeds`, are site code in the same way.
+
+### A stream that needs both repos
+
+Several streams today change code and content in one branch:
+`table-component` adds `Table.astro` and wraps `delhi.mdx`'s tables in
+`<Table>`. After the split, a stream like that has two halves:
+
+1. **Site branch:** the component and its registry entry.
+2. **Content branch, with the same name:** the post that uses the tag.
+
+Develop both together locally: check out the site branch, and point
+`CONTENT_DIR` at a content checkout on the matching branch. To keep CI
+working while both are open, each repo's CI tests against the other
+repo's branch of the same name when one exists, and `main` otherwise (see
+"CI"). Merge the site branch first. Once it is deployed, merge the content
+branch.
+
 ## CI
 
 ### Content repo
@@ -171,8 +231,9 @@ checking out the site repo, which is public and needs no token, next to
 itself:
 
 - **`validate.yml`** runs on push and PR. It checks out content and the
-  site's `main`, runs `pnpm install`, and with `CONTENT_DIR` pointing at the
-  content checkout runs:
+  site: the site branch with the same name as the content branch if one
+  exists, and `main` otherwise (see "MDX"). It runs `pnpm install`, and with
+  `CONTENT_DIR` pointing at the content checkout runs:
   - `pnpm build`, which catches schema errors such as a bad date or a tag
     that isn't kebab-case;
   - `pnpm test`, which runs the link checker, feeds and horizontal scroll;
@@ -188,8 +249,12 @@ itself:
 ### Site repo
 
 - **`ci.yml`** clones content with a `CONTENT_REPO_TOKEN` repo secret
-  before `pnpm check`. Integration tests keep running against real
-  content, which is what makes them useful.
+  before `pnpm check`: the content branch with the same name as the site
+  branch if one exists, and `main` otherwise. Integration tests keep
+  running against real content, which is what makes them useful.
+- **Deploys always use content `main`.** Branch matching is for CI only.
+  Netlify deploy previews of a site PR build against content `main` too,
+  unless `fetch-content.sh` is given `CONTENT_BRANCH`.
 - **Removed:** `content-validation.yml` and `transcode-audio.yml`. Their
   checks have moved to the content repo.
 - **lint-staged:** the `posts/**/images/*` rule is removed. The image
@@ -252,13 +317,18 @@ mirroring the published one.
 Order matters: nothing should be able to write content to the old repo after
 the split commit.
 
+0. Land or park the in-flight branches that touch `posts/` (the `delhi-*`,
+   `table-component` and `component-gallery` streams). A branch still open
+   after the split has to be cut in two by hand: its `posts/` changes are
+   replayed onto a same-named content branch, and the rest stays as a site
+   branch. Merging them first is cheaper.
 1. Create `tanvibhakta-content`, private, and push the filtered history to it.
 2. Create both PATs. Set `CONTENT_REPO_TOKEN` on Netlify and in site
    repo secrets, and `NETLIFY_BUILD_HOOK` in content repo secrets.
-3. Add the content repo's workflows, with `validate.yml` temporarily
-   checking out the step 4 PR branch. The site's `main` still reads
-   `posts/`, so validating against it would fail. Switch it back to `main`
-   after the merge.
+3. Add the content repo's workflows on a content branch named like the
+   step 4 site PR branch, so branch matching validates it against that PR.
+   The site's `main` still reads `posts/`, so validating against it would
+   fail.
 4. Site PR: `content-dir.ts`, the loader and script changes, the fetch
    script, the build command, Sveltia config, `NOTES_DIR`, CI changes,
    deletion of the moved paths, `.gitignore` entries, README and
@@ -288,6 +358,11 @@ the split commit.
   with `pages/` changes no code, but site tests then depend on a file in
   the content repo. Alternative: a fixtures-only collection in the site repo
   under `tests/fixtures/`. Defer until it causes a problem.
-- **Site PRs build against live content `main`.** A content change can
-  break a site PR's CI with nothing wrong in the code. That is acceptable
-  for one author, and it shows up in the next content push's own CI anyway.
+- **Site PRs without a matching content branch build against live content
+  `main`.** A content change can break such a PR's CI with nothing wrong in
+  the code. That is acceptable for one author, and it shows up in the next
+  content push's own CI anyway.
+- **Removing a component** from the registry breaks every post that still
+  uses its tag. Content CI catches it on the next content push, but site CI
+  catches it first only because it builds against real content. Keep it
+  that way.
